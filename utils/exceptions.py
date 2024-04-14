@@ -16,6 +16,9 @@ class CapynanceException(Exception):
     errors = {
         "default": "I am placeholder, please change me.",
         "invalid_components": "Invalid components provided.",
+        "unknown index": "Provided str index is invalid.",
+        "invalid index": "Provided index is invalid.",
+        "control not flet.Control": "Provided Control must be of type flet.Control",
     }
 
     def __init__(self, error_type: str):

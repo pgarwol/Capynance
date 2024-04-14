@@ -1,82 +1,41 @@
 from components.abstract_component import AbstractComponent
+from utils.exceptions import CapynanceException
 from typing import List, Optional
 import flet as ft
 
 
 class Component(AbstractComponent):
-    """
-    Summary:
-    Class representing a concrete component.
-
-    Explanation:
-    This class extends AbstractComponent and defines a component with content, description, and page object properties. The content is a list of controls, description is an optional string, and page object is an optional Page instance.
-
-    Args:
-    - content: List of controls representing the content of the component.
-    - description: Optional string describing the component (default is an empty string).
-    - page_obj: Optional Page instance associated with the component (default is None).
-
-    Returns:
-    - None
-    """
-
     def __init__(
         self,
         content: List[ft.Control],
-        description: Optional[str] = "",
-        page_obj: Optional[ft.Page] = None,
+        description: str,
     ):
-        self._content = content
-        self._description = description
-        self._page_obj = page_obj
+        super().__init__(content=content, description=description)
 
     @property
     def content(self):
-        """
-        Summary:
-        Property for accessing the content of a component.
-
-        Explanation:
-        This property allows access to the content of a component instance.
-
-        Args:
-        - self
-
-        Returns:
-        - The content of the component.
-        """
         return self._content
 
     @property
     def description(self):
-        """
-        Summary:
-        Property for accessing the description of a component.
-
-        Explanation:
-        This property allows access to the description of a component instance.
-
-        Args:
-        - self
-
-        Returns:
-        - The description of the component.
-        """
         return self._description
 
-    @property
-    def page_obj(self):
-        """
-        Summary:
-        Property for accessing the page object of a component.
+    def add_control(self, control: ft.Control, index: int | str) -> None:
+        if not isinstance(control, ft.Control):
+            raise CapynanceException("control not flet.Control")
 
-        Explanation:
-        This property allows access to the page object associated with a component instance.
+        if isinstance(index, str):
+            index_mapping = {"first": 0, "last": -1}
+            if index in index_mapping:
+                i = index_mapping[index]
+            else:
+                raise CapynanceException("unknown index")
+        elif isinstance(index, int):
+            if index < -1 or index >= len(self.content):
+                raise CapynanceException("index invalid")
+            else:
+                i = index
+        else:
+            raise CapynanceException("index invalid")
 
-        Args:
-        - self
-
-        Returns:
-        - The page object of the component.
-        """
-        return self._page_obj
+        self._content.insert(i, control)
