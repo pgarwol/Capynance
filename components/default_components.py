@@ -21,6 +21,9 @@ navigation = Component(
                     selected_icon=ft.icons.BOOKMARK,
                     label="zakładeczka",
                 ),
+                ft.NavigationDestination(
+                    icon=ft.icons.PERSON,
+                    label="Social"),
             ]
         )
     ],
