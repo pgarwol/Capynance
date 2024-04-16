@@ -1,5 +1,6 @@
 from views.main_screen import main_screen
 from views.shop import shop
+from views.social import social
 import flet as ft
 from abc import ABC
 from components.component import Component
@@ -14,12 +15,20 @@ def main(page: ft.Page):
         ),
         index="last",
     )
+    main_screen.get_component(0).add_control(
+        ft.ElevatedButton(
+            "Wejdź se do sociala tego typu", on_click=lambda _: page.go("/social")
+        ),
+        index="last",
+    )
 
     def route_change(route):
         page.views.clear()
         page.views.append(main_screen.build())
         if page.route == shop.route:
             page.views.append(shop.build())
+        if page.route == social.route:
+            page.views.append(social.build())
         page.update()
 
     def view_pop(view):
