@@ -2,4 +2,10 @@ from .abstract_view import *
 from .view import *
 
 # Custom views
-from .main_screen import *
+from .calendar import *
+from .finances import *
+from .home import *
+from .scan import *
+from .settings import *
+from .shop import *
+from .social import *

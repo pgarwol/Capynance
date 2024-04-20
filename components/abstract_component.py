@@ -12,10 +12,13 @@ class AbstractComponent(ABC):
     @property
     @abstractmethod
     def content(self):
-
         pass
 
     @property
     @abstractmethod
     def description(self):
+        pass
+
+    @abstractmethod
+    def extend(self):
         pass
