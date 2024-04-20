@@ -27,7 +27,13 @@ class View(AbstractView):
     def get_component(self, index: Optional[int] = 0) -> Component:
         return self._components[index]
 
-    def build(self) -> ft.View:
+    def build(
+        self,
+        vertical_alignment: Optional[ft.MainAxisAlignment] = ft.MainAxisAlignment.START,
+        horizontal_alignment: Optional[
+            ft.CrossAxisAlignment
+        ] = ft.CrossAxisAlignment.CENTER,
+    ) -> ft.View:
         unpacked_components = [
             control
             for item in self.components
@@ -36,7 +42,12 @@ class View(AbstractView):
             if isinstance(control, ft.Control)
         ]
 
-        return ft.View(self.route, unpacked_components)
+        return ft.View(
+            self.route,
+            unpacked_components,
+            vertical_alignment=vertical_alignment,
+            horizontal_alignment=horizontal_alignment,
+        )
 
     def add_component(self, component: Component) -> None:
         if isinstance(component, Component):

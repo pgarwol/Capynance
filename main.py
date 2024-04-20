@@ -6,6 +6,7 @@ from views.scan import scan
 from views.settings import settings
 from views.social import social
 from views.calendar import calendar
+from views.login import login
 from components.component import Component
 from components.default_components import defaults
 import flet as ft
@@ -22,6 +23,7 @@ class App:
         4: {"view": finances, "route": finances.route},
         5: {"view": social, "route": social.route},
         6: {"view": settings, "route": settings.route},
+        7: {"view": login, "route": login.route},
     }
 
     def main(self, page: ft.Page) -> None:
