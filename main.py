@@ -7,6 +7,7 @@ from views.settings import settings
 from views.social import social
 from views.calendar import calendar
 from views.login import login
+from views.login import initialize_login_fields
 from components.component import Component
 from components.default_components import defaults
 import flet as ft
@@ -33,13 +34,17 @@ class App:
         defaults["NAVIGATION_BAR"].content[0].content.on_change = lambda e: page.go(
             route=self.navigation_bar_items[e.control.selected_index]["route"]
         )
+        login_input, password_input = initialize_login_fields()
+        login.get_component(0).content[-1].on_click = lambda _: log_user_in(
+            login_input.value, password_input.value
+        )
 
         def route_change(route: str) -> None:
             page.views.clear()
             page.views.append(
-                self.navigation_bar_items[get_view_index(route="/")]["view"].build()
+                self.navigation_bar_items[get_view_index(route="/home")]["view"].build()
             )
-            if page.route != "/":
+            if page.route != "/home":
                 page.views.append(
                     self.navigation_bar_items[get_view_index(route=page.route)][
                         "view"
@@ -62,6 +67,14 @@ class App:
                 ),
                 None,
             )
+
+        def log_user_in(login: str | None, password: str | None):
+            if login is None or password is None:
+                return
+
+            # @TODO: Legit login system
+            if login == "admin" and password == "admin":
+                page.go("/home")
 
         page.on_route_change = route_change
         page.on_view_pop = view_pop
