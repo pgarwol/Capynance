@@ -4,9 +4,8 @@ from views.view import View
 import flet as ft
 
 
-social = View(name="Social", route="/social")
-social.add_component(defaults["STATS"])
-social.add_component(
-    Component(content=[ft.Text("Friends")], description="Friends")
-)
-social.add_component(defaults["NAVIGATION"])
+social = View(name="social", route="/social")
+social.add_component(defaults["STATISTICS_BAR"])
+social.add_component(Component([ft.Text("ZIOMKI")], "View representing Social."))
+social.add_component(defaults["NAVIGATION_BAR"])
+print(social)

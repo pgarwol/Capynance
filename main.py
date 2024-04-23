@@ -1,44 +1,73 @@
-from views.main_screen import main_screen
 from views.shop import shop
+from views.calendar import calendar
+from views.home import home
+from views.finances import finances
+from views.scan import scan
+from views.settings import settings
 from views.social import social
-import flet as ft
-from abc import ABC
+from views.calendar import calendar
+from views.login import login
 from components.component import Component
+from components.default_components import defaults
+import flet as ft
 
 
-def main(page: ft.Page):
-    page.title = "Capynance"
-    # To avoid problems with ft.Page variable scope
-    main_screen.get_component(0).add_control(
-        ft.ElevatedButton(
-            "Wejdź se do sklepa tego typu", on_click=lambda _: page.go("/shop")
-        ),
-        index="last",
-    )
-    main_screen.get_component(0).add_control(
-        ft.ElevatedButton(
-            "Wejdź se do sociala tego typu", on_click=lambda _: page.go("/social")
-        ),
-        index="last",
-    )
+class App:
+    name = "Capynance."
 
-    def route_change(route):
-        page.views.clear()
-        page.views.append(main_screen.build())
-        if page.route == shop.route:
-            page.views.append(shop.build())
-        if page.route == social.route:
-            page.views.append(social.build())
-        page.update()
+    navigation_bar_items = {
+        0: {"view": scan, "route": scan.route},
+        1: {"view": shop, "route": shop.route},
+        2: {"view": calendar, "route": calendar.route},
+        3: {"view": home, "route": home.route},
+        4: {"view": finances, "route": finances.route},
+        5: {"view": social, "route": social.route},
+        6: {"view": settings, "route": settings.route},
+        7: {"view": login, "route": login.route},
+    }
 
-    def view_pop(view):
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
+    def main(self, page: ft.Page) -> None:
+        page.title = self.name
 
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
-    page.go(page.route)
+        # Avoids page variable scope problem
+        defaults["NAVIGATION_BAR"].content[0].content.on_change = lambda e: page.go(
+            route=self.navigation_bar_items[e.control.selected_index]["route"]
+        )
+
+        def route_change(route: str) -> None:
+            page.views.clear()
+            page.views.append(
+                self.navigation_bar_items[get_view_index(route="/")]["view"].build()
+            )
+            if page.route != "/":
+                page.views.append(
+                    self.navigation_bar_items[get_view_index(route=page.route)][
+                        "view"
+                    ].build()
+                )
+
+            page.update()
+
+        def view_pop(view):
+            page.views.pop()
+            top_view = page.views[-1]
+            page.go(top_view.route)
+
+        def get_view_index(route: str) -> int | None:
+            return next(
+                (
+                    key
+                    for key in self.navigation_bar_items.keys()
+                    if self.navigation_bar_items[key]["route"] == route
+                ),
+                None,
+            )
+
+        page.on_route_change = route_change
+        page.on_view_pop = view_pop
+        page.go(page.route)
 
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+if __name__ == "__main__":
+    app = App()
+    ft.app(target=app.main, view=ft.AppView.WEB_BROWSER)

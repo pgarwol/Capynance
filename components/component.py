@@ -20,7 +20,7 @@ class Component(AbstractComponent):
     def description(self):
         return self._description
 
-    def add_control(self, control: ft.Control, index: int | str) -> None:
+    def extend(self, control: ft.Control, index: int | str) -> None:
         if not isinstance(control, ft.Control):
             raise CapynanceException("control not flet.Control")
 
