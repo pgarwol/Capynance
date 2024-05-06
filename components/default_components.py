@@ -61,10 +61,6 @@ navigation = Component(
                             name=ft.icons.SETTINGS_ROUNDED, color=ft.colors.RED_700
                         ),
                     ),
-                    ft.Container(
-                        padding=ft.padding.symmetric(0, 10),
-                        content=ft.Icon(name=ft.icons.KEY, color=ft.colors.RED_700),
-                    ),
                 ],
             )
         )
