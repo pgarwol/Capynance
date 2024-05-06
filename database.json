@@ -1,0 +1,10 @@
+{
+    "0": {
+        "login": "admin",
+        "password": "admin",
+        "profile": {
+            "first_name": "Jan",
+            "last_name": "Kowalski"
+        }
+    }
+}

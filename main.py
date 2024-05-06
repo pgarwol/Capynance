@@ -10,6 +10,7 @@ from views.login import login
 from views.login import initialize_login_fields
 from components.component import Component
 from components.default_components import defaults
+import database_manager as db
 import flet as ft
 
 
@@ -73,7 +74,7 @@ class App:
                 return
 
             # @TODO: Legit login system
-            if login == "admin" and password == "admin":
+            if db.valid_login(login, password):
                 page.go("/home")
 
         page.on_route_change = route_change
