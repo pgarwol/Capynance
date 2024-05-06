@@ -78,9 +78,7 @@ class App:
             logged_in_successfully, user_id = services.is_login_valid(login, password)
             if logged_in_successfully:
                 self.session = Session(user_id)
-                print(
-                    f"SUCCESSFULLY LOGGED IN USER: {self.session.logged_user.first_name} {self.session.logged_user.last_name} ({self.session.logged_user.email})"
-                )
+                print(self.session.logged_user)
                 page.go("/home")
 
         page.on_route_change = route_change

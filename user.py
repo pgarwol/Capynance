@@ -1,4 +1,5 @@
 from enum import Enum
+from db_keys import DB_Keys
 
 
 class User:
@@ -8,6 +9,18 @@ class User:
         self.last_name = last_name
         self.email = email
         # settings = Settings(language=Langs.PL)
+
+    def serialize(self):
+        return {
+            DB_Keys.PROFILE.value: {
+                DB_Keys.FIRST_NAME.value: self.first_name,
+                DB_Keys.LAST_NAME.value: self.first_name,
+                DB_Keys.EMAIL.value: self.email,
+            }
+        }
+
+    def __repr__(self):
+        return f"User(id = {self.id}, first_name = {self.first_name}, last_name = {self.last_name}, email = {self.email})"
 
 
 class Statistics: ...

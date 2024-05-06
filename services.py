@@ -1,18 +1,15 @@
 from user import User
 from db_keys import DB_Keys
-from typing import Tuple
+from typing import Tuple, LiteralString
 import json
 
 
 def is_login_valid(login: str, password: str) -> Tuple[bool, str] | Tuple[bool, None]:
-    with open("database.json") as db:
-        data = json.load(db)
+    data = load_db_data(DB_Keys.LOGIN_DB.value)
 
     for user in data.keys():
-        user_login = data[user][DB_Keys.LOGIN_CREDENTIALS.value][DB_Keys.LOGIN.value]
-        user_password = data[user][DB_Keys.LOGIN_CREDENTIALS.value][
-            DB_Keys.PASSWORD.value
-        ]
+        user_login = data[user][DB_Keys.LOGIN.value]
+        user_password = data[user][DB_Keys.PASSWORD.value]
 
         if user_login == login and user_password == password:
             return True, user
@@ -21,7 +18,7 @@ def is_login_valid(login: str, password: str) -> Tuple[bool, str] | Tuple[bool, 
 
 
 def read_user_from_db(id: int) -> User:
-    with open("database.json") as db:
+    with open(DB_Keys.USER_DB.value) as db:
         user_data = json.load(db)[str(id)]
 
     return User(
@@ -32,4 +29,14 @@ def read_user_from_db(id: int) -> User:
     )
 
 
-def save_entity() -> None: ...
+def save_user_data(user: User) -> None:
+    data = load_db_data(DB_Keys.USER_DB.value)
+    data[user.id] = user.serialize()
+    with open(DB_Keys.USER_DB.value, "w") as db:
+        json.dump(data, db)
+
+
+def load_db_data(db_filename: str) -> dict:
+    with open(db_filename) as db:
+        data = json.load(db)
+    return data
