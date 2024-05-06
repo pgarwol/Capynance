@@ -1,10 +1,35 @@
 {
-    "0": {
-        "login": "admin",
-        "password": "admin",
-        "profile": {
-            "first_name": "Jan",
-            "last_name": "Kowalski"
-        }
+  "0": {
+    "login_credentials": {
+      "login": "admin",
+      "password": "admin"
+    },
+    "profile": {
+      "first_name": "Ziutek",
+      "last_name": "Ziutowski",
+      "email": "ziutek@mail.com"
     }
+  },
+  "1": {
+    "login_credentials": {
+      "login": "admin2",
+      "password": "admin2"
+    },
+    "profile": {
+      "first_name": "Jan",
+      "last_name": "Kowalski",
+      "email": "Kowalski@mail.com"
+    }
+  },
+  "2": {
+    "login_credentials": {
+      "login": "admin3",
+      "password": "admin3"
+    },
+    "profile": {
+      "first_name": "Kamil",
+      "last_name": "Ślimak",
+      "email": "kamilslimak@mail.com"
+    }
+  }
 }

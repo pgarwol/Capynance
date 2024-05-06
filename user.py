@@ -1,22 +1,15 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass
 class User:
-    def __init__(self, id, first_name, last_name, language):
-        # read_properties_from_db()
-        profile = Profile(first_name=first_name, last_name=last_name)
-        settings = Settings(language=Langs.PL)
+    def __init__(self, id: str, first_name: str, last_name: str, email: str):
+        self.id = id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        # settings = Settings(language=Langs.PL)
 
 
-@dataclass
-class Profile:
-    first_name: str
-    last_name: str
-
-
-@dataclass
 class Statistics: ...
 
 
@@ -27,6 +20,5 @@ class Langs(Enum):
     NL = 3
 
 
-@dataclass
 class Settings:
     language: Langs

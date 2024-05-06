@@ -10,7 +10,8 @@ from views.login import login
 from views.login import initialize_login_fields
 from components.component import Component
 from components.default_components import defaults
-import database_manager as db
+from session import Session
+import services
 import flet as ft
 
 
@@ -74,7 +75,12 @@ class App:
                 return
 
             # @TODO: Legit login system
-            if db.valid_login(login, password):
+            logged_in_successfully, user_id = services.is_login_valid(login, password)
+            if logged_in_successfully:
+                self.session = Session(user_id)
+                print(
+                    f"SUCCESSFULLY LOGGED IN USER: {self.session.logged_user.first_name} {self.session.logged_user.last_name} ({self.session.logged_user.email})"
+                )
                 page.go("/home")
 
         page.on_route_change = route_change
