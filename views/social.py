@@ -9,6 +9,11 @@ def add_friend_onclick(_) -> None:
     print('Friend added!')
 
 
+def new_post_onclick(_) -> None:
+    """Add a new post to the user's feed. Currently testing purposes only."""
+    print('New post added!')
+
+
 # Placeholder image
 usr_img = ft.Image(
     src='https://www.rainforest-alliance.org/wp-content'
@@ -157,6 +162,11 @@ achievements = ft.Column(
     ]
 )
 
+# Floating button to add a new post
+new_post_btn = ft.FloatingActionButton(
+    icon=ft.icons.ADD, on_click=new_post_onclick, bgcolor=ft.colors.RED_50
+)
+
 social = View(name="social", route="/social")
 social.add_component(defaults["STATISTICS_BAR"])
 social.add_component(Component([
@@ -168,8 +178,9 @@ social.add_component(Component([
             ft.Divider(),
             achievements,
         ],
-        scroll=ft.ScrollMode.ALWAYS,
+        scroll=ft.ScrollMode.HIDDEN,
         expand=True
-    )
+    ),
+    new_post_btn,
 ], "User data and image"))
 social.add_component(defaults["NAVIGATION_BAR"])
