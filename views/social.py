@@ -55,8 +55,7 @@ friend_1 = ft.Container(
     ft.Row(
         [
             ft.Image(
-                src='https://www.artmajeur.com/medias/standard/j/p/jp-eugster/artwork/16391596_kingsize-capybara-3'
-                    '.jpg?v=1671743788',
+                src='https://www.allthingswild.co.uk/wp-content/uploads/2019/11/capy.jpg',
                 border_radius=ft.border_radius.all(100),
                 height=50,
                 width=50
@@ -124,6 +123,7 @@ friend_3 = ft.Container(
     ), padding=ft.padding.only(left=15)
 )
 
+# Merge of friends updates
 friends_updates = ft.Column(
     [
         friends_updates_title,
@@ -133,12 +133,43 @@ friends_updates = ft.Column(
     ]
 )
 
+# Achievements container
+achievements_cont = ft.Container(
+    ft.Row(
+        [
+            ft.Image(src='https://placehold.co/60x60/png'),
+            ft.Image(src='https://placehold.co/60x60/png')
+        ]
+    ),
+    padding=ft.padding.all(13),
+    border=ft.border.all(2, ft.colors.GREY_300),
+    border_radius=ft.border_radius.all(20),
+    bgcolor=ft.colors.GREY_100,
+    alignment=ft.alignment.center,
+    margin=10
+)
+
+# User achievements
+achievements = ft.Column(
+    [
+        ft.Text('Achievements', size=25, weight=ft.FontWeight.W_200),
+        achievements_cont,
+    ]
+)
+
 social = View(name="social", route="/social")
 social.add_component(defaults["STATISTICS_BAR"])
 social.add_component(Component([
-    usr_data,
-    ft.Divider(),
-    friends_updates,
-    ft.Divider()
+    ft.Column(
+        [
+            usr_data,
+            ft.Divider(),
+            friends_updates,
+            ft.Divider(),
+            achievements,
+        ],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True
+    )
 ], "User data and image"))
 social.add_component(defaults["NAVIGATION_BAR"])
