@@ -4,7 +4,7 @@ from views.view import View
 import flet as ft
 
 
-def add_friend_onclick(e) -> None:
+def add_friend_onclick(_) -> None:
     """Add a friend to the user's friend list. Currently testing purposes only."""
     print('Friend added!')
 
@@ -21,7 +21,7 @@ usr_img = ft.Image(
 # User basic info as name and surname, basic data etd. Also, a button to add friends.
 usr_stats = ft.Column(
     [
-        ft.Text('Imię i nazwisko', size=25),
+        ft.Text('Imię i nazwisko', size=23, weight=ft.FontWeight.W_200),
         ft.Column(
             [
                 ft.Text('Basic dane'),
@@ -45,15 +45,100 @@ usr_data = ft.Row(
 )
 
 # News feed with friends updates. Shows last 3 updates.
-friends_updates_title = ft.Row([ft.Text('Friends updates', size=25)],
-                               alignment=ft.MainAxisAlignment.START)
+friends_updates_title = ft.Row(
+    [ft.Text('What\'s new?', size=25, weight=ft.FontWeight.W_200)],
+    alignment=ft.MainAxisAlignment.START
+)
+
+# Friend 1 update
+friend_1 = ft.Container(
+    ft.Row(
+        [
+            ft.Image(
+                src='https://www.artmajeur.com/medias/standard/j/p/jp-eugster/artwork/16391596_kingsize-capybara-3'
+                    '.jpg?v=1671743788',
+                border_radius=ft.border_radius.all(100),
+                height=50,
+                width=50
+            ),
+            ft.Container(
+                ft.Text(
+                    'Co tam kapibary??',
+                    size=15,
+                ),
+                padding=ft.padding.only(left=10)
+            )
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=10
+    ), padding=ft.padding.only(left=15)
+)
+
+# Friend 2 update
+# noinspection SpellCheckingInspection
+friend_2 = ft.Container(
+    ft.Row(
+        [
+            ft.Image(
+                src='https://www.columbuszoo.org/sites/default/files/styles/uncropped_xl/public/assets/tours/Capybara'
+                    '%200360%20-%20Amanda%20Carberry%2C%20Columbus%20Zoo%20and%20Aquarium%20%281%29.jpg?itok=6K8he2dl',
+                border_radius=ft.border_radius.all(100),
+                height=50,
+                width=50
+            ),
+            ft.Container(
+                ft.Text(
+                    'Siema, jestem kapibarą',
+                    size=15,
+                ),
+                padding=ft.padding.only(left=10)
+            )
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=10
+    ), padding=ft.padding.only(left=15)
+)
+
+# Friend 3 update
+# noinspection SpellCheckingInspection
+friend_3 = ft.Container(
+    ft.Row(
+        [
+            ft.Image(
+                src='https://people.com/thmb/ovi1vkp7e_cTTPC5LglB_Ii83n0=/1500x0/filters:no_upscale():max_bytes(150000)'
+                    ':strip_icc():focal(149x0:151x2)/capybara-1-300-dbd2c51946de4b989723201dac1f20ff.jpg',
+                border_radius=ft.border_radius.all(100),
+                height=50,
+                width=50
+            ),
+            ft.Container(
+                ft.Text(
+                    'Jedzenieeee',
+                    size=15,
+                ),
+                padding=ft.padding.only(left=10)
+            )
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=10
+    ), padding=ft.padding.only(left=15)
+)
+
 friends_updates = ft.Column(
     [
         friends_updates_title,
+        friend_1,
+        friend_2,
+        friend_3,
     ]
 )
 
 social = View(name="social", route="/social")
 social.add_component(defaults["STATISTICS_BAR"])
-social.add_component(Component([usr_data, ft.Divider(), friends_updates], "User data and image"))
+social.add_component(Component([
+    usr_data,
+    ft.Divider(),
+    friends_updates,
+    ft.Divider()
+], "User data and image"))
 social.add_component(defaults["NAVIGATION_BAR"])
