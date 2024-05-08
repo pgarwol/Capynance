@@ -10,6 +10,8 @@ from views.login import login
 from views.login import initialize_login_fields
 from components.component import Component
 from components.default_components import defaults
+from session import Session
+import services
 import flet as ft
 
 
@@ -73,7 +75,10 @@ class App:
                 return
 
             # @TODO: Legit login system
-            if login == "admin" and password == "admin":
+            logged_in_successfully, user_id = services.is_login_valid(login, password)
+            if logged_in_successfully:
+                self.session = Session(user_id)
+                print(self.session.logged_user)
                 page.go("/home")
 
         page.on_route_change = route_change
