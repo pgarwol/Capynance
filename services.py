@@ -1,5 +1,6 @@
 from user import User
 from db_keys import DB_Keys
+from utils.global_enums import String
 from typing import Tuple, LiteralString
 import json
 import random
@@ -48,8 +49,8 @@ def create_account(email: str, password: str):
     new_user_id = random.randint(1, 1000)
     user_data[new_user_id] = {
         DB_Keys.PROFILE.value: {
-            DB_Keys.FIRST_NAME.value: "",
-            DB_Keys.LAST_NAME.value: "",
+            DB_Keys.FIRST_NAME.value: String.EMPTY.value,
+            DB_Keys.LAST_NAME.value: String.EMPTY.value,
             DB_Keys.EMAIL.value: email,
         }
     }
