@@ -23,7 +23,7 @@ usr_img = ft.Image(
     width=150
 )
 
-# User basic info as name and surname, basic data etd. Also, a button to add friends.
+# User basic info as name and surname, basic data etc. Also, a button to add friends.
 usr_stats = ft.Column(
     [
         ft.Text('Imię i nazwisko', size=23, weight=ft.FontWeight.W_200),
@@ -164,7 +164,9 @@ achievements = ft.Column(
 
 # Floating button to add a new post
 new_post_btn = ft.FloatingActionButton(
-    icon=ft.icons.ADD, on_click=new_post_onclick, bgcolor=ft.colors.RED_50
+    icon=ft.icons.ADD,
+    on_click=new_post_onclick,
+    bgcolor=ft.colors.RED_600,
 )
 
 social = View(name="social", route="/social")
