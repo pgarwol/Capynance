@@ -1,8 +1,8 @@
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException
-from typing import Optional
 from io import StringIO
+from typing import Optional
 import flet as ft
 
 
@@ -36,6 +36,15 @@ class View(AbstractView):
         self._var = value
 
     def get_component(self, index: Optional[int] = 0) -> Component:
+        """
+        Retrieves a component at the specified index.
+
+        Args:
+            index (Optional[int]): The index of the component to retrieve. Defaults to 0.
+
+        Returns:
+            Component: The component at the specified index.
+        """
         return self._components[index]
 
     def build(
@@ -45,6 +54,18 @@ class View(AbstractView):
             ft.CrossAxisAlignment
         ] = ft.CrossAxisAlignment.CENTER,
     ) -> ft.View:
+        """
+        Builds a view with the specified vertical and horizontal alignment.
+
+        Args:
+            vertical_alignment (Optional[ft.MainAxisAlignment]): The vertical alignment of the view.
+                Defaults to MainAxisAlignment.START.
+            horizontal_alignment (Optional[ft.CrossAxisAlignment]): The horizontal alignment of the view.
+                Defaults to CrossAxisAlignment.CENTER.
+
+        Returns:
+            ft.View: The constructed view.
+        """
         unpacked_components = [
             control
             for item in self.components
@@ -61,12 +82,33 @@ class View(AbstractView):
         )
 
     def add_component(self, component: Component) -> None:
+        """
+        Adds a component to the view.
+
+        Args:
+            component (Component): The component to add to the view.
+
+        Returns:
+            None
+
+        Raises:
+            CapynanceException: If the component is invalid.
+        """
         if isinstance(component, Component):
             self.components.append(component)
         else:
             raise CapynanceException("invalid_components")
 
     def attach_page(self, page: ft.Page) -> None:
+        """
+        Attaches a page to the view.
+
+        Args:
+            page (ft.Page): The page to attach to the view.
+
+        Returns:
+            None
+        """
         if isinstance(page, ft.Page):
             self.var["page"] = page
 

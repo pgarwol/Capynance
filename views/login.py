@@ -1,13 +1,13 @@
-from views.view import View
-from components.component import Component
-import flet as ft
+import services
 from typing import Tuple
-from session import Session
 from views.home import home
-from views.register import register
+from session import Session
+from views.view import View
 from utils.colors import Color
 from utils.styles import Style
-import services
+from views.register import register
+from components.component import Component
+import flet as ft
 
 login = View(name="Login", route="/")
 

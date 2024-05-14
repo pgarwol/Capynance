@@ -1,12 +1,23 @@
 from user import User
 from utils.db_keys import DB_Keys
 from utils.global_enums import String
-from typing import Tuple, LiteralString
 import json
 import random
+from typing import Tuple
+from pathlib import Path
 
 
 def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, None]:
+    """
+    Checks if the login credentials are valid.
+
+    Args:
+        email (str): The email for login.
+        password (str): The password for login.
+
+    Returns:
+        Tuple[bool, str] | Tuple[bool, None]: A tuple indicating if the login is valid and the user ID if valid.
+    """
     data = load_db_data(DB_Keys.LOGIN_DB.value)
 
     for user in data.keys():
@@ -20,7 +31,16 @@ def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, 
 
 
 def read_user_from_db(id: int) -> User:
-    with open(DB_Keys.USER_DB.value) as db:
+    """
+    Reads user data from the database based on the provided ID.
+
+    Args:
+        id (int): The ID of the user to read from the database.
+
+    Returns:
+        User: The user dto created from the retrieved data.
+    """
+    with open(Path(DB_Keys.USER_DB.value)) as db:
         user_data = json.load(db)[str(id)]
 
     return User(
@@ -32,18 +52,46 @@ def read_user_from_db(id: int) -> User:
 
 
 def save_user_data(user: User) -> None:
+    """
+    Saves user data to the database.
+
+    Args:
+        user (User): The user dto to save.
+
+    Returns:
+        None
+    """
     data = load_db_data(DB_Keys.USER_DB.value)
     data[user.id] = user.serialize()
     dump_data(data, DB_Keys.USER_DB.value)
 
 
 def load_db_data(db_filename: str) -> dict:
-    with open(db_filename) as db:
+    """
+    Loads data from a JSON file.
+
+    Args:
+        db_filename (str): The filename of the JSON file to load.
+
+    Returns:
+        dict: The loaded data from the file.
+    """
+    with open(Path(db_filename), "r") as db:
         data = json.load(db)
     return data
 
 
-def create_account(email: str, password: str):
+def create_account(email: str, password: str) -> None:
+    """
+    Creates a new user account with the provided email and password.
+
+    Args:
+        email (str): The email of the user for the account.
+        password (str): The password for the user account.
+
+    Returns:
+        None
+    """
     user_data = load_db_data(DB_Keys.USER_DB.value)
     login_data = load_db_data(DB_Keys.LOGIN_DB.value)
     new_user_id = random.randint(1, 1000)
@@ -62,6 +110,16 @@ def create_account(email: str, password: str):
     dump_data(login_data, DB_Keys.LOGIN_DB.value)
 
 
-def dump_data(data: dict, db_filename: str):
-    with open(db_filename, "w") as db:
+def dump_data(data: dict, db_filename: str) -> None:
+    """
+    Dumps the provided data into a JSON file.
+
+    Args:
+        data (dict): The data to be dumped into the file.
+        db_filename (str): The filename of the JSON file.
+
+    Returns:
+        None
+    """
+    with open(Path(db_filename), "w") as db:
         json.dump(data, db)

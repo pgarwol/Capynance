@@ -1,6 +1,6 @@
 from utils.colors import Color
-from components.component import Component
 from utils.styles import Style
+from components.component import Component
 import flet as ft
 
 stats = Component(

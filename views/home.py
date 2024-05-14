@@ -1,6 +1,6 @@
-from components.default_components import defaults
-from components.component import Component
 from views.view import View
+from components.component import Component
+from components.default_components import defaults
 
 
 home = View(name="Main Screen", route="/home")

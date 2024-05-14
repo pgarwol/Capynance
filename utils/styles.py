@@ -1,5 +1,5 @@
-from enum import Enum
 from utils.colors import Color
+from enum import Enum
 import flet as ft
 
 

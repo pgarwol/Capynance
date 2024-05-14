@@ -1,6 +1,6 @@
-from components.abstract_component import AbstractComponent
 from utils.exceptions import CapynanceException
-from typing import List, Optional
+from components.abstract_component import AbstractComponent
+from typing import List
 import flet as ft
 
 
@@ -21,6 +21,19 @@ class Component(AbstractComponent):
         return self._description
 
     def extend(self, control: ft.Control, index: int | str) -> None:
+        """
+        Extends the content of the component with the specified control at the given index.
+
+        Args:
+            control (ft.Control): The control to add to the component's content.
+            index (int | str): The index at which to insert the control, or 'first'/'last' for specific positions.
+
+        Returns:
+            None
+
+        Raises:
+            CapynanceException: If the control is not a flet.Control, the index is unknown, or invalid.
+        """
         if not isinstance(control, ft.Control):
             raise CapynanceException("control not flet.Control")
 

@@ -1,12 +1,8 @@
-from components.default_components import defaults
-from components.component import Component
 from views.view import View
-from utils.global_enums import String
-from typing import Tuple
-import datetime
-from utils.colors import Color
 from utils.styles import Style
-from views.login import login
+from components.component import Component
+from components.default_components import defaults
+import datetime
 import flet as ft
 
 
@@ -85,7 +81,6 @@ calendar.add_component(
                     ft.DataColumn(ft.Text("Data")),
                     ft.DataColumn(ft.Text("Cel")),
                     ft.DataColumn(ft.Text("Ilość"), numeric=True),
-                    # ft.DataColumn(ft.Text(String.EMPTY.value)),
                 ],
                 rows=[],
             )
@@ -107,6 +102,10 @@ def add_savings_row(date: datetime, goal: str, amount: str, currency: str) -> No
     try:
         amount = round(float(amount), 2)
     except ValueError:
+        return
+
+    if amount < 0:
+        # TODO: error feedback
         return
 
     calendar.get_component(2).content[0].rows.append(

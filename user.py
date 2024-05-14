@@ -1,5 +1,5 @@
-from enum import Enum
 from utils.db_keys import DB_Keys
+from enum import Enum
 
 
 class User:
@@ -11,6 +11,12 @@ class User:
         # settings = Settings(language=Langs.PL)
 
     def serialize(self):
+        """
+        Serializes the user data into a dictionary format.
+
+        Returns:
+            dict: The serialized user data.
+        """
         return {
             DB_Keys.PROFILE.value: {
                 DB_Keys.FIRST_NAME.value: self.first_name,

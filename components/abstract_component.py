@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Any, Dict
-import flet as ft
 
 
 class AbstractComponent(ABC):

@@ -1,23 +1,21 @@
-import services
-from utils.ft_keys import FT_Keys
 from session import Session
 from views.shop import shop
 from views.home import home
 from views.scan import scan
 from views.login import login
-import datetime
-from views.register import register
+from views.login import login
 from views.social import social
+from utils.ft_keys import FT_Keys
+from views.register import register
 from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
 from views.calendar import calendar
-from components.component import Component
-from views.login import login
 from components.default_components import defaults
+import datetime
+import flet as ft
 
 all_views = (shop, home, scan, login, register, social, calendar, finances, settings)
-import flet as ft
 
 
 class App:
