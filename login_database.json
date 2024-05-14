@@ -1,7 +1,1 @@
-{
-  "0": { "email": "admin", "password": "admin" },
-  "1": { "email": "admin2", "password": "admin2" },
-  "2": { "email": "admin3", "password": "admin3" },
-  "273": { "email": "siema@mail.com", "password": "aaa" },
-  "30": { "email": "siema@mail.com", "password": "siema" }
-}
+{"0": {"email": "admin", "password": "admin"}, "1": {"email": "admin2", "password": "admin2"}, "2": {"email": "admin3", "password": "admin3"}, "273": {"email": "siema@mail.com", "password": "aaa"}, "30": {"email": "siema@mail.com", "password": "siema"}, "41": {"email": "email@siemanko.com", "password": "eee"}, "148": {"email": "admin@com.pl", "password": "siema"}, "678": {"email": "admin@com.pl", "password": "siema"}, "530": {"email": "register@com.pl", "password": "admin"}}

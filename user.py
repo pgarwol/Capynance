@@ -1,5 +1,5 @@
 from enum import Enum
-from db_keys import DB_Keys
+from utils.db_keys import DB_Keys
 
 
 class User:

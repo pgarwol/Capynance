@@ -1,25 +1,22 @@
 import services
-from ft_keys import FT_Keys
+from utils.ft_keys import FT_Keys
 from session import Session
 from views.shop import shop
 from views.home import home
 from views.scan import scan
 from views.login import login
-from views.register import (
-    register,
-    do_register,
-    validate_email,
-    create_account,
-    initialize_register_fields,
-)
+import datetime
+from views.register import register
 from views.social import social
 from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
 from views.calendar import calendar
 from components.component import Component
-from views.login import initialize_login_fields
+from views.login import login
 from components.default_components import defaults
+
+all_views = (shop, home, scan, login, register, social, calendar, finances, settings)
 import flet as ft
 
 
@@ -39,35 +36,21 @@ class App:
     }
 
     def main(self, page: ft.Page) -> None:
+        def attach_pages() -> None:
+            for view in all_views:
+                view.attach_page(page)
+
         def on_init() -> None:
+            attach_pages()
+
             defaults["NAVIGATION_BAR"].content[0].content.on_change = lambda e: page.go(
                 route=self.navigation_bar_items[e.control.selected_index][
                     FT_Keys.ROUTE.value
                 ]
             )
-
-            login_email_input, login_password_input = initialize_login_fields()
-            login.get_component(0).content[-2].on_click = lambda _: log_user_in(
-                login_email_input.value, login_password_input.value
-            )
-            login.get_component(0).content[-1].on_click = lambda _: page.go(
-                register.route
-            )
-
-            (
-                register_email_input,
-                register_password_input,
-                register_confirm_pwd_input,
-            ) = initialize_register_fields()
-
-            register.get_component(0).content[-2].on_click = lambda _: page.go(
-                login.route
-            )
-            register.get_component(0).content[-1].on_click = lambda _: do_register(
-                register_email_input.value,
-                register_password_input.value,
-                register_confirm_pwd_input.value,
-            )
+            defaults["STATISTICS_BAR"].content[0].actions[
+                0
+            ].on_click = lambda _: page.update()
 
         page.title = self.name
 
@@ -103,16 +86,6 @@ class App:
                 ),
                 None,
             )
-
-        def log_user_in(email: str | None, password: str | None):
-            if email is None or password is None:
-                return
-
-            logged_in_successfully, user_id = services.is_login_valid(email, password)
-            if logged_in_successfully:
-                self.session = Session(user_id)
-                print(self.session.logged_user)
-                page.go(home.route)
 
         page.on_route_change = route_change
         page.on_view_pop = view_pop

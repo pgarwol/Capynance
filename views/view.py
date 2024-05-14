@@ -7,10 +7,13 @@ import flet as ft
 
 
 class View(AbstractView):
+    _var = None
+
     def __init__(self, name: str, route: str):
         self._name = name
         self._route = route
         self._components = []
+        self._var = {}
 
     @property
     def name(self):
@@ -23,6 +26,14 @@ class View(AbstractView):
     @property
     def components(self):
         return self._components
+
+    @property
+    def var(self):
+        return self._var
+
+    @var.setter
+    def var(self, value):
+        self._var = value
 
     def get_component(self, index: Optional[int] = 0) -> Component:
         return self._components[index]
@@ -54,6 +65,10 @@ class View(AbstractView):
             self.components.append(component)
         else:
             raise CapynanceException("invalid_components")
+
+    def attach_page(self, page: ft.Page) -> None:
+        if isinstance(page, ft.Page):
+            self.var["page"] = page
 
     def __repr__(self):
         def list_all_component_descriptions(self) -> str:
