@@ -10,7 +10,7 @@ from views.register import register
 from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
-from views.calendar import calendar
+from views.calendar import calendar, init_calendar
 from components.default_components import defaults
 import datetime
 import flet as ft
@@ -20,6 +20,7 @@ all_views = (shop, home, scan, login, register, social, calendar, finances, sett
 
 class App:
     name = "Capynance."
+    session = None
 
     navigation_bar_items = {
         0: {FT_Keys.VIEW.value: scan, FT_Keys.ROUTE.value: scan.route},
@@ -37,6 +38,7 @@ class App:
         def attach_pages() -> None:
             for view in all_views:
                 view.attach_page(page)
+                view.attach_session(self.session)
 
         def on_init() -> None:
             attach_pages()
@@ -88,6 +90,9 @@ class App:
         page.on_route_change = route_change
         page.on_view_pop = view_pop
         page.go(page.route)
+
+    def set_session(self, session: Session) -> None:
+        self.session = session
 
 
 if __name__ == "__main__":

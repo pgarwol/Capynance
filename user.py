@@ -1,13 +1,25 @@
 from utils.db_keys import DB_Keys
+import services
 from enum import Enum
 
 
 class User:
-    def __init__(self, id: str, first_name: str, last_name: str, email: str):
+    def __init__(
+        self,
+        id: str,
+        profile: dict,
+        calendar: dict,
+        finances: dict,
+        social: dict,
+        settings: dict,
+    ):
         self.id = id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
+        self.profile = profile
+        self.calendar = calendar
+        self.finances = finances
+        self.social = social
+        self.settings = settings
+
         # settings = Settings(language=Langs.PL)
 
     def serialize(self):
@@ -17,16 +29,10 @@ class User:
         Returns:
             dict: The serialized user data.
         """
-        return {
-            DB_Keys.PROFILE.value: {
-                DB_Keys.FIRST_NAME.value: self.first_name,
-                DB_Keys.LAST_NAME.value: self.first_name,
-                DB_Keys.EMAIL.value: self.email,
-            }
-        }
+        return {DB_Keys.PROFILE.value: self.profile}
 
     def __repr__(self):
-        return f"User(id = {self.id}, first_name = {self.first_name}, last_name = {self.last_name}, email = {self.email})"
+        return f"User(id = {self.id}, first_name = {self.profile[DB_Keys.FIRST_NAME.value]}, last_name = {self.profile[DB_Keys.LAST_NAME.value]}, email = {self.profile[DB_Keys.EMAIL.value]})"
 
 
 class Statistics: ...

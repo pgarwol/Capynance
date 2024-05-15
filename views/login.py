@@ -7,6 +7,7 @@ from utils.colors import Color
 from utils.styles import Style
 from views.register import register
 from components.component import Component
+from views.calendar import calendar, init_calendar
 import flet as ft
 
 login = View(name="Login", route="/")
@@ -61,3 +62,5 @@ def log_user_in(email: str | None, password: str | None):
         session = Session(user_id, language="pl")
         print(session.logged_user)
         login.var["page"].go(home.route)
+        calendar.var["session"] = session
+        init_calendar()

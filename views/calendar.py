@@ -1,3 +1,6 @@
+import services
+from user import User
+from session import Session
 from views.view import View
 from utils.styles import Style
 from components.component import Component
@@ -91,7 +94,9 @@ calendar.add_component(
 calendar.add_component(defaults["NAVIGATION_BAR"])
 
 
-def add_savings_row(date: datetime, goal: str, amount: str, currency: str) -> None:
+def add_savings_row(
+    date: datetime.datetime, goal: str, amount: str, currency: str
+) -> None:
     if goal is None or amount is None:
         return
     if date is None:
@@ -132,6 +137,27 @@ def change_date():
 
 # TODO
 def remove_savings_row(row) -> None: ...
+
+
+def retrieve_dto_data(dto: User) -> None:
+    view_data = services.get_view_data(view_name=calendar.name, user_id=dto.id)
+    savings_rows = view_data["savings_rows"]
+    insert_dto_data_to_datarows(savings_rows)
+
+
+def insert_dto_data_to_datarows(data: dict):
+    for key in data:
+        add_savings_row(
+            date=datetime.datetime.strptime(data[key]["savings_deadline"], "%d-%m-%Y"),
+            goal=data[key]["savings_goal"],
+            amount=float(data[key]["savings_amount"]),
+            currency=data[key]["savings_currency"],
+        )
+
+
+def init_calendar() -> None:
+    if "session" in calendar.var:
+        retrieve_dto_data(dto=calendar.var["session"].logged_user)
 
 
 print(calendar)

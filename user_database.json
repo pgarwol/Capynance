@@ -1,1 +1,28 @@
-{"0": {"profile": {"first_name": "Ziutek", "last_name": "Ziutek", "email": "test@mail.com"}}, "1": {"profile": {"first_name": "Jan", "last_name": "Kowalski", "email": "Kowalski@mail.com"}}, "2": {"profile": {"first_name": "Kamil", "last_name": "Slimak", "email": "kamilslimak@mail.com"}}, "502": {"siemanko": "siema"}, "273": {"profile": {"first_name": "", "last_name": "", "email": "siema@mail.com"}}, "30": {"profile": {"first_name": "", "last_name": "", "email": "siema@mail.com"}}, "41": {"profile": {"first_name": "", "last_name": "", "email": "email@siemanko.com"}}, "148": {"profile": {"first_name": "", "last_name": "", "email": "admin@com.pl"}}, "678": {"profile": {"first_name": "", "last_name": "", "email": "admin@com.pl"}}, "530": {"profile": {"first_name": "", "last_name": "", "email": "register@com.pl"}}, "460": {"profile": {"first_name": "", "last_name": "", "email": "eqw@com.pl"}}}
+{
+  "0": {
+    "profile": {
+      "first_name": "Ziutek",
+      "last_name": "Ziutek",
+      "email": "test@mail.com"
+    },
+    "calendar": {
+      "savings_rows": {
+        "0": {
+          "savings_deadline": "27-05-2024",
+          "savings_goal": "Saab 9-3 Turbo",
+          "savings_amount": "15000.00",
+          "savings_currency": "ZŁ"
+        },
+        "1": {
+          "savings_deadline": "27-05-2024",
+          "savings_goal": "Guma Turbo",
+          "savings_amount": "1.00",
+          "savings_currency": "ZŁ"
+        }
+      }
+    },
+    "finances": {},
+    "social": {},
+    "settings": {}
+  }
+}

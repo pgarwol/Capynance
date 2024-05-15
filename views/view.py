@@ -1,3 +1,4 @@
+from session import Session
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException
@@ -111,6 +112,19 @@ class View(AbstractView):
         """
         if isinstance(page, ft.Page):
             self.var["page"] = page
+
+    def attach_session(self, session: Session) -> None:
+        """
+        Attaches a session to the view.
+
+        Args:
+            session (Session): The session to attach to the view.
+
+        Returns:
+            None
+        """
+        if isinstance(session, Session):
+            self.var["session"] = session
 
     def __repr__(self):
         def list_all_component_descriptions(self) -> str:

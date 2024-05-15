@@ -3,8 +3,8 @@ from utils.db_keys import DB_Keys
 from utils.global_enums import String
 import json
 import random
-from typing import Tuple
 from pathlib import Path
+from typing import Tuple
 
 
 def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, None]:
@@ -30,7 +30,7 @@ def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, 
     return False, None
 
 
-def read_user_from_db(id: int) -> User:
+def read_user_from_db(id: str | int) -> User:
     """
     Reads user data from the database based on the provided ID.
 
@@ -40,14 +40,16 @@ def read_user_from_db(id: int) -> User:
     Returns:
         User: The user dto created from the retrieved data.
     """
-    with open(Path(DB_Keys.USER_DB.value)) as db:
+    with open(Path(DB_Keys.USER_DB.value), encoding=DB_Keys.ENCODING.value) as db:
         user_data = json.load(db)[str(id)]
 
     return User(
         id=id,
-        first_name=user_data[DB_Keys.PROFILE.value][DB_Keys.FIRST_NAME.value],
-        last_name=user_data[DB_Keys.PROFILE.value][DB_Keys.LAST_NAME.value],
-        email=user_data[DB_Keys.PROFILE.value][DB_Keys.EMAIL.value],
+        profile=user_data[DB_Keys.PROFILE.value],
+        calendar=user_data[DB_Keys.CALENDAR.value],
+        finances=user_data[DB_Keys.FINANCES.value],
+        social=user_data[DB_Keys.SOCIAL.value],
+        settings=user_data[DB_Keys.SETTINGS.value],
     )
 
 
@@ -76,7 +78,7 @@ def load_db_data(db_filename: str) -> dict:
     Returns:
         dict: The loaded data from the file.
     """
-    with open(Path(db_filename), "r") as db:
+    with open(Path(db_filename), "r", encoding=DB_Keys.ENCODING.value) as db:
         data = json.load(db)
     return data
 
@@ -121,5 +123,19 @@ def dump_data(data: dict, db_filename: str) -> None:
     Returns:
         None
     """
-    with open(Path(db_filename), "w") as db:
+    with open(Path(db_filename), "w", encoding=DB_Keys.ENCODING.value) as db:
         json.dump(data, db)
+
+
+def get_view_data(view_name: str, user_id: str | int) -> dict:
+    """
+    Retrieve data for a specific view associated with a user.
+
+    Args:
+        view_name (str): The name of the view to retrieve data for.
+        user_id (str | int): The ID of the user.
+
+    Returns:
+        dict: The data for the specified view associated with the user.
+    """
+    return load_db_data(DB_Keys.USER_DB.value)[str(user_id)][view_name]
