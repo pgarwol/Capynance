@@ -113,19 +113,30 @@ def add_savings_row(
         # TODO: error feedback
         return
 
-    calendar.get_component(2).content[0].rows.append(
-        ft.DataRow(
-            on_long_press=lambda row: remove_savings_row(row),
-            cells=[
-                ft.DataCell(ft.Text(f"{date:%d-%m-%Y}")),
-                ft.DataCell(ft.Text(goal)),
-                ft.DataCell(ft.Text(f"{amount:.2f} {currency}")),
-            ],
+    if not calendar.var["session"].logged_user.does_savings_goal_exist(goal):
+        calendar.get_component(2).content[0].rows.append(
+            ft.DataRow(
+                on_long_press=lambda row: remove_savings_row(row),
+                cells=[
+                    ft.DataCell(ft.Text(f"{date:%d-%m-%Y}")),
+                    ft.DataCell(ft.Text(goal)),
+                    ft.DataCell(ft.Text(f"{amount:.2f} {currency}")),
+                ],
+            )
         )
-    )
+        calendar.var["session"].logged_user.from_savings_datarow(
+            date=f"{date:%d-%m-%Y}",
+            goal=goal,
+            amount=f"{amount:.2f}",
+            currency=currency,
+        )
+        services.save_user_data(calendar.var["session"].logged_user)
 
-    if "page" in calendar.var:
-        calendar.var["page"].update()
+        if "page" in calendar.var:
+            calendar.var["page"].update()
+    else:
+        ...
+        # "TODO: user error output: SAVING GOAL ALREADY EXISTS
 
 
 def change_date():

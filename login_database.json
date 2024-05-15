@@ -1,3 +1,4 @@
 {
-  "0": { "email": "admin", "password": "admin" }
+  "0": { "email": "admin", "password": "admin" },
+  "1": { "email": "test", "password": "test" }
 }

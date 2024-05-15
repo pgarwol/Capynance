@@ -11,13 +11,45 @@
           "savings_deadline": "27-05-2024",
           "savings_goal": "Saab 9-3 Turbo",
           "savings_amount": "15000.00",
-          "savings_currency": "ZŁ"
+          "savings_currency": "Z\u0141"
         },
         "1": {
           "savings_deadline": "27-05-2024",
           "savings_goal": "Guma Turbo",
           "savings_amount": "1.00",
-          "savings_currency": "ZŁ"
+          "savings_currency": "Z\u0141"
+        },
+        "2": {
+          "savings_deadline": "30-05-2024",
+          "savings_goal": "jajco",
+          "savings_amount": "50.00",
+          "savings_currency": "USD"
+        }
+      }
+    },
+    "finances": {},
+    "social": {},
+    "settings": {}
+  },
+  "1": {
+    "profile": {
+      "first_name": "Testowy",
+      "last_name": "Tester",
+      "email": "tester@mail.com"
+    },
+    "calendar": {
+      "savings_rows": {
+        "0": {
+          "savings_deadline": "01-06-2024",
+          "savings_goal": "Jajka 10 szt.",
+          "savings_amount": "10.00",
+          "savings_currency": "Z\u0141"
+        },
+        "1": {
+          "savings_deadline": "09-09-2025",
+          "savings_goal": "Taczka gruzu",
+          "savings_amount": "21.37",
+          "savings_currency": "EUR"
         }
       }
     },
