@@ -1,34 +1,34 @@
-from utils.colors import Color
+from utils.enums import Colors
 from enum import Enum
 import flet as ft
 
 
 class Style(Enum):
     ElevatedButton = {
-        "color": Color.BLACK.value,
-        "bgcolor": Color.ACCENT.value,
+        "color": Colors.BLACK,
+        "bgcolor": Colors.ACCENT,
     }
     TextField = {
         "border": None,
         "border_width": 0,
         "filled": True,
-        "cursor_color": Color.PRIMARY_LIGHTER.value,
+        "cursor_color": Colors.PRIMARY_LIGHTER,
         "label_style": ft.TextStyle(
-            color=Color.PRIMARY_LIGHTER.value, weight=ft.FontWeight.W_400
+            color=Colors.PRIMARY_LIGHTER, weight=ft.FontWeight.W_400
         ),
     }
     IconButton = {
-        "bgcolor": Color.PRIMARY_LIGHTER.value,
-        "icon_color": Color.BLACK.value,
+        "bgcolor": Colors.PRIMARY_LIGHTER,
+        "icon_color": Colors.BLACK,
     }
     AppBar = {
-        "bgcolor": Color.PRIMARY_DARKER.value,
-        "color": Color.BLACK.value,
+        "bgcolor": Colors.PRIMARY_DARKER,
+        "color": Colors.BLACK,
     }
     CupertinoSlidingSegmentedButton = {
-        "thumb_color": Color.PRIMARY_DARKER.value,
-        "bgcolor": Color.SECONDARY.value,
+        "thumb_color": Colors.PRIMARY_DARKER,
+        "bgcolor": Colors.SECONDARY,
     }
     Dropdown = {
-        "color": Color.WHITE.value,
+        "color": Colors.WHITE,
     }

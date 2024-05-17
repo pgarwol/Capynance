@@ -1,4 +1,5 @@
 from enum import StrEnum
+import flet as ft
 
 
 class String(StrEnum):
@@ -21,7 +22,7 @@ class DBFields(StrEnum):
     SETTINGS = "settings"
 
 
-class FLET_NAMES(StrEnum):
+class FletNames(StrEnum):
     VIEW = "view"
     ROUTE = "route"
     CALENDAR = "calendar"
@@ -33,3 +34,12 @@ class FLET_NAMES(StrEnum):
     SETTINGS = "settings"
     SHOP = "shop"
     SOCIAL = "social"
+
+
+class Colors(StrEnum):
+    PRIMARY_DARKER = "#B1DAC9"
+    PRIMARY_LIGHTER = ft.colors.TEAL_ACCENT_100
+    SECONDARY = "#EEEDD7"
+    ACCENT = "#ECDB5E"
+    WHITE = ft.colors.WHITE
+    BLACK = ft.colors.BLACK

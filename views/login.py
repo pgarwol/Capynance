@@ -1,6 +1,6 @@
 from views.home import home
 from views.view import View
-from utils.colors import Color
+from utils.enums import Color
 from utils.styles import Style
 import utils.services as services
 from views.register import register

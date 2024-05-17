@@ -1,4 +1,4 @@
-from utils.colors import Color
+from utils.enums import Colors
 from utils.styles import Style
 from components.component import Component
 import flet as ft
@@ -25,46 +25,46 @@ navigation = Component(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.QR_CODE_SCANNER,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.SHOPPING_CART_ROUNDED,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.CALENDAR_MONTH,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.HOME_ROUNDED,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.ATTACH_MONEY,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
-                        content=ft.Icon(name=ft.icons.PEOPLE, color=Color.BLACK.value),
+                        content=ft.Icon(name=ft.icons.PEOPLE, color=Colors.BLACK),
                     ),
                     ft.Container(
                         padding=ft.padding.symmetric(0, 10),
                         content=ft.Icon(
                             name=ft.icons.SETTINGS_ROUNDED,
-                            color=Color.BLACK.value,
+                            color=Colors.BLACK,
                         ),
                     ),
                 ],
