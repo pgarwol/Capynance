@@ -1,6 +1,5 @@
-from utils.db_keys import DB_Keys
+from utils.enums import DBFields
 import datetime
-from enum import Enum
 
 
 class User:
@@ -30,11 +29,11 @@ class User:
             dict: The serialized user data.
         """
         return {
-            DB_Keys.PROFILE.value: self.profile,
-            DB_Keys.CALENDAR.value: self.calendar,
-            DB_Keys.FINANCES.value: self.finances,
-            DB_Keys.SOCIAL.value: self.social,
-            DB_Keys.SETTINGS.value: self.settings,
+            DBFields.PROFILE: self.profile,
+            DBFields.CALENDAR: self.calendar,
+            DBFields.FINANCES: self.finances,
+            DBFields.SOCIAL: self.social,
+            DBFields.SETTINGS: self.settings,
         }
 
     # Calendar view
@@ -66,14 +65,4 @@ class User:
         )
 
     def __repr__(self):
-        return f"User(id = {self.id}, first_name = {self.profile[DB_Keys.FIRST_NAME.value]}, last_name = {self.profile[DB_Keys.LAST_NAME.value]}, email = {self.profile[DB_Keys.EMAIL.value]})"
-
-
-class Statistics: ...
-
-
-class Langs(Enum):
-    PL = 0
-    EN = 1
-    DE = 2
-    NL = 3
+        return f"User(id = {self.id}, first_name = {self.profile[DBFields.FIRST_NAME]}, last_name = {self.profile[DBFields.LAST_NAME]}, email = {self.profile[DBFields.EMAIL]})"

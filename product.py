@@ -1,8 +1,6 @@
 import json
 from pathlib import Path
 
-_PRODUCT_DATABASE_NAME = "shop_database.json"
-
 
 class Product:
     def __init__(self, id, name, images, price):

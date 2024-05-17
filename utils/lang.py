@@ -1,5 +1,5 @@
 import configparser
-from utils.db_keys import DB_Keys
+from utils.enums import DBFields
 from pathlib import Path
 from typing import Optional
 
@@ -21,12 +21,12 @@ def read_lang_file(language: str, section: str) -> dict:
     config = configparser.ConfigParser()
     try:
         config.read(
-            Path(f"{DB_Keys.RELATIVE_DB_PATH.value}lang_{language}.properties"),
+            Path(f"{DBFields.RELATIVE_DB_PATH}lang_{language}.properties"),
             encoding="utf-8",
         )
     except FileNotFoundError:
         config.read(
-            Path(f"{DB_Keys.RELATIVE_DB_PATH.value}lang_en.properties"),
+            Path(f"{DBFields.RELATIVE_DB_PATH}lang_en.properties"),
             encoding="utf-8",
         )
     finally:

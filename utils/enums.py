@@ -1,7 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class DB_Keys(Enum):
+class String(StrEnum):
+    EMPTY = ""
+
+
+class DBFields(StrEnum):
     RELATIVE_DB_PATH = "./database/"
     ENCODING = "utf-8"
     LOGIN_DB = "login_database.json"
@@ -15,3 +19,17 @@ class DB_Keys(Enum):
     FINANCES = "finances"
     SOCIAL = "social"
     SETTINGS = "settings"
+
+
+class FLET_NAMES(StrEnum):
+    VIEW = "view"
+    ROUTE = "route"
+    CALENDAR = "calendar"
+    FINANCES = "finances"
+    HOME = "home"
+    LOGIN = "login"
+    REGISTER = "register"
+    SCAN = "scan"
+    SETTINGS = "settings"
+    SHOP = "shop"
+    SOCIAL = "social"

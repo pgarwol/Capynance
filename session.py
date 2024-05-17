@@ -1,8 +1,7 @@
-from utils.services import read_user_from_db
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
-class Session:
+class Session(ABC):
 
     @classmethod
     def set_logged_user(cls, logged_user):

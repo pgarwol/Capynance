@@ -1,10 +1,11 @@
 from user import User
-from utils.db_keys import DB_Keys
-from utils.global_enums import String
+from utils.enums import DBFields, String
 import json
 import random
 from pathlib import Path
 from typing import Tuple
+
+encoding = DBFields.ENCODING.value
 
 
 def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, None]:
@@ -18,11 +19,11 @@ def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, 
     Returns:
         Tuple[bool, str] | Tuple[bool, None]: A tuple indicating if the login is valid and the user ID if valid.
     """
-    data = load_db_data(DB_Keys.LOGIN_DB.value)
+    data = load_db_data(DBFields.LOGIN_DB)
 
     for user in data.keys():
-        user_login = data[user][DB_Keys.EMAIL.value]
-        user_password = data[user][DB_Keys.PASSWORD.value]
+        user_login = data[user][DBFields.EMAIL]
+        user_password = data[user][DBFields.PASSWORD]
 
         if user_login == email and user_password == password:
             return True, user
@@ -41,18 +42,18 @@ def read_user_from_db(id: str | int) -> User:
         User: The user dto created from the retrieved data.
     """
     with open(
-        Path(DB_Keys.RELATIVE_DB_PATH.value + DB_Keys.USER_DB.value).resolve(),
-        encoding=DB_Keys.ENCODING.value,
+        Path(DBFields.RELATIVE_DB_PATH + DBFields.USER_DB).resolve(),
+        encoding=encoding,
     ) as db:
         user_data = json.load(db)[str(id)]
 
     return User(
         id=id,
-        profile=user_data[DB_Keys.PROFILE.value],
-        calendar=user_data[DB_Keys.CALENDAR.value],
-        finances=user_data[DB_Keys.FINANCES.value],
-        social=user_data[DB_Keys.SOCIAL.value],
-        settings=user_data[DB_Keys.SETTINGS.value],
+        profile=user_data[DBFields.PROFILE],
+        calendar=user_data[DBFields.CALENDAR],
+        finances=user_data[DBFields.FINANCES],
+        social=user_data[DBFields.SOCIAL],
+        settings=user_data[DBFields.SETTINGS],
     )
 
 
@@ -66,9 +67,9 @@ def save_user_data(user: User) -> None:
     Returns:
         None
     """
-    data = load_db_data(DB_Keys.USER_DB.value)
+    data = load_db_data(DBFields.USER_DB)
     data[user.id] = user.serialize()
-    dump_data(data, DB_Keys.USER_DB.value)
+    dump_data(data, DBFields.USER_DB)
 
 
 def load_db_data(db_filename: str) -> dict:
@@ -82,9 +83,9 @@ def load_db_data(db_filename: str) -> dict:
         dict: The loaded data from the file.
     """
     with open(
-        Path(DB_Keys.RELATIVE_DB_PATH.value + db_filename).resolve(),
+        Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
         "r",
-        encoding=DB_Keys.ENCODING.value,
+        encoding=encoding,
     ) as db:
         data = json.load(db)
     return data
@@ -101,22 +102,22 @@ def create_account(email: str, password: str) -> None:
     Returns:
         None
     """
-    user_data = load_db_data(DB_Keys.USER_DB.value)
-    login_data = load_db_data(DB_Keys.LOGIN_DB.value)
+    user_data = load_db_data(DBFields.USER_DB)
+    login_data = load_db_data(DBFields.LOGIN_DB)
     new_user_id = random.randint(1, 1000)
     user_data[new_user_id] = {
-        DB_Keys.PROFILE.value: {
-            DB_Keys.FIRST_NAME.value: String.EMPTY.value,
-            DB_Keys.LAST_NAME.value: String.EMPTY.value,
-            DB_Keys.EMAIL.value: email,
+        DBFields.PROFILE: {
+            DBFields.FIRST_NAME: String.EMPTY,
+            DBFields.LAST_NAME: String.EMPTY,
+            DBFields.EMAIL: email,
         }
     }
     login_data[new_user_id] = {
-        DB_Keys.EMAIL.value: email,
-        DB_Keys.PASSWORD.value: password,
+        DBFields.EMAIL: email,
+        DBFields.PASSWORD: password,
     }
-    dump_data(user_data, DB_Keys.USER_DB.value)
-    dump_data(login_data, DB_Keys.LOGIN_DB.value)
+    dump_data(user_data, DBFields.USER_DB)
+    dump_data(login_data, DBFields.LOGIN_DB)
 
 
 def dump_data(data: dict, db_filename: str) -> None:
@@ -131,9 +132,9 @@ def dump_data(data: dict, db_filename: str) -> None:
         None
     """
     with open(
-        Path(DB_Keys.RELATIVE_DB_PATH.value + db_filename).resolve(),
+        Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
         "w",
-        encoding=DB_Keys.ENCODING.value,
+        encoding=encoding,
     ) as db:
         json.dump(data, db)
 
@@ -149,4 +150,4 @@ def get_view_data(view_name: str, user_id: str | int) -> dict:
     Returns:
         dict: The data for the specified view associated with the user.
     """
-    return load_db_data(DB_Keys.USER_DB.value)[str(user_id)][view_name]
+    return load_db_data(DBFields.USER_DB)[str(user_id)][view_name]

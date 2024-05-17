@@ -5,7 +5,7 @@ from views.home import home
 from views.scan import scan
 from views.login import login
 from views.social import social
-from utils.ft_keys import FT_Keys
+from utils.enums import DBFields, FLET_NAMES
 from views.register import register
 from views.calendar import calendar
 from views.finances import finances
@@ -23,15 +23,15 @@ class App:
     session = None
 
     navigation_bar_items = {
-        0: {FT_Keys.VIEW.value: scan, FT_Keys.ROUTE.value: scan.route},
-        1: {FT_Keys.VIEW.value: shop, FT_Keys.ROUTE.value: shop.route},
-        2: {FT_Keys.VIEW.value: calendar, FT_Keys.ROUTE.value: calendar.route},
-        3: {FT_Keys.VIEW.value: home, FT_Keys.ROUTE.value: home.route},
-        4: {FT_Keys.VIEW.value: finances, FT_Keys.ROUTE.value: finances.route},
-        5: {FT_Keys.VIEW.value: social, FT_Keys.ROUTE.value: social.route},
-        6: {FT_Keys.VIEW.value: settings, FT_Keys.ROUTE.value: settings.route},
-        7: {FT_Keys.VIEW.value: login, FT_Keys.ROUTE.value: login.route},
-        8: {FT_Keys.VIEW.value: register, FT_Keys.ROUTE.value: register.route},
+        0: {FLET_NAMES.VIEW: scan, FLET_NAMES.ROUTE: scan.route},
+        1: {FLET_NAMES.VIEW: shop, FLET_NAMES.ROUTE: shop.route},
+        2: {FLET_NAMES.VIEW: calendar, FLET_NAMES.ROUTE: calendar.route},
+        3: {FLET_NAMES.VIEW: home, FLET_NAMES.ROUTE: home.route},
+        4: {FLET_NAMES.VIEW: finances, FLET_NAMES.ROUTE: finances.route},
+        5: {FLET_NAMES.VIEW: social, FLET_NAMES.ROUTE: social.route},
+        6: {FLET_NAMES.VIEW: settings, FLET_NAMES.ROUTE: settings.route},
+        7: {FLET_NAMES.VIEW: login, FLET_NAMES.ROUTE: login.route},
+        8: {FLET_NAMES.VIEW: register, FLET_NAMES.ROUTE: register.route},
     }
 
     def main(self, page: ft.Page) -> None:
@@ -44,7 +44,7 @@ class App:
 
             defaults["NAVIGATION_BAR"].content[0].content.on_change = lambda e: page.go(
                 route=self.navigation_bar_items[e.control.selected_index][
-                    FT_Keys.ROUTE.value
+                    FLET_NAMES.ROUTE
                 ]
             )
             defaults["STATISTICS_BAR"].content[0].actions[
@@ -59,13 +59,13 @@ class App:
             page.views.clear()
             page.views.append(
                 self.navigation_bar_items[get_view_index(route=home.route)][
-                    FT_Keys.VIEW.value
+                    FLET_NAMES.VIEW
                 ].build()
             )
             if page.route != home.route:
                 page.views.append(
                     self.navigation_bar_items[get_view_index(route=page.route)][
-                        FT_Keys.VIEW.value
+                        FLET_NAMES.VIEW
                     ].build()
                 )
 
@@ -81,7 +81,7 @@ class App:
                 (
                     key
                     for key in self.navigation_bar_items.keys()
-                    if self.navigation_bar_items[key][FT_Keys.ROUTE.value] == route
+                    if self.navigation_bar_items[key][FLET_NAMES.ROUTE] == route
                 ),
                 None,
             )
