@@ -4,7 +4,7 @@ from components.default_components import defaults
 import flet as ft
 
 
-shop = View(name="Shop", route="/shop")
+shop = View(name="shop", route="/shop")
 shop.add_component(defaults["STATISTICS_BAR"])
 shop.add_component(Component([ft.Text("SKLEP")], "View representing Shop."))
 shop.add_component(defaults["NAVIGATION_BAR"])

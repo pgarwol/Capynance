@@ -1,4 +1,4 @@
-from session import Session
+from lang import Lang
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException
@@ -15,6 +15,10 @@ class View(AbstractView):
         self._route = route
         self._components = []
         self._var = {}
+        self.refresh_language_contents = None
+        print(self.name)
+        self._lang = Lang(section=self.name)
+        View.instances.append(self)
 
     @property
     def name(self):
@@ -35,6 +39,14 @@ class View(AbstractView):
     @var.setter
     def var(self, value):
         self._var = value
+
+    @property
+    def lang(self):
+        return self._lang
+
+    @lang.setter
+    def lang(self, value):
+        self._lang = value
 
     def get_component(self, index: Optional[int] = 0) -> Component:
         """
@@ -100,9 +112,10 @@ class View(AbstractView):
         else:
             raise CapynanceException("invalid_components")
 
+    def refresh_language_contents() -> None: ...
     def attach_page(self, page: ft.Page) -> None:
         """
-        Attaches a page to the view.
+        Attaches a page reference to the view.
 
         Args:
             page (ft.Page): The page to attach to the view.
@@ -113,18 +126,9 @@ class View(AbstractView):
         if isinstance(page, ft.Page):
             self.var["page"] = page
 
-    def attach_session(self, session: Session) -> None:
-        """
-        Attaches a session to the view.
-
-        Args:
-            session (Session): The session to attach to the view.
-
-        Returns:
-            None
-        """
-        if isinstance(session, Session):
-            self.var["session"] = session
+    def attach_language_object(self, language: str) -> None:
+        if isinstance(language, str):
+            self.lang = Lang(section=self.name.lower(), language=language)
 
     def __repr__(self):
         def list_all_component_descriptions(self) -> str:

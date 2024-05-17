@@ -1,8 +1,8 @@
+import utils.services as services
 from session import Session
 from views.shop import shop
 from views.home import home
 from views.scan import scan
-from views.login import login
 from views.login import login
 from views.social import social
 from utils.ft_keys import FT_Keys
@@ -12,10 +12,18 @@ from views.finances import finances
 from views.settings import settings
 from views.calendar import calendar, init_calendar
 from components.default_components import defaults
-import datetime
+from lang import Lang
 import flet as ft
 
 all_views = (shop, home, scan, login, register, social, calendar, finances, settings)
+
+
+def refresh_langs(language: str) -> None:
+    for view in all_views:
+        view.lang = Lang(section=view.name, language=language)
+
+
+def init_session(user_id) -> None: ...
 
 
 class App:
@@ -38,7 +46,6 @@ class App:
         def attach_pages() -> None:
             for view in all_views:
                 view.attach_page(page)
-                view.attach_session(self.session)
 
         def on_init() -> None:
             attach_pages()
@@ -90,9 +97,6 @@ class App:
         page.on_route_change = route_change
         page.on_view_pop = view_pop
         page.go(page.route)
-
-    def set_session(self, session: Session) -> None:
-        self.session = session
 
 
 if __name__ == "__main__":

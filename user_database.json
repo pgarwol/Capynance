@@ -29,7 +29,7 @@
     },
     "finances": {},
     "social": {},
-    "settings": {}
+    "settings": { "language": "pl" }
   },
   "1": {
     "profile": {
@@ -55,6 +55,6 @@
     },
     "finances": {},
     "social": {},
-    "settings": {}
+    "settings": { "language": "en" }
   }
 }

@@ -2,6 +2,20 @@ from abc import ABC, abstractmethod
 
 
 class AbstractView(ABC):
+    lang = None
+    instances = []
+
+    @classmethod
+    def set_lang(cls, lang):
+        cls.lang = lang
+
+    @classmethod
+    def get_lang(cls):
+        return cls.lang
+
+    @classmethod
+    def get_instances(cls):
+        return cls.instances
 
     @property
     @abstractmethod
@@ -30,6 +44,10 @@ class AbstractView(ABC):
 
     @abstractmethod
     def build(self):
+        pass
+
+    @abstractmethod
+    def refresh_language_contents(self):
         pass
 
     @abstractmethod

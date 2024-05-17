@@ -1,5 +1,4 @@
-import services
-from user import User
+import utils.services as services
 from session import Session
 from views.view import View
 from utils.styles import Style
@@ -9,89 +8,103 @@ import datetime
 import flet as ft
 
 
+def change_date():
+    calendar.var["savings_deadline"] = date_picker.value
+    calendar.var["savings_deadline_output"].value = f"{date_picker.value:%d-%m-%Y}"
+    if "page" in calendar.var:
+        calendar.var["page"].update()
+
+
 calendar = View(name="calendar", route="/calendar")
-calendar.add_component(defaults["STATISTICS_BAR"])
-calendar.add_component(
-    Component(
-        content=[
-            date_picker := ft.DatePicker(
-                on_change=lambda _: change_date(),
-                first_date=datetime.datetime(2023, 10, 1),
-                last_date=datetime.datetime(2024, 10, 1),
-            ),
-            ft.TextField(
-                label="Cel",
-                **Style.TextField.value,
-            ),
-            ft.Row(
-                controls=[
-                    ft.TextField(
-                        label="Ilość",
-                        **Style.TextField.value,
-                    ),
-                    ft.Dropdown(
-                        options=[
-                            ft.dropdown.Option("ZŁ"),
-                            ft.dropdown.Option("EUR"),
-                            ft.dropdown.Option("USD"),
-                            ft.dropdown.Option("GBP"),
-                        ],
-                        label="Waluta",
-                        **Style.Dropdown.value,
-                    ),
-                ]
-            ),
-            ft.Row(
-                controls=[
-                    ft.TextField(
-                        label="Data",
-                        read_only=True,
-                        **Style.TextField.value,
-                    ),
-                    date_button := ft.IconButton(
-                        icon=ft.icons.CALENDAR_MONTH,
-                        on_click=lambda _: date_picker.pick_date(),
-                        **Style.IconButton.value,
-                    ),
-                ]
-            ),
-            ft.ElevatedButton(
-                text="Dodaj",
-                on_click=lambda _: add_savings_row(
-                    date=calendar.var["savings_deadline"],
-                    goal=calendar.var["savings_goal"].value,
-                    amount=calendar.var["savings_amount"].value,
-                    currency=calendar.var["savings_currency"].value,
+
+
+def init() -> None: ...
+
+
+statistics = defaults["STATISTICS_BAR"]
+main_content = Component(
+    content=[
+        date_picker := ft.DatePicker(
+            on_change=lambda _: change_date(),
+            first_date=datetime.datetime(2023, 10, 1),
+            last_date=datetime.datetime(2024, 10, 1),
+        ),
+        goal_textfield := ft.TextField(
+            label=None,
+            **Style.TextField.value,
+        ),
+        ft.Row(
+            controls=[
+                amount_textfield := ft.TextField(
+                    label=None,
+                    **Style.TextField.value,
                 ),
-                **Style.ElevatedButton.value,
+                currency_dropdown := ft.Dropdown(
+                    options=[
+                        ft.dropdown.Option("ZŁ"),
+                        ft.dropdown.Option("EUR"),
+                        ft.dropdown.Option("USD"),
+                        ft.dropdown.Option("GBP"),
+                    ],
+                    label=None,
+                    **Style.Dropdown.value,
+                ),
+            ]
+        ),
+        ft.Row(
+            controls=[
+                date_textfield := ft.TextField(
+                    label=None,
+                    read_only=True,
+                    **Style.TextField.value,
+                ),
+                date_button := ft.IconButton(
+                    icon=ft.icons.CALENDAR_MONTH,
+                    on_click=lambda _: date_picker.pick_date(),
+                    **Style.IconButton.value,
+                ),
+            ]
+        ),
+        add_button := ft.ElevatedButton(
+            text=None,
+            on_click=lambda _: add_savings_row(
+                date=calendar.var["savings_deadline"],
+                goal=calendar.var["savings_goal"].value,
+                amount=calendar.var["savings_amount"].value,
+                currency=calendar.var["savings_currency"].value,
             ),
-        ],
-        description="User calendar inputs",
-    )
+            **Style.ElevatedButton.value,
+        ),
+    ],
+    description="User calendar inputs",
 )
+data_row = Component(
+    content=[
+        ft.DataTable(
+            sort_ascending=True,
+            columns=[
+                ft.DataColumn(date_col_header := ft.Text(value=None)),
+                ft.DataColumn(goal_col_header := ft.Text(value=None)),
+                ft.DataColumn(amount_col_header := ft.Text(value=None), numeric=True),
+            ],
+            rows=[],
+        )
+    ],
+    description="User finance goals",
+)
+navbar = defaults["NAVIGATION_BAR"]
+
+calendar.add_component(statistics)
+calendar.add_component(main_content)
+calendar.add_component(data_row)
+calendar.add_component(navbar)
+
 calendar.var = {
     "savings_goal": calendar.components[1].content[1],
     "savings_amount": calendar.components[1].content[2].controls[0],
     "savings_currency": calendar.components[1].content[2].controls[1],
     "savings_deadline_output": calendar.components[1].content[3].controls[0],
 }
-calendar.add_component(
-    Component(
-        content=[
-            ft.DataTable(
-                sort_ascending=True,
-                columns=[
-                    ft.DataColumn(ft.Text("Data")),
-                    ft.DataColumn(ft.Text("Cel")),
-                    ft.DataColumn(ft.Text("Ilość"), numeric=True),
-                ],
-                rows=[],
-            )
-        ],
-        description="User finance goals",
-    )
-)
-calendar.add_component(defaults["NAVIGATION_BAR"])
 
 
 def add_savings_row(
@@ -113,35 +126,25 @@ def add_savings_row(
         # TODO: error feedback
         return
 
-    if not calendar.var["session"].logged_user.does_savings_goal_exist(goal):
-        calendar.get_component(2).content[0].rows.append(
-            ft.DataRow(
-                on_long_press=lambda row: remove_savings_row(row),
-                cells=[
-                    ft.DataCell(ft.Text(f"{date:%d-%m-%Y}")),
-                    ft.DataCell(ft.Text(goal)),
-                    ft.DataCell(ft.Text(f"{amount:.2f} {currency}")),
-                ],
-            )
+    calendar.get_component(2).content[0].rows.append(
+        ft.DataRow(
+            on_long_press=lambda row: remove_savings_row(row),
+            cells=[
+                ft.DataCell(ft.Text(f"{date:%d-%m-%Y}")),
+                ft.DataCell(ft.Text(goal)),
+                ft.DataCell(ft.Text(f"{amount:.2f} {currency}")),
+            ],
         )
-        calendar.var["session"].logged_user.from_savings_datarow(
-            date=f"{date:%d-%m-%Y}",
-            goal=goal,
-            amount=f"{amount:.2f}",
-            currency=currency,
-        )
-        services.save_user_data(calendar.var["session"].logged_user)
+    )
+    Session.get_logged_user().from_savings_datarow(
+        date=f"{date:%d-%m-%Y}",
+        goal=goal,
+        amount=f"{amount:.2f}",
+        currency=currency,
+    )
+    if not Session.get_logged_user().does_savings_goal_exist(goal):
+        services.save_user_data(Session.get_logged_user())
 
-        if "page" in calendar.var:
-            calendar.var["page"].update()
-    else:
-        ...
-        # "TODO: user error output: SAVING GOAL ALREADY EXISTS
-
-
-def change_date():
-    calendar.var["savings_deadline"] = date_picker.value
-    calendar.var["savings_deadline_output"].value = f"{date_picker.value:%d-%m-%Y}"
     if "page" in calendar.var:
         calendar.var["page"].update()
 
@@ -150,7 +153,7 @@ def change_date():
 def remove_savings_row(row) -> None: ...
 
 
-def retrieve_dto_data(dto: User) -> None:
+def retrieve_dto_data(dto) -> None:
     view_data = services.get_view_data(view_name=calendar.name, user_id=dto.id)
     savings_rows = view_data["savings_rows"]
     insert_dto_data_to_datarows(savings_rows)
@@ -167,8 +170,22 @@ def insert_dto_data_to_datarows(data: dict):
 
 
 def init_calendar() -> None:
-    if "session" in calendar.var:
-        retrieve_dto_data(dto=calendar.var["session"].logged_user)
+    retrieve_dto_data(dto=Session.get_logged_user())
 
+
+def refresh_labels() -> None:
+    goal_textfield.label = calendar.lang["goal"]
+    currency_dropdown.label = calendar.lang["currency"]
+    amount_textfield.label = calendar.lang["amount"]
+    date_textfield.label = calendar.lang["date"]
+    add_button.text = calendar.lang["add"]
+    date_col_header.value = calendar.lang["date"]
+    amount_col_header.value = calendar.lang["amount"]
+    goal_col_header.value = calendar.lang["goal"]
+
+
+refresh_labels()
+
+calendar.refresh_language_contents = refresh_labels
 
 print(calendar)

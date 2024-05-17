@@ -1,11 +1,24 @@
-from services import read_user_from_db
+from utils.services import read_user_from_db
 from abc import ABC, abstractmethod
 
 
 class Session:
-    def __init__(self, user_id: str | int, language: str):
-        self.logged_user = read_user_from_db(id=str(user_id))
-        self.language = language
+
+    @classmethod
+    def set_logged_user(cls, logged_user):
+        cls.logged_user = logged_user
+
+    @classmethod
+    def get_logged_user(cls):
+        return cls.logged_user
+
+    @classmethod
+    def set_language(cls, language):
+        cls.language = language
+
+    @classmethod
+    def get_language(cls):
+        return cls.language
 
 
 # Initialized after login

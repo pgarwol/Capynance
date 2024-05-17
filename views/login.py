@@ -1,17 +1,18 @@
-import services
+import utils.services as services
 from typing import Tuple
 from views.home import home
-from session import Session
 from views.view import View
 from utils.colors import Color
 from utils.styles import Style
 from views.register import register
 from components.component import Component
 from views.calendar import calendar, init_calendar
+from session import Session
+from utils.services import read_user_from_db
+from lang import Lang
 import flet as ft
 
 login = View(name="Login", route="/")
-
 login.add_component(
     Component(
         content=[
@@ -24,23 +25,23 @@ login.add_component(
                     error_content=ft.Text("Image error."),
                 ),
             ),
-            ft.TextField(label="e-mail", **Style.TextField.value),
-            ft.TextField(
-                label="hasło",
+            email_textfield := ft.TextField(label=None, **Style.TextField.value),
+            password_textfield := ft.TextField(
+                label=None,
                 password=True,
                 can_reveal_password=True,
-                **Style.TextField.value
+                **Style.TextField.value,
             ),
-            ft.ElevatedButton(
-                text="Zaloguj",
+            log_in_button := ft.ElevatedButton(
+                text=None,
                 color=Color.BLACK.value,
                 bgcolor=Color.ACCENT.value,
                 on_click=lambda _: log_user_in(
                     login.var["email"].value, login.var["password"].value
                 ),
             ),
-            ft.TextButton(
-                text="Nie masz jeszcze konta? Zarejestruj się!",
+            no_account_button := ft.TextButton(
+                text=None,
                 on_click=lambda _: login.var["page"].go(register.route),
             ),
         ],
@@ -54,13 +55,49 @@ login.var = {
 
 
 def log_user_in(email: str | None, password: str | None):
+    """
+    Log a user into the system.
+
+    Logs a user into the system if the provided email and password are valid.
+    Sets the logged user's language, updates views with the new language,
+    initializes the calendar, and redirects to the home page upon successful login.
+
+    Args:
+        email (str | None): The email of the user trying to log in.
+        password (str | None): The password of the user trying to log in.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
     if email is None or password is None:
         return
 
     logged_in_successfully, user_id = services.is_login_valid(email, password)
     if logged_in_successfully:
-        session = Session(user_id, language="pl")
-        print(session.logged_user)
-        login.var["page"].go(home.route)
-        calendar.var["session"] = session
+        Session.set_logged_user(read_user_from_db(user_id))
+        Session.set_language(Session.get_logged_user().settings["language"])
+        for view in View.instances:
+            view.lang.change_language(Session.get_language())
+            view.var["page"].update()
+            if view.refresh_language_contents is not None:
+                view.refresh_language_contents()
         init_calendar()
+        login.var["page"].go(home.route)
+
+
+def refresh_labels() -> None:
+    email_textfield.label = login.lang["email"]
+    password_textfield.label = login.lang["password"]
+    log_in_button.text = login.lang["log_in"]
+    no_account_button.text = login.lang["no_account"]
+
+
+refresh_labels()
+
+login.refresh_language_contents = refresh_labels
+
+
+print(login)

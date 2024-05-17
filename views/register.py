@@ -1,7 +1,7 @@
 from views.home import home
 from views.view import View
 from utils.styles import Style
-from services import create_account
+import utils.services as services
 from components.component import Component
 import re
 import flet as ft
@@ -10,33 +10,33 @@ register = View(name="Register", route="/register")
 register.add_component(
     Component(
         content=[
-            ft.TextField(label="e-mail", **Style.TextField.value),
-            ft.TextField(
-                label="hasło",
+            email_textfield := ft.TextField(label=None, **Style.TextField.value),
+            password_textfield := ft.TextField(
+                label=None,
                 password=True,
                 can_reveal_password=True,
-                **Style.TextField.value
+                **Style.TextField.value,
             ),
-            ft.TextField(
-                label="powtórz hasło",
+            confirm_password_textfield := ft.TextField(
+                label=None,
                 password=True,
                 can_reveal_password=True,
-                **Style.TextField.value
+                **Style.TextField.value,
             ),
             ft.Text(),
             # TODO: Incorrect data info,
-            ft.TextButton(
-                text="Masz już konto? Zaloguj się!",
+            has_account_button := ft.TextButton(
+                text=register.lang["has_account"],
                 on_click=lambda _: register.var["page"].go("/"),
             ),
-            ft.ElevatedButton(
-                text="Zarejestruj",
+            register_button := ft.ElevatedButton(
+                text=None,
                 on_click=lambda _: do_register(
                     register.var["email"].value,
                     register.var["password"].value,
                     register.var["password_confirmation"].value,
                 ),
-                **Style.ElevatedButton.value
+                **Style.ElevatedButton.value,
             ),
         ],
         description="View used for user registration",
@@ -84,7 +84,7 @@ def do_register(email: str, password: str, password_confirmation: str) -> None:
 
     if validate_email(email):
         if password == password_confirmation:
-            create_account(email, password)
+            services.create_account(email, password)
             register.var["page"].go(home.route)
         else:
             register.var["errors_output"].value = "Hasła muszą być takie same"
@@ -92,3 +92,18 @@ def do_register(email: str, password: str, password_confirmation: str) -> None:
     else:
         register.var["errors_output"].value = "Wszystkie pola muszą zostać wypełnione"
         register.var["page"].update()
+
+
+def refresh_labels() -> None:
+    email_textfield.label = register.lang["email"]
+    password_textfield.label = register.lang["password"]
+    confirm_password_textfield.label = register.lang["confirm_password"]
+    has_account_button.text = register.lang["has_account"]
+    register_button.text = register.lang["register"]
+
+
+refresh_labels()
+
+register.refresh_language_labels = refresh_labels
+
+print(register)
