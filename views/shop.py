@@ -1,6 +1,6 @@
 from views.view import View
-from components.component import Component
-from components.default_components import defaults
+from components.component import Component, DefaultComponents
+from utils.enums import FletNames
 import flet as ft
 from product import read_product_from_db
 
@@ -130,7 +130,7 @@ def create_shop_item(product_id, index_ref):
     )
 
 
-shop = View(name="Shop", route="/shop")
+shop = View(name=FletNames.SHOP, route=f"/{FletNames.SHOP}")
 
 
 shop.add_component(
@@ -150,6 +150,6 @@ shop.add_component(
     )
 )
 
-shop.add_component(defaults["STATISTICS_BAR"])
-shop.add_component(defaults["NAVIGATION_BAR"])
+shop.add_component(DefaultComponents.STATISTICS_BAR.value)
+shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
 print(shop)

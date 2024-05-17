@@ -1,12 +1,13 @@
 from views.home import home
 from views.view import View
 from utils.styles import Style
+from utils.enums import FletNames
 import utils.services as services
 from components.component import Component
 import re
 import flet as ft
 
-register = View(name="Register", route="/register")
+register = View(name=FletNames.REGISTER, route=f"/{FletNames.REGISTER}")
 register.add_component(
     Component(
         content=[
@@ -27,7 +28,7 @@ register.add_component(
             # TODO: Incorrect data info,
             has_account_button := ft.TextButton(
                 text=register.lang["has_account"],
-                on_click=lambda _: register.var["page"].go("/"),
+                on_click=lambda _: register.var[FletNames.PAGE].go("/"),
             ),
             register_button := ft.ElevatedButton(
                 text=None,
@@ -79,19 +80,19 @@ def do_register(email: str, password: str, password_confirmation: str) -> None:
     """
     if email is None or password is None or password_confirmation is None:
         register.var["errors_output"].value = "Wszystkie pola muszą zostać wypełnione"
-        register.var["page"].update()
+        register.var[FletNames.PAGE].update()
         return
 
     if validate_email(email):
         if password == password_confirmation:
             services.create_account(email, password)
-            register.var["page"].go(home.route)
+            register.var[FletNames.PAGE].go(home.route)
         else:
             register.var["errors_output"].value = "Hasła muszą być takie same"
-            register.var["page"].update()
+            register.var[FletNames.PAGE].update()
     else:
         register.var["errors_output"].value = "Wszystkie pola muszą zostać wypełnione"
-        register.var["page"].update()
+        register.var[FletNames.PAGE].update()
 
 
 def refresh_labels() -> None:

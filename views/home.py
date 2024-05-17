@@ -1,9 +1,9 @@
 from views.view import View
-from components.component import Component
-from components.default_components import defaults
+from utils.enums import FletNames
+from components.component import Component, DefaultComponents
 
 
-home = View(name="home", route="/home")
-home.add_component(defaults["STATISTICS_BAR"])
-home.add_component(defaults["NAVIGATION_BAR"])
+home = View(name=FletNames.HOME, route=f"/{FletNames.HOME}")
+home.add_component(DefaultComponents.STATISTICS_BAR.value)
+home.add_component(DefaultComponents.NAVIGATION_BAR.value)
 print(home)

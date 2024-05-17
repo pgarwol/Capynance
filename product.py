@@ -1,4 +1,5 @@
 import json
+from utils.enums import DBFields
 from pathlib import Path
 
 
@@ -20,7 +21,9 @@ def read_product_from_db(product_id: str) -> Product:
     Returns:
         Product: The product created from the retrieved data.
     """
-    with open(Path("./database/shop_database.json").resolve(), encoding="utf-8") as db:
+    with open(
+        Path("./database/shop_database.json").resolve(), encoding=DBFields.ENCODING
+    ) as db:
         product_data = json.load(db)[product_id]
 
     return Product(

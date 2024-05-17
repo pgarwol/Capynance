@@ -23,8 +23,10 @@ class DBFields(StrEnum):
 
 
 class FletNames(StrEnum):
+    APP_NAME = "Capynance."
     VIEW = "view"
     ROUTE = "route"
+    PAGE = "page"
     CALENDAR = "calendar"
     FINANCES = "finances"
     HOME = "home"
@@ -43,3 +45,18 @@ class Colors(StrEnum):
     ACCENT = "#ffa500"
     WHITE = ft.colors.WHITE
     BLACK = ft.colors.BLACK
+
+
+class Currencies(StrEnum):
+    POLISH_ZLOTY = "ZŁ"
+    EURO = "EUR"
+    US_DOLLAR = "USD"
+    JAPANESE_YEN = "JPY"
+
+
+class LanguageCodes(StrEnum):
+    POLISH = "PL"
+    ENGLISH = "EN"
+    GERMAN = "DE"
+    DUTCH = "NL"
+    SPANISH = "ES"

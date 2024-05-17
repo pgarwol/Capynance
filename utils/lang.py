@@ -1,5 +1,5 @@
 import configparser
-from utils.enums import DBFields
+from utils.enums import DBFields, LanguageCodes
 from pathlib import Path
 from typing import Optional
 
@@ -22,12 +22,12 @@ def read_lang_file(language: str, section: str) -> dict:
     try:
         config.read(
             Path(f"{DBFields.RELATIVE_DB_PATH}lang_{language}.properties"),
-            encoding="utf-8",
+            encoding=DBFields.ENCODING,
         )
     except FileNotFoundError:
         config.read(
             Path(f"{DBFields.RELATIVE_DB_PATH}lang_en.properties"),
-            encoding="utf-8",
+            encoding=DBFields.ENCODING,
         )
     finally:
         if section in config:
@@ -39,7 +39,7 @@ def read_lang_file(language: str, section: str) -> dict:
 
 
 class Lang:
-    default_lang = "pl"  #  TODO: make it "static"
+    default_lang = LanguageCodes.POLISH  #  TODO: make it "static"
 
     def __init__(
         self,

@@ -1,7 +1,10 @@
+from utils.enums import Colors, FletNames
+from utils.styles import Style
 from utils.exceptions import CapynanceException
 from components.abstract_component import AbstractComponent
-from typing import List
 import flet as ft
+from enum import Enum
+from typing import List
 
 
 class Component(AbstractComponent):
@@ -52,3 +55,76 @@ class Component(AbstractComponent):
             raise CapynanceException("index invalid")
 
         self._content.insert(i, control)
+
+
+class DefaultComponents(Enum):
+    STATISTICS_BAR = Component(
+        content=[
+            ft.AppBar(
+                title=ft.Text(FletNames.APP_NAME),
+                center_title=True,
+                actions=[ft.IconButton(icon=ft.icons.LOGOUT_OUTLINED)],
+                **Style.AppBar.value
+            ),
+        ],
+        description="Contains user stats located on the top.",
+    )
+    NAVIGATION_BAR = Component(
+        content=[
+            ft.BottomAppBar(
+                ft.CupertinoSlidingSegmentedButton(
+                    selected_index=3,
+                    controls=[
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.QR_CODE_SCANNER,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.SHOPPING_CART_ROUNDED,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.CALENDAR_MONTH,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.HOME_ROUNDED,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.ATTACH_MONEY,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(name=ft.icons.PEOPLE, color=Colors.BLACK),
+                        ),
+                        ft.Container(
+                            padding=ft.padding.symmetric(0, 10),
+                            content=ft.Icon(
+                                name=ft.icons.SETTINGS_ROUNDED,
+                                color=Colors.BLACK,
+                            ),
+                        ),
+                    ],
+                    **Style.CupertinoSlidingSegmentedButton.value
+                )
+            )
+        ],
+        description="Contains bottom navigation bar.",
+    )

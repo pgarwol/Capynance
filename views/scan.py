@@ -1,13 +1,16 @@
 from views.view import View
-from components.component import Component
-from components.default_components import defaults
+from components.component import Component, DefaultComponents
+from utils.enums import FletNames
 import flet as ft
 
 
-scan = View(name="scan", route="/scan")
-scan.add_component(defaults["STATISTICS_BAR"])
+scan = View(name=FletNames.SCAN, route=f"/{FletNames.SCAN}")
+scan.add_component(DefaultComponents.STATISTICS_BAR.value)
 scan.add_component(
-    Component([ft.Text("SKANOWANIE PARAGONU")], "View representing scanning QR codes.")
+    Component(
+        [ft.Text("SKANOWANIE PARAGONU")],
+        description="View representing scanning QR codes.",
+    )
 )
-scan.add_component(defaults["NAVIGATION_BAR"])
+scan.add_component(DefaultComponents.NAVIGATION_BAR.value)
 print(scan)

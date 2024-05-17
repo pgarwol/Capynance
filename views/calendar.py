@@ -2,8 +2,8 @@ import utils.services as services
 from session import Session
 from views.view import View
 from utils.styles import Style
-from components.component import Component
-from components.default_components import defaults
+from utils.enums import Currencies, FletNames
+from components.component import Component, DefaultComponents
 import datetime
 import flet as ft
 
@@ -11,13 +11,13 @@ import flet as ft
 def change_date():
     calendar.var["savings_deadline"] = date_picker.value
     calendar.var["savings_deadline_output"].value = f"{date_picker.value:%d-%m-%Y}"
-    if "page" in calendar.var:
-        calendar.var["page"].update()
+    if FletNames.PAGE in calendar.var:
+        calendar.var[FletNames.PAGE].update()
 
 
-calendar = View(name="calendar", route="/calendar")
+calendar = View(name=FletNames.CALENDAR, route=f"/{FletNames.CALENDAR}")
 
-calendar.add_component(defaults["STATISTICS_BAR"])
+calendar.add_component(DefaultComponents.STATISTICS_BAR.value)
 calendar.add_component(
     Component(
         content=[
@@ -36,10 +36,8 @@ calendar.add_component(
                     ),
                     currency_dropdown := ft.Dropdown(
                         options=[
-                            ft.dropdown.Option("ZŁ"),
-                            ft.dropdown.Option("EUR"),
-                            ft.dropdown.Option("USD"),
-                            ft.dropdown.Option("GBP"),
+                            ft.dropdown.Option(currency.value)
+                            for currency in Currencies
                         ],
                         **Style.Dropdown.value,
                     ),
@@ -87,7 +85,7 @@ calendar.add_component(
         description="User finance goals",
     )
 )
-calendar.add_component(defaults["NAVIGATION_BAR"])
+calendar.add_component(DefaultComponents.NAVIGATION_BAR.value)
 
 calendar.var = {
     "savings_goal": calendar.components[1].content[1],
@@ -105,7 +103,7 @@ def add_savings_row(
     if date is None:
         date = datetime.datetime.now()
     if currency is None:
-        currency = "ZŁ"
+        currency = Currencies.POLISH_ZLOTY
 
     try:
         amount = round(float(amount), 2)
@@ -135,8 +133,8 @@ def add_savings_row(
     if not Session.get_logged_user().does_savings_goal_exist(goal):
         services.save_user_data(Session.get_logged_user())
 
-    if "page" in calendar.var:
-        calendar.var["page"].update()
+    if FletNames.PAGE in calendar.var:
+        calendar.var[FletNames.PAGE].update()
 
 
 # TODO

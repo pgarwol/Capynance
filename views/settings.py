@@ -1,13 +1,13 @@
 from views.view import View
-from components.component import Component
-from components.default_components import defaults
+from components.component import Component, DefaultComponents
+from utils.enums import FletNames
 import flet as ft
 
 
-settings = View(name="settings", route="/settings")
-settings.add_component(defaults["STATISTICS_BAR"])
+settings = View(name=FletNames.SETTINGS, route=f"/{FletNames.SETTINGS}")
+settings.add_component(DefaultComponents.STATISTICS_BAR.value)
 settings.add_component(
     Component([ft.Text("USTAWIENIA")], "View representing Settings.")
 )
-settings.add_component(defaults["NAVIGATION_BAR"])
+settings.add_component(DefaultComponents.NAVIGATION_BAR.value)
 print(settings)

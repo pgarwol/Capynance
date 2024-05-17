@@ -11,15 +11,14 @@ from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
 from views.calendar import calendar
-from components.default_components import defaults
+from components.component import DefaultComponents
 from utils.lang import Lang
+from views.view import View
 import flet as ft
-
-all_views = (shop, home, scan, login, register, social, calendar, finances, settings)
 
 
 class App:
-    name = "Capynance."
+    name = FletNames.APP_NAME
     session = None
 
     navigation_bar_items = {
@@ -36,18 +35,20 @@ class App:
 
     def main(self, page: ft.Page) -> None:
         def attach_pages() -> None:
-            for view in all_views:
+            for view in View.instances:
                 view.attach_page(page)
 
         def on_init() -> None:
             attach_pages()
 
-            defaults["NAVIGATION_BAR"].content[0].content.on_change = lambda e: page.go(
-                route=self.navigation_bar_items[e.control.selected_index][
-                    FletNames.ROUTE
-                ]
+            DefaultComponents.NAVIGATION_BAR.value.content[0].content.on_change = (
+                lambda e: page.go(
+                    route=self.navigation_bar_items[e.control.selected_index][
+                        FletNames.ROUTE
+                    ]
+                )
             )
-            defaults["STATISTICS_BAR"].content[0].actions[
+            DefaultComponents.STATISTICS_BAR.value.content[0].actions[
                 0
             ].on_click = lambda _: page.update()
 

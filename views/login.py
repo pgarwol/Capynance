@@ -1,6 +1,6 @@
 from views.home import home
 from views.view import View
-from utils.enums import Colors
+from utils.enums import Colors, FletNames
 from utils.styles import Style
 import utils.services as services
 from views.register import register
@@ -11,7 +11,7 @@ from utils.services import read_user_from_db
 from typing import Tuple
 import flet as ft
 
-login = View(name="Login", route="/")
+login = View(name=FletNames.LOGIN, route="/")
 login.add_component(
     Component(
         content=[
@@ -38,7 +38,7 @@ login.add_component(
                 ),
             ),
             no_account_button := ft.TextButton(
-                on_click=lambda _: login.var["page"].go(register.route),
+                on_click=lambda _: login.var[FletNames.PAGE].go(register.route),
             ),
         ],
         description="Login page.",
@@ -77,11 +77,11 @@ def log_user_in(email: str | None, password: str | None):
         Session.set_language(Session.get_logged_user().settings["language"])
         for view in View.instances:
             view.lang.change_language(Session.get_language())
-            view.var["page"].update()
+            view.var[FletNames.PAGE].update()
             if view.refresh_language_contents is not None:
                 view.refresh_language_contents()
         init_calendar()
-        login.var["page"].go(home.route)
+        login.var[FletNames.PAGE].go(home.route)
 
 
 def refresh_labels() -> None:

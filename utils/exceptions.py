@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class CapynanceException(Exception):
     """
     Summary:
@@ -26,3 +29,9 @@ class CapynanceException(Exception):
 
     def __str__(self):
         return self.errors[self.error_type]
+
+
+class Errors(Enum): ...
+
+
+class Warnings(Enum): ...

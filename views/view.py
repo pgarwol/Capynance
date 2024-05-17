@@ -2,6 +2,7 @@ from utils.lang import Lang
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException
+from utils.enums import FletNames
 from io import StringIO
 from typing import Optional
 import flet as ft
@@ -124,7 +125,7 @@ class View(AbstractView):
             None
         """
         if isinstance(page, ft.Page):
-            self.var["page"] = page
+            self.var[FletNames.PAGE] = page
 
     def attach_language_object(self, language: str) -> None:
         if isinstance(language, str):

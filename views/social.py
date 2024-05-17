@@ -1,42 +1,42 @@
-from components.default_components import defaults
-from components.component import Component
+from utils.enums import FletNames
+from components.component import Component, DefaultComponents
 from views.view import View
 import flet as ft
 
 
 def add_friend_onclick(_) -> None:
     """Add a friend to the user's friend list. Currently testing purposes only."""
-    print('Friend added!')
+    print("Friend added!")
 
 
 def new_post_onclick(_) -> None:
     """Add a new post to the user's feed. Currently testing purposes only."""
-    print('New post added!')
+    print("New post added!")
 
 
 # Placeholder image
 usr_img = ft.Image(
-    src='https://www.rainforest-alliance.org/wp-content'
-        '/uploads/2021/06/capybara-square-1.jpg.optimal.jpg',
+    src="https://www.rainforest-alliance.org/wp-content"
+    "/uploads/2021/06/capybara-square-1.jpg.optimal.jpg",
     border_radius=ft.border_radius.all(100),
     height=150,
-    width=150
+    width=150,
 )
 
 # User basic info as name and surname, basic data etc. Also, a button to add friends.
 usr_stats = ft.Column(
     [
-        ft.Text('Imię i nazwisko', size=23, weight=ft.FontWeight.W_200),
+        ft.Text("Imię i nazwisko", size=23, weight=ft.FontWeight.W_200),
         ft.Column(
             [
-                ft.Text('Basic dane'),
-                ft.Text('Lorem ipsum'),
+                ft.Text("Basic dane"),
+                ft.Text("Lorem ipsum"),
             ],
-            spacing=1
+            spacing=1,
         ),
-        ft.ElevatedButton('Add friends', on_click=add_friend_onclick),
+        ft.ElevatedButton("Add friends", on_click=add_friend_onclick),
     ],
-    spacing=15
+    spacing=15,
 )
 
 # Merge of user image and user stats
@@ -51,8 +51,8 @@ usr_data = ft.Row(
 
 # News feed with friends updates. Shows last 3 updates.
 friends_updates_title = ft.Row(
-    [ft.Text('What\'s new?', size=25, weight=ft.FontWeight.W_200)],
-    alignment=ft.MainAxisAlignment.START
+    [ft.Text("What's new?", size=25, weight=ft.FontWeight.W_200)],
+    alignment=ft.MainAxisAlignment.START,
 )
 
 # Friend 1 update
@@ -60,22 +60,23 @@ friend_1 = ft.Container(
     ft.Row(
         [
             ft.Image(
-                src='https://www.allthingswild.co.uk/wp-content/uploads/2019/11/capy.jpg',
+                src="https://www.allthingswild.co.uk/wp-content/uploads/2019/11/capy.jpg",
                 border_radius=ft.border_radius.all(100),
                 height=50,
-                width=50
+                width=50,
             ),
             ft.Container(
                 ft.Text(
-                    'Co tam kapibary??',
+                    "Co tam kapibary??",
                     size=15,
                 ),
-                padding=ft.padding.only(left=10)
-            )
+                padding=ft.padding.only(left=10),
+            ),
         ],
         alignment=ft.MainAxisAlignment.START,
-        spacing=10
-    ), padding=ft.padding.only(left=15)
+        spacing=10,
+    ),
+    padding=ft.padding.only(left=15),
 )
 
 # Friend 2 update
@@ -84,23 +85,24 @@ friend_2 = ft.Container(
     ft.Row(
         [
             ft.Image(
-                src='https://www.columbuszoo.org/sites/default/files/styles/uncropped_xl/public/assets/tours/Capybara'
-                    '%200360%20-%20Amanda%20Carberry%2C%20Columbus%20Zoo%20and%20Aquarium%20%281%29.jpg?itok=6K8he2dl',
+                src="https://www.columbuszoo.org/sites/default/files/styles/uncropped_xl/public/assets/tours/Capybara"
+                "%200360%20-%20Amanda%20Carberry%2C%20Columbus%20Zoo%20and%20Aquarium%20%281%29.jpg?itok=6K8he2dl",
                 border_radius=ft.border_radius.all(100),
                 height=50,
-                width=50
+                width=50,
             ),
             ft.Container(
                 ft.Text(
-                    'Siema, jestem kapibarą',
+                    "Siema, jestem kapibarą",
                     size=15,
                 ),
-                padding=ft.padding.only(left=10)
-            )
+                padding=ft.padding.only(left=10),
+            ),
         ],
         alignment=ft.MainAxisAlignment.START,
-        spacing=10
-    ), padding=ft.padding.only(left=15)
+        spacing=10,
+    ),
+    padding=ft.padding.only(left=15),
 )
 
 # Friend 3 update
@@ -109,23 +111,24 @@ friend_3 = ft.Container(
     ft.Row(
         [
             ft.Image(
-                src='https://people.com/thmb/ovi1vkp7e_cTTPC5LglB_Ii83n0=/1500x0/filters:no_upscale():max_bytes(150000)'
-                    ':strip_icc():focal(149x0:151x2)/capybara-1-300-dbd2c51946de4b989723201dac1f20ff.jpg',
+                src="https://people.com/thmb/ovi1vkp7e_cTTPC5LglB_Ii83n0=/1500x0/filters:no_upscale():max_bytes(150000)"
+                ":strip_icc():focal(149x0:151x2)/capybara-1-300-dbd2c51946de4b989723201dac1f20ff.jpg",
                 border_radius=ft.border_radius.all(100),
                 height=50,
-                width=50
+                width=50,
             ),
             ft.Container(
                 ft.Text(
-                    'Jedzenieeee',
+                    "Jedzenieeee",
                     size=15,
                 ),
-                padding=ft.padding.only(left=10)
-            )
+                padding=ft.padding.only(left=10),
+            ),
         ],
         alignment=ft.MainAxisAlignment.START,
-        spacing=10
-    ), padding=ft.padding.only(left=15)
+        spacing=10,
+    ),
+    padding=ft.padding.only(left=15),
 )
 
 # Merge of friends updates
@@ -142,8 +145,8 @@ friends_updates = ft.Column(
 achievements_cont = ft.Container(
     ft.Row(
         [
-            ft.Image(src='https://placehold.co/60x60/png'),
-            ft.Image(src='https://placehold.co/60x60/png')
+            ft.Image(src="https://placehold.co/60x60/png"),
+            ft.Image(src="https://placehold.co/60x60/png"),
         ]
     ),
     padding=ft.padding.all(13),
@@ -151,13 +154,13 @@ achievements_cont = ft.Container(
     border_radius=ft.border_radius.all(20),
     bgcolor=ft.colors.GREY_100,
     alignment=ft.alignment.center,
-    margin=10
+    margin=10,
 )
 
 # User achievements
 achievements = ft.Column(
     [
-        ft.Text('Achievements', size=25, weight=ft.FontWeight.W_200),
+        ft.Text("Achievements", size=25, weight=ft.FontWeight.W_200),
         achievements_cont,
     ]
 )
@@ -169,20 +172,25 @@ new_post_btn = ft.FloatingActionButton(
     bgcolor=ft.colors.RED_600,
 )
 
-social = View(name="social", route="/social")
-social.add_component(defaults["STATISTICS_BAR"])
-social.add_component(Component([
-    ft.Column(
+social = View(name=FletNames.SOCIAL, route=f"/{FletNames.SOCIAL}")
+social.add_component(DefaultComponents.STATISTICS_BAR.value)
+social.add_component(
+    Component(
         [
-            usr_data,
-            ft.Divider(),
-            friends_updates,
-            ft.Divider(),
-            achievements,
+            ft.Column(
+                [
+                    usr_data,
+                    ft.Divider(),
+                    friends_updates,
+                    ft.Divider(),
+                    achievements,
+                ],
+                scroll=ft.ScrollMode.HIDDEN,
+                expand=True,
+            ),
+            new_post_btn,
         ],
-        scroll=ft.ScrollMode.HIDDEN,
-        expand=True
-    ),
-    new_post_btn,
-], "User data and image"))
-social.add_component(defaults["NAVIGATION_BAR"])
+        "User data and image",
+    )
+)
+social.add_component(DefaultComponents.NAVIGATION_BAR.value)
