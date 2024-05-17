@@ -1,0 +1,29 @@
+{
+    "hats": {
+        "name": "Hats",
+        "images": [
+            "https://lh3.googleusercontent.com/pw/AP1GczOjY162O6weUBUQCO2nG5cEUNjkiy2D6O0MTAZuWFeKzhjk4j40jiUg8R58n-E58pHG5aJCMbeS9nxIe1B4hDxXm-XrPGjnaTceh_69H_GrvaHiT2IVHzTedJiqN43r71xAwRC5CmAzUJz5y0vd_Kw=w642-h857-s-no-gm?authuser=0",
+            "https://lh3.googleusercontent.com/pw/AP1GczOUOYrQC_n9_x1wK5JZcXxKf056b26QwigQ5ibqumcfzHyK-0zOEf9DiudOwSmWk5jJsRkLzTO28dhhuMTBZS3nxy_gfBNfFyPEVGyfPZcMq_OXU1gnQ0AhXjGF1yXQE1v4BmFKlwocUE0fHpy1guU=w642-h857-s-no-gm?authuser=0",
+            "https://lh3.googleusercontent.com/pw/AP1GczM4rE9w5STaV4BiVE3TQ2MtuVCwYj1EB5YFs11fujKmZBkKy0u201GzbFOOvi-9wXJ11pDIJwnCakf5j5EVsbycVVdWHYLZsdKVusrvnPqfLjyVGOHtLwbKKs21Cavtr9nBYhrrkXzCa6Zxkcwn8NU=w642-h857-s-no-gm?authuser=0"
+        ],
+        "price": "100 PLN"
+    },
+    "colors": {
+        "name": "Colors",
+        "images": [
+            "https://htmlcolorcodes.com/assets/images/colors/red-color-solid-background-1920x1080.png",
+            "https://htmlcolorcodes.com/assets/images/colors/green-color-solid-background-1920x1080.png",
+            "ft.Text(name, text_align=ft.TextAlign.CENTER),"
+        ],
+        "price": "50 PLN"
+    },
+    "shirts": {
+        "name": "Shirts",
+        "images": [
+            "https://i.imgur.com/lEy6WEe.jpeg",
+            "https://i.imgur.com/GyIhaOr.jpeg",
+            "https://i.imgur.com/rXHNe2T.jpeg"
+        ],
+        "price": "150 PLN"
+    }
+}
