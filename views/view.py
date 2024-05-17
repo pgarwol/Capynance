@@ -1,4 +1,4 @@
-from lang import Lang
+from utils.lang import Lang
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException

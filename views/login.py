@@ -1,15 +1,14 @@
-import utils.services as services
-from typing import Tuple
 from views.home import home
 from views.view import View
 from utils.colors import Color
 from utils.styles import Style
+import utils.services as services
 from views.register import register
-from components.component import Component
-from views.calendar import calendar, init_calendar
 from session import Session
+from views.calendar import init_calendar
+from components.component import Component
 from utils.services import read_user_from_db
-from lang import Lang
+from typing import Tuple
 import flet as ft
 
 login = View(name="Login", route="/")
@@ -25,15 +24,13 @@ login.add_component(
                     error_content=ft.Text("Image error."),
                 ),
             ),
-            email_textfield := ft.TextField(label=None, **Style.TextField.value),
+            email_textfield := ft.TextField(**Style.TextField.value),
             password_textfield := ft.TextField(
-                label=None,
                 password=True,
                 can_reveal_password=True,
                 **Style.TextField.value,
             ),
             log_in_button := ft.ElevatedButton(
-                text=None,
                 color=Color.BLACK.value,
                 bgcolor=Color.ACCENT.value,
                 on_click=lambda _: log_user_in(
@@ -41,7 +38,6 @@ login.add_component(
                 ),
             ),
             no_account_button := ft.TextButton(
-                text=None,
                 on_click=lambda _: login.var["page"].go(register.route),
             ),
         ],

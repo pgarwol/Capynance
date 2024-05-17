@@ -17,87 +17,77 @@ def change_date():
 
 calendar = View(name="calendar", route="/calendar")
 
-
-def init() -> None: ...
-
-
-statistics = defaults["STATISTICS_BAR"]
-main_content = Component(
-    content=[
-        date_picker := ft.DatePicker(
-            on_change=lambda _: change_date(),
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
-        ),
-        goal_textfield := ft.TextField(
-            label=None,
-            **Style.TextField.value,
-        ),
-        ft.Row(
-            controls=[
-                amount_textfield := ft.TextField(
-                    label=None,
-                    **Style.TextField.value,
-                ),
-                currency_dropdown := ft.Dropdown(
-                    options=[
-                        ft.dropdown.Option("ZŁ"),
-                        ft.dropdown.Option("EUR"),
-                        ft.dropdown.Option("USD"),
-                        ft.dropdown.Option("GBP"),
-                    ],
-                    label=None,
-                    **Style.Dropdown.value,
-                ),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                date_textfield := ft.TextField(
-                    label=None,
-                    read_only=True,
-                    **Style.TextField.value,
-                ),
-                date_button := ft.IconButton(
-                    icon=ft.icons.CALENDAR_MONTH,
-                    on_click=lambda _: date_picker.pick_date(),
-                    **Style.IconButton.value,
-                ),
-            ]
-        ),
-        add_button := ft.ElevatedButton(
-            text=None,
-            on_click=lambda _: add_savings_row(
-                date=calendar.var["savings_deadline"],
-                goal=calendar.var["savings_goal"].value,
-                amount=calendar.var["savings_amount"].value,
-                currency=calendar.var["savings_currency"].value,
+calendar.add_component(defaults["STATISTICS_BAR"])
+calendar.add_component(
+    Component(
+        content=[
+            date_picker := ft.DatePicker(
+                on_change=lambda _: change_date(),
+                first_date=datetime.datetime(2023, 10, 1),
+                last_date=datetime.datetime(2024, 10, 1),
             ),
-            **Style.ElevatedButton.value,
-        ),
-    ],
-    description="User calendar inputs",
+            goal_textfield := ft.TextField(
+                **Style.TextField.value,
+            ),
+            ft.Row(
+                controls=[
+                    amount_textfield := ft.TextField(
+                        **Style.TextField.value,
+                    ),
+                    currency_dropdown := ft.Dropdown(
+                        options=[
+                            ft.dropdown.Option("ZŁ"),
+                            ft.dropdown.Option("EUR"),
+                            ft.dropdown.Option("USD"),
+                            ft.dropdown.Option("GBP"),
+                        ],
+                        **Style.Dropdown.value,
+                    ),
+                ]
+            ),
+            ft.Row(
+                controls=[
+                    date_textfield := ft.TextField(
+                        read_only=True,
+                        **Style.TextField.value,
+                    ),
+                    date_button := ft.IconButton(
+                        icon=ft.icons.CALENDAR_MONTH,
+                        on_click=lambda _: date_picker.pick_date(),
+                        **Style.IconButton.value,
+                    ),
+                ]
+            ),
+            add_button := ft.ElevatedButton(
+                on_click=lambda _: add_savings_row(
+                    date=calendar.var["savings_deadline"],
+                    goal=calendar.var["savings_goal"].value,
+                    amount=calendar.var["savings_amount"].value,
+                    currency=calendar.var["savings_currency"].value,
+                ),
+                **Style.ElevatedButton.value,
+            ),
+        ],
+        description="User calendar inputs",
+    )
 )
-data_row = Component(
-    content=[
-        ft.DataTable(
-            sort_ascending=True,
-            columns=[
-                ft.DataColumn(date_col_header := ft.Text(value=None)),
-                ft.DataColumn(goal_col_header := ft.Text(value=None)),
-                ft.DataColumn(amount_col_header := ft.Text(value=None), numeric=True),
-            ],
-            rows=[],
-        )
-    ],
-    description="User finance goals",
+calendar.add_component(
+    Component(
+        content=[
+            ft.DataTable(
+                sort_ascending=True,
+                columns=[
+                    ft.DataColumn(date_col_header := ft.Text()),
+                    ft.DataColumn(goal_col_header := ft.Text()),
+                    ft.DataColumn(amount_col_header := ft.Text(), numeric=True),
+                ],
+                rows=[],
+            )
+        ],
+        description="User finance goals",
+    )
 )
-navbar = defaults["NAVIGATION_BAR"]
-
-calendar.add_component(statistics)
-calendar.add_component(main_content)
-calendar.add_component(data_row)
-calendar.add_component(navbar)
+calendar.add_component(defaults["NAVIGATION_BAR"])
 
 calendar.var = {
     "savings_goal": calendar.components[1].content[1],

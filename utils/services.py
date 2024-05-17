@@ -40,7 +40,10 @@ def read_user_from_db(id: str | int) -> User:
     Returns:
         User: The user dto created from the retrieved data.
     """
-    with open(Path(DB_Keys.USER_DB.value), encoding=DB_Keys.ENCODING.value) as db:
+    with open(
+        Path(DB_Keys.RELATIVE_DB_PATH.value + DB_Keys.USER_DB.value).resolve(),
+        encoding=DB_Keys.ENCODING.value,
+    ) as db:
         user_data = json.load(db)[str(id)]
 
     return User(
@@ -78,7 +81,11 @@ def load_db_data(db_filename: str) -> dict:
     Returns:
         dict: The loaded data from the file.
     """
-    with open(Path(db_filename), "r", encoding=DB_Keys.ENCODING.value) as db:
+    with open(
+        Path(DB_Keys.RELATIVE_DB_PATH.value + db_filename).resolve(),
+        "r",
+        encoding=DB_Keys.ENCODING.value,
+    ) as db:
         data = json.load(db)
     return data
 
@@ -123,7 +130,11 @@ def dump_data(data: dict, db_filename: str) -> None:
     Returns:
         None
     """
-    with open(Path(db_filename), "w", encoding=DB_Keys.ENCODING.value) as db:
+    with open(
+        Path(DB_Keys.RELATIVE_DB_PATH.value + db_filename).resolve(),
+        "w",
+        encoding=DB_Keys.ENCODING.value,
+    ) as db:
         json.dump(data, db)
 
 

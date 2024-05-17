@@ -10,20 +10,12 @@ from views.register import register
 from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
-from views.calendar import calendar, init_calendar
+from views.calendar import calendar
 from components.default_components import defaults
-from lang import Lang
+from utils.lang import Lang
 import flet as ft
 
 all_views = (shop, home, scan, login, register, social, calendar, finances, settings)
-
-
-def refresh_langs(language: str) -> None:
-    for view in all_views:
-        view.lang = Lang(section=view.name, language=language)
-
-
-def init_session(user_id) -> None: ...
 
 
 class App:

@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class DB_Keys(Enum):
+    RELATIVE_DB_PATH = "./database/"
     ENCODING = "utf-8"
     LOGIN_DB = "login_database.json"
     USER_DB = "user_database.json"

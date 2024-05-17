@@ -8,7 +8,7 @@ stats = Component(
         ft.AppBar(
             title=ft.Text("Capynance."),
             center_title=True,
-            actions=[ft.IconButton(icon=ft.icons.REFRESH_OUTLINED)],
+            actions=[ft.IconButton(icon=ft.icons.LOGOUT_OUTLINED)],
             **Style.AppBar.value
         ),
     ],

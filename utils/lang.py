@@ -1,4 +1,5 @@
 import configparser
+from utils.db_keys import DB_Keys
 from pathlib import Path
 from typing import Optional
 
@@ -19,9 +20,15 @@ def read_lang_file(language: str, section: str) -> dict:
     translations = {}
     config = configparser.ConfigParser()
     try:
-        config.read(Path(f"lang_{language}.properties"), encoding="utf-8")
+        config.read(
+            Path(f"{DB_Keys.RELATIVE_DB_PATH.value}lang_{language}.properties"),
+            encoding="utf-8",
+        )
     except FileNotFoundError:
-        config.read(Path("lang_en.properties"), encoding="utf-8")
+        config.read(
+            Path(f"{DB_Keys.RELATIVE_DB_PATH.value}lang_en.properties"),
+            encoding="utf-8",
+        )
     finally:
         if section in config:
             translations[section] = {}
