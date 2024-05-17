@@ -72,13 +72,13 @@ def create_shop_item(product_id, index_ref):
 
     container = ft.Container(
         content=ft.Image(
-            src=images[index_ref.current], fit=ft.ImageFit.COVER, width=100, height=100
+            src=images[index_ref.current], fit=ft.ImageFit.COVER, width=150, height=150
         ),
         margin=10,
         padding=10,
         alignment=ft.alignment.center,
         bgcolor=ft.colors.WHITE,
-        width=200,
+        width=150,
         height=150,
         border_radius=10,
         shadow=ft.BoxShadow(

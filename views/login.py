@@ -1,6 +1,6 @@
 from views.home import home
 from views.view import View
-from utils.enums import Color
+from utils.enums import Colors
 from utils.styles import Style
 import utils.services as services
 from views.register import register
@@ -17,7 +17,7 @@ login.add_component(
         content=[
             ft.SafeArea(
                 ft.Image(
-                    src="https://img.freepik.com/free-vector/forest-scene-with-wild-animals_1308-114385.jpg?w=1380&t=st=1715025124~exp=1715025724~hmac=2029704265bfa5fb3d7d035ec399ec793f14c925e4e2a7711e10a0b79a3dc6cd",
+                    src="https://lh3.googleusercontent.com/pw/AP1GczM8ZzSJnB2PxA1RqdI04DnJf16ps6PE8-8Ppsy0Gt-xMairJPaW9h-oQJ5huSbJzlyD0d0L0RixI0EJmssHgf8KEJgI6B5jq9OW1W4zMzj8csIsfUwy5pmILFuQ0mLxZhX61uw7Pg6CnuhekOLDF0Y=w894-h894-s-no-gm?authuser=0",
                     width=250,
                     height=250,
                     fit=ft.ImageFit.COVER,
@@ -31,8 +31,8 @@ login.add_component(
                 **Style.TextField.value,
             ),
             log_in_button := ft.ElevatedButton(
-                color=Color.BLACK.value,
-                bgcolor=Color.ACCENT.value,
+                color=Colors.BLACK.value,
+                bgcolor=Colors.ACCENT.value,
                 on_click=lambda _: log_user_in(
                     login.var["email"].value, login.var["password"].value
                 ),
