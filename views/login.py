@@ -6,6 +6,7 @@ import utils.services as services
 from views.register import register
 from session import Session
 from views.calendar import init_calendar
+from views.finances import init_finances
 from components.component import Component
 from page import Page
 from typing import Tuple
@@ -83,6 +84,7 @@ def log_user_in(email: str | None, password: str | None):
             if view.refresh_language_contents is not None:
                 view.refresh_language_contents()
         init_calendar()
+        init_finances()
         Page.go(home.route)
 
 

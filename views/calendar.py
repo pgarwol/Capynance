@@ -134,8 +134,7 @@ def add_savings_row(
     if not Session.get_logged_user().does_savings_goal_exist(goal):
         services.save_user_data(Session.get_logged_user())
 
-    if FletNames.PAGE in calendar.var:
-        Page.update()
+    Page.update()
 
 
 # TODO
@@ -160,6 +159,10 @@ def insert_dto_data_to_datarows(data: dict):
 
 def init_calendar() -> None:
     retrieve_dto_data(dto=Session.get_logged_user())
+
+
+def reset_calendar() -> None:
+    calendar.components[2].content[0].rows.clear()
 
 
 def refresh_labels() -> None:

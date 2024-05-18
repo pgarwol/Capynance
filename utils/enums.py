@@ -46,6 +46,14 @@ class Colors(StrEnum):
     ACCENT = "#ffa500"
     WHITE = ft.colors.WHITE
     BLACK = ft.colors.BLACK
+    ING = "#ff6201"
+    MBANK = "#008520"
+    APPLE_PAY = ft.colors.WHITE
+    REVOLUT = ft.colors.WHITE
+    SANTANDER = "#ec0000"
+    PAYPAL = "#019cde"
+    POSITIVE = ft.colors.GREEN_500
+    NEGATIVE = ft.colors.RED_500
 
 
 class Currencies(StrEnum):

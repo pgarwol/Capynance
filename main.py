@@ -9,9 +9,9 @@ from views.social import social
 from utils.enums import DBFields, FletNames
 from views.register import register
 from views.calendar import calendar
-from views.finances import finances
+from views.finances import finances, reset_finances
 from views.settings import settings
-from views.calendar import calendar, change_date
+from views.calendar import calendar, change_date, reset_calendar
 from components.component import DefaultComponents
 from utils.lang import Lang
 from views.view import View
@@ -97,6 +97,8 @@ def save_and_flush() -> None:
         DefaultComponents.DEFAULT_MENU_SELECTION.value
     )
     View.reset_views()
+    reset_calendar()
+    reset_finances()
     Page.update()
 
 
