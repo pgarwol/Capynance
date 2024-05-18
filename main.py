@@ -14,6 +14,7 @@ from views.calendar import calendar
 from components.component import DefaultComponents
 from utils.lang import Lang
 from views.view import View
+from page import Page
 import flet as ft
 
 
@@ -34,15 +35,11 @@ class App:
     }
 
     def main(self, page: ft.Page) -> None:
-        def attach_pages() -> None:
-            for view in View.instances:
-                view.attach_page(page)
+        Page.set_page(page=page)
 
         def on_init() -> None:
-            attach_pages()
-
             DefaultComponents.NAVIGATION_BAR.value.content[0].content.on_change = (
-                lambda e: page.go(
+                lambda e: Page.go(
                     route=self.navigation_bar_items[e.control.selected_index][
                         FletNames.ROUTE
                     ]
@@ -50,7 +47,7 @@ class App:
             )
             DefaultComponents.STATISTICS_BAR.value.content[0].actions[
                 0
-            ].on_click = lambda _: page.update()
+            ].on_click = lambda _: Page.update()
 
         page.title = self.name
 
@@ -70,12 +67,12 @@ class App:
                     ].build()
                 )
 
-            page.update()
+            Page.update()
 
         def view_pop(view: ft.View):
             page.views.pop()
             top_view = page.views[-1]
-            page.go(top_view.route)
+            Page.go(top_view.route)
 
         def get_view_index(route: str) -> int | None:
             return next(
@@ -89,7 +86,7 @@ class App:
 
         page.on_route_change = route_change
         page.on_view_pop = view_pop
-        page.go(page.route)
+        Page.go(page.route)
 
 
 if __name__ == "__main__":

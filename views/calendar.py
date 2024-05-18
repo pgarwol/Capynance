@@ -5,6 +5,7 @@ from utils.styles import Style
 from utils.enums import Currencies, FletNames
 from components.component import Component, DefaultComponents
 import datetime
+from page import Page
 import flet as ft
 
 
@@ -12,7 +13,7 @@ def change_date():
     calendar.var["savings_deadline"] = date_picker.value
     calendar.var["savings_deadline_output"].value = f"{date_picker.value:%d-%m-%Y}"
     if FletNames.PAGE in calendar.var:
-        calendar.var[FletNames.PAGE].update()
+        Page.update()
 
 
 calendar = View(name=FletNames.CALENDAR, route=f"/{FletNames.CALENDAR}")
@@ -88,6 +89,7 @@ calendar.add_component(
 calendar.add_component(DefaultComponents.NAVIGATION_BAR.value)
 
 calendar.var = {
+    "savings_deadline": None,
     "savings_goal": calendar.components[1].content[1],
     "savings_amount": calendar.components[1].content[2].controls[0],
     "savings_currency": calendar.components[1].content[2].controls[1],
@@ -134,7 +136,7 @@ def add_savings_row(
         services.save_user_data(Session.get_logged_user())
 
     if FletNames.PAGE in calendar.var:
-        calendar.var[FletNames.PAGE].update()
+        Page.update()
 
 
 # TODO

@@ -4,6 +4,7 @@ from utils.styles import Style
 from utils.enums import FletNames
 import utils.services as services
 from components.component import Component
+from page import Page
 import re
 import flet as ft
 
@@ -28,7 +29,7 @@ register.add_component(
             # TODO: Incorrect data info,
             has_account_button := ft.TextButton(
                 text=register.lang["has_account"],
-                on_click=lambda _: register.var[FletNames.PAGE].go("/"),
+                on_click=lambda _: Page.go("/"),
             ),
             register_button := ft.ElevatedButton(
                 text=None,
@@ -80,19 +81,19 @@ def do_register(email: str, password: str, password_confirmation: str) -> None:
     """
     if email is None or password is None or password_confirmation is None:
         register.var["errors_output"].value = "Wszystkie pola muszą zostać wypełnione"
-        register.var[FletNames.PAGE].update()
+        Page.update()
         return
 
     if validate_email(email):
         if password == password_confirmation:
             services.create_account(email, password)
-            register.var[FletNames.PAGE].go(home.route)
+            Page.go(home.route)
         else:
             register.var["errors_output"].value = "Hasła muszą być takie same"
-            register.var[FletNames.PAGE].update()
+            Page.update()
     else:
         register.var["errors_output"].value = "Wszystkie pola muszą zostać wypełnione"
-        register.var[FletNames.PAGE].update()
+        Page.update()
 
 
 def refresh_labels() -> None:

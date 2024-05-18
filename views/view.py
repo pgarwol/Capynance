@@ -114,18 +114,6 @@ class View(AbstractView):
             raise CapynanceException("invalid_components")
 
     def refresh_language_contents() -> None: ...
-    def attach_page(self, page: ft.Page) -> None:
-        """
-        Attaches a page reference to the view.
-
-        Args:
-            page (ft.Page): The page to attach to the view.
-
-        Returns:
-            None
-        """
-        if isinstance(page, ft.Page):
-            self.var[FletNames.PAGE] = page
 
     def attach_language_object(self, language: str) -> None:
         if isinstance(language, str):

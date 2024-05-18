@@ -8,6 +8,7 @@ from session import Session
 from views.calendar import init_calendar
 from components.component import Component
 from utils.services import read_user_from_db
+from page import Page
 from typing import Tuple
 import flet as ft
 
@@ -38,7 +39,7 @@ login.add_component(
                 ),
             ),
             no_account_button := ft.TextButton(
-                on_click=lambda _: login.var[FletNames.PAGE].go(register.route),
+                on_click=lambda _: Page.go(register.route),
             ),
         ],
         description="Login page.",
@@ -77,11 +78,11 @@ def log_user_in(email: str | None, password: str | None):
         Session.set_language(Session.get_logged_user().settings["language"])
         for view in View.instances:
             view.lang.change_language(Session.get_language())
-            view.var[FletNames.PAGE].update()
+            Page.update()
             if view.refresh_language_contents is not None:
                 view.refresh_language_contents()
         init_calendar()
-        login.var[FletNames.PAGE].go(home.route)
+        Page.go(home.route)
 
 
 def refresh_labels() -> None:
