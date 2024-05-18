@@ -11,13 +11,13 @@ from views.register import register
 from views.calendar import calendar
 from views.finances import finances
 from views.settings import settings
-from views.calendar import calendar
+from views.calendar import calendar, change_date
 from components.component import DefaultComponents
 from utils.lang import Lang
 from views.view import View
+from page import Page
 import signal
 import sys
-from page import Page
 import flet as ft
 
 
@@ -50,7 +50,7 @@ class App:
             )
             DefaultComponents.STATISTICS_BAR.value.content[0].actions[
                 0
-            ].on_click = lambda _: Page.update()
+            ].on_click = lambda _: save_and_flush()
 
         page.title = self.name
 
@@ -90,6 +90,14 @@ class App:
         page.on_route_change = route_change
         page.on_view_pop = view_pop
         Page.go(page.route)
+
+
+def save_and_flush() -> None:
+    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
+        DefaultComponents.DEFAULT_MENU_SELECTION.value
+    )
+    View.reset_views()
+    Page.update()
 
 
 def cleanup(signum=None, frame=None):

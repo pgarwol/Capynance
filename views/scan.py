@@ -1,4 +1,4 @@
-from views.view import View
+from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames
@@ -14,4 +14,5 @@ scan.add_component(
     )
 )
 scan.add_component(DefaultComponents.NAVIGATION_BAR.value)
+ViewsInitialStates.set_scan_copy(scan)
 scan.log()

@@ -1,4 +1,4 @@
-from views.view import View
+from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames
@@ -91,7 +91,7 @@ def create_shop_item(product_id, index_ref):
     )
 
     return ft.Column(
-        controls=[
+        controls=(
             ft.Container(
                 content=ft.Text(name),
                 alignment=ft.alignment.center,
@@ -127,7 +127,7 @@ def create_shop_item(product_id, index_ref):
                 alignment=ft.alignment.center,
             ),
             ft.Divider(),
-        ]
+        )
     )
 
 
@@ -153,4 +153,5 @@ shop.add_component(
 
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
 shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
+ViewsInitialStates.set_shop_copy(shop)
 shop.log()

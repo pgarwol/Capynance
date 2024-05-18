@@ -1,6 +1,6 @@
 import utils.services as services
 from session import Session
-from views.view import View
+from views.view import View, ViewsInitialStates
 from utils.styles import Style
 from utils.enums import Currencies, FletNames
 from components.component import Component, DefaultComponents
@@ -12,8 +12,7 @@ import flet as ft
 def change_date():
     calendar.var["savings_deadline"] = date_picker.value
     calendar.var["savings_deadline_output"].value = f"{date_picker.value:%d-%m-%Y}"
-    if FletNames.PAGE in calendar.var:
-        Page.update()
+    Page.update()
 
 
 calendar = View(name=FletNames.CALENDAR, route=f"/{FletNames.CALENDAR}")
@@ -177,5 +176,5 @@ def refresh_labels() -> None:
 refresh_labels()
 
 calendar.refresh_language_contents = refresh_labels
-
+ViewsInitialStates.set_calendar_copy(calendar)
 calendar.log()

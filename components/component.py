@@ -1,4 +1,5 @@
 from utils.enums import Colors, FletNames
+import copy
 from utils.styles import Style
 from utils.exceptions import CapynanceException
 from components.abstract_component import AbstractComponent
@@ -58,6 +59,7 @@ class Component(AbstractComponent):
 
 
 class DefaultComponents(Enum):
+    DEFAULT_MENU_SELECTION = 3
     STATISTICS_BAR = Component(
         content=[
             ft.AppBar(

@@ -1,6 +1,6 @@
 from views.home import home
 from views.view import View
-from utils.enums import Colors, FletNames
+from utils.enums import Colors, FletNames, String
 from utils.styles import Style
 import utils.services as services
 from views.register import register
@@ -75,6 +75,8 @@ def log_user_in(email: str | None, password: str | None):
     if logged_in_successfully:
         Session.set_logged_user(services.read_user_from_db(user_id))
         Session.set_language(Session.get_logged_user().settings["language"])
+        login.var["email"].value = String.EMPTY
+        login.var["password"].value = String.EMPTY
         for view in View.instances:
             view.lang.change_language(Session.get_language())
             Page.update()

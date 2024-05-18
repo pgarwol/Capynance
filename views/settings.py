@@ -1,4 +1,4 @@
-from views.view import View
+from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames
@@ -11,4 +11,5 @@ settings.add_component(
     Component([ft.Text("USTAWIENIA")], "View representing Settings.")
 )
 settings.add_component(DefaultComponents.NAVIGATION_BAR.value)
+ViewsInitialStates.set_settings_copy(settings)
 settings.log()

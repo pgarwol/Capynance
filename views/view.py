@@ -1,9 +1,11 @@
 from utils.lang import Lang
+import copy
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException, Errors
 from utils.enums import FletNames, DBFields
 from io import StringIO
+from page import Page
 from pathlib import Path
 from typing import Optional, List
 import flet as ft
@@ -19,6 +21,7 @@ class View(AbstractView):
         self._var = {}
         self.refresh_language_contents = None
         self._lang = Lang(section=self.name)
+        self.copy = copy.copy(self)
         View.instances.append(self)
 
     @property
@@ -48,6 +51,17 @@ class View(AbstractView):
     @lang.setter
     def lang(self, value):
         self._lang = value
+
+    @classmethod
+    def reset_views(cls):
+        for view in cls.instances:
+            print(id(view), " ?= ", id(ViewsInitialStates.get_calendar_copy()))
+
+            view = ViewsInitialStates.get_calendar_copy()
+            # view = view.copy
+
+        Page.update()
+        Page.go("/")
 
     def get_component(self, index: Optional[int] = 0) -> Component:
         """
@@ -109,17 +123,37 @@ class View(AbstractView):
             CapynanceException: If the component is invalid.
         """
         if isinstance(component, Component):
-            self.components.append(component)
+            self.components.append(copy.copy(component))
+
         else:
             raise CapynanceException(Errors.INVALID_COMPONENT)
 
-    def refresh_language_contents() -> None: ...
+    def refresh_language_contents() -> None:
+        """
+        Refreshes the language contents for the view.
+
+        Method implementation must be provided during instantiating View.
+        """
+        ...
 
     def attach_language_object(self, language: str) -> None:
+        """
+        Attaches a language object to the view.
+
+        Args:
+            language (str): The language to attach to the view.
+
+        Returns:
+            None
+        """
         if isinstance(language, str):
             self.lang = Lang(section=self.name.lower(), language=language)
 
     def log(self) -> None:
+        """
+        Logs the view details and components to the build log file.
+        """
+
         def append_build_log(content: str) -> None:
             with open(
                 Path(DBFields.BUILD_LOG_PATH).resolve(), "a", encoding=DBFields.ENCODING
@@ -144,3 +178,61 @@ class View(AbstractView):
 
         output = f"{self.name.capitalize()} | route = {self.route}\n\tcomponents:\n{list_all_component_descriptions(self)}\n\n"
         append_build_log(output)
+
+
+class ViewsInitialStates:
+    @classmethod
+    def set_calendar_copy(cls, calendar):
+        cls.calendar = copy.copy(calendar)
+
+    @classmethod
+    def get_calendar_copy(cls):
+        return copy.copy(cls.calendar)
+
+    @classmethod
+    def set_finances_copy(cls, finances):
+        cls.finances = copy.copy(finances)
+
+    @classmethod
+    def get_finances_copy(cls):
+        return cls.finances
+
+    @classmethod
+    def set_home_copy(cls, home):
+        cls.home = copy.copy(home)
+
+    @classmethod
+    def get_home_copy(cls):
+        return cls.home
+
+    @classmethod
+    def set_settings_copy(cls, settings):
+        cls.settings = copy.copy(settings)
+
+    @classmethod
+    def get_settings_copy(cls):
+        return cls.settings
+
+    @classmethod
+    def set_scan_copy(cls, scan):
+        cls.scan = copy.copy(scan)
+
+    @classmethod
+    def get_scan_copy(cls):
+        return cls.scan
+
+    @classmethod
+    def set_shop_copy(cls, shop):
+        cls.shop = copy.copy(shop)
+
+    @classmethod
+    def get_shop_copy(cls):
+        return cls.shop
+
+    @classmethod
+    def set_social_copy(cls, social):
+        cls.social = copy.copy(social)
+
+    @classmethod
+    def get_social_copy(cls):
+        return cls.social
