@@ -7,7 +7,6 @@ from views.register import register
 from session import Session
 from views.calendar import init_calendar
 from components.component import Component
-from utils.services import read_user_from_db
 from page import Page
 from typing import Tuple
 import flet as ft
@@ -74,7 +73,7 @@ def log_user_in(email: str | None, password: str | None):
 
     logged_in_successfully, user_id = services.is_login_valid(email, password)
     if logged_in_successfully:
-        Session.set_logged_user(read_user_from_db(user_id))
+        Session.set_logged_user(services.read_user_from_db(user_id))
         Session.set_language(Session.get_logged_user().settings["language"])
         for view in View.instances:
             view.lang.change_language(Session.get_language())
@@ -97,4 +96,4 @@ refresh_labels()
 login.refresh_language_contents = refresh_labels
 
 
-print(login)
+login.log()

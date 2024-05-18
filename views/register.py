@@ -108,4 +108,4 @@ refresh_labels()
 
 register.refresh_language_labels = refresh_labels
 
-print(register)
+register.log()

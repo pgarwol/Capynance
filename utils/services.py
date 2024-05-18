@@ -1,12 +1,18 @@
 from user import User
+from views.view import View
 from utils.enums import DBFields, String
+from utils.exceptions import CapynanceException, Errors, Warnings
 import json
 import random
 from pathlib import Path
 from typing import Tuple
-from utils.exceptions import CapynanceException, Errors, Warnings
 
-encoding = DBFields.ENCODING.value
+
+def flush_build_log() -> None:
+    with open(
+        Path(DBFields.BUILD_LOG_PATH).resolve(), "w", encoding=DBFields.ENCODING
+    ) as file:
+        file.write(String.EMPTY)
 
 
 def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, None]:
@@ -44,7 +50,7 @@ def read_user_from_db(id: str | int) -> User:
     """
     with open(
         Path(DBFields.RELATIVE_DB_PATH + DBFields.USER_DB).resolve(),
-        encoding=encoding,
+        encoding=DBFields.ENCODING,
     ) as db:
         user_data = json.load(db)[str(id)]
     try:
@@ -88,7 +94,7 @@ def load_db_data(db_filename: str) -> dict:
     with open(
         Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
         "r",
-        encoding=encoding,
+        encoding=DBFields.ENCODING,
     ) as db:
         data = json.load(db)
     return data
@@ -137,7 +143,7 @@ def dump_data(data: dict, db_filename: str) -> None:
     with open(
         Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
         "w",
-        encoding=encoding,
+        encoding=DBFields.ENCODING,
     ) as db:
         json.dump(data, db)
 
@@ -154,8 +160,3 @@ def get_view_data(view_name: str, user_id: str | int) -> dict:
         dict: The data for the specified view associated with the user.
     """
     return load_db_data(DBFields.USER_DB)[str(user_id)][view_name]
-
-
-def append_build(content: str) -> None:
-    with open("./build.log", "a", encoding=DBFields.ENCODING) as file:
-        file.write(content)

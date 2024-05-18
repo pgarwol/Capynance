@@ -178,4 +178,4 @@ refresh_labels()
 
 calendar.refresh_language_contents = refresh_labels
 
-print(calendar)
+calendar.log()

@@ -2,10 +2,10 @@ from utils.lang import Lang
 from components.component import Component
 from views.abstract_view import AbstractView
 from utils.exceptions import CapynanceException, Errors
-from utils.enums import FletNames
-from utils.services import append_build
+from utils.enums import FletNames, DBFields
 from io import StringIO
-from typing import Optional
+from pathlib import Path
+from typing import Optional, List
 import flet as ft
 
 
@@ -18,7 +18,6 @@ class View(AbstractView):
         self._components = []
         self._var = {}
         self.refresh_language_contents = None
-        print(self.name)
         self._lang = Lang(section=self.name)
         View.instances.append(self)
 
@@ -120,19 +119,28 @@ class View(AbstractView):
         if isinstance(language, str):
             self.lang = Lang(section=self.name.lower(), language=language)
 
-    def __repr__(self):
+    def log(self) -> None:
+        def append_build_log(content: str) -> None:
+            with open(
+                Path(DBFields.BUILD_LOG_PATH).resolve(), "a", encoding=DBFields.ENCODING
+            ) as file:
+                file.write(content)
+
+        def list_all_controls(control_list: List[ft.Control]) -> str:
+            buffer = StringIO()
+            for i, control in enumerate(control_list):
+                buffer.write("\t\t|---------------|----- " + f"{i}. {control}\n")
+            return buffer.getvalue()
+
         def list_all_component_descriptions(self) -> str:
             buffer = StringIO()
             for i, component in enumerate(self._components):
                 buffer.write(
-                    "\t\t"
-                    + f"{i}. {component.description} | Controls: {component.content}"
-                    + "\n"
+                    "\t\t|----- "
+                    + f"{i}. {component.description}\n{list_all_controls(component.content)}"
                 )
-            buffer.write("\t]")
 
             return buffer.getvalue()
 
-        output = f'View (\n\tname = {self.name},\n\troute = "{self.route}",\n\tcomponents: [\n{list_all_component_descriptions(self)}\n)'
-        append_build(output)
-        return output
+        output = f"{self.name.capitalize()} | route = {self.route}\n\tcomponents:\n{list_all_component_descriptions(self)}\n\n"
+        append_build_log(output)

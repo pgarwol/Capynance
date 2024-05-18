@@ -1,4 +1,5 @@
 from views.view import View
+import utils.services as services
 from utils.enums import FletNames
 from components.component import Component, DefaultComponents
 import flet as ft
@@ -10,4 +11,4 @@ finances.add_component(
     Component([ft.Text("FINANSE")], "View representing finance management.")
 )
 finances.add_component(DefaultComponents.NAVIGATION_BAR.value)
-print(finances)
+finances.log()

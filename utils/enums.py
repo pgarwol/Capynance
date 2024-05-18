@@ -8,6 +8,7 @@ class String(StrEnum):
 
 class DBFields(StrEnum):
     RELATIVE_DB_PATH = "./database/"
+    BUILD_LOG_PATH = "./database/built_views.log"
     ENCODING = "utf-8"
     LOGIN_DB = "login_database.json"
     USER_DB = "user_database.json"

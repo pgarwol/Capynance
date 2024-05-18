@@ -1,4 +1,5 @@
 import utils.services as services
+
 from session import Session
 from views.shop import shop
 from views.home import home
@@ -14,6 +15,8 @@ from views.calendar import calendar
 from components.component import DefaultComponents
 from utils.lang import Lang
 from views.view import View
+import signal
+import sys
 from page import Page
 import flet as ft
 
@@ -89,6 +92,16 @@ class App:
         Page.go(page.route)
 
 
+def cleanup(signum=None, frame=None):
+    services.flush_build_log()
+    sys.exit(0)
+
+
 if __name__ == "__main__":
-    app = App()
-    ft.app(target=app.main, view=ft.AppView.WEB_BROWSER)
+    signal.signal(signal.SIGINT, cleanup)
+    signal.signal(signal.SIGTERM, cleanup)
+    try:
+        app = App()
+        ft.app(target=app.main, view=ft.AppView.WEB_BROWSER)
+    finally:
+        cleanup()

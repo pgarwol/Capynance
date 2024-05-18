@@ -1,4 +1,5 @@
 from views.view import View
+import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames
 import flet as ft
@@ -152,4 +153,4 @@ shop.add_component(
 
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
 shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
-print(shop)
+shop.log()

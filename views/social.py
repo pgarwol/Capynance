@@ -1,4 +1,5 @@
 from utils.enums import FletNames
+import utils.services as services
 from components.component import Component, DefaultComponents
 from views.view import View
 import flet as ft
@@ -194,3 +195,4 @@ social.add_component(
     )
 )
 social.add_component(DefaultComponents.NAVIGATION_BAR.value)
+social.log()

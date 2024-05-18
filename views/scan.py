@@ -1,4 +1,5 @@
 from views.view import View
+import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames
 import flet as ft
@@ -13,4 +14,4 @@ scan.add_component(
     )
 )
 scan.add_component(DefaultComponents.NAVIGATION_BAR.value)
-print(scan)
+scan.log()
