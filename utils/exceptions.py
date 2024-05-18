@@ -1,4 +1,14 @@
-from enum import Enum
+from enum import StrEnum
+
+
+class Errors(StrEnum):
+    INVALID_COMPONENT = "Invalid component has been provided."
+    INVALID_CONTROL_TYPE = "Provided Control must be of type flet.Control."
+    USER_NOT_FOUND = "User could not be initialized."
+
+
+class Warnings(StrEnum):
+    INVALID_INDEX = "Provided index is invalid."
 
 
 class CapynanceException(Exception):
@@ -16,22 +26,10 @@ class CapynanceException(Exception):
     - The error message corresponding to the specified error type.
     """
 
-    errors = {
-        "default": "I am placeholder, please change me.",
-        "invalid_components": "Invalid components provided.",
-        "unknown index": "Provided str index is invalid.",
-        "invalid index": "Provided index is invalid.",
-        "control not flet.Control": "Provided Control must be of type flet.Control",
-    }
+    _DEFAULT_ERROR = "Error has not been specified"
 
     def __init__(self, error_type: str):
-        self.error_type = error_type if error_type in self.errors.keys() else "default"
+        self.error_type = error_type if error_type in Errors else self._DEFAULT_ERROR
 
     def __str__(self):
-        return self.errors[self.error_type]
-
-
-class Errors(Enum): ...
-
-
-class Warnings(Enum): ...
+        return self.error_type

@@ -1,8 +1,9 @@
 from utils.lang import Lang
 from components.component import Component
 from views.abstract_view import AbstractView
-from utils.exceptions import CapynanceException
+from utils.exceptions import CapynanceException, Errors
 from utils.enums import FletNames
+from utils.services import append_build
 from io import StringIO
 from typing import Optional
 import flet as ft
@@ -111,7 +112,7 @@ class View(AbstractView):
         if isinstance(component, Component):
             self.components.append(component)
         else:
-            raise CapynanceException("invalid_components")
+            raise CapynanceException(Errors.INVALID_COMPONENT)
 
     def refresh_language_contents() -> None: ...
 
@@ -132,4 +133,6 @@ class View(AbstractView):
 
             return buffer.getvalue()
 
-        return f'View (\n\tname = {self.name},\n\troute = "{self.route}",\n\tcomponents: [\n{list_all_component_descriptions(self)}\n)'
+        output = f'View (\n\tname = {self.name},\n\troute = "{self.route}",\n\tcomponents: [\n{list_all_component_descriptions(self)}\n)'
+        append_build(output)
+        return output

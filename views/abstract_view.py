@@ -53,7 +53,3 @@ class AbstractView(ABC):
     @abstractmethod
     def add_component(self):
         pass
-
-    @abstractmethod
-    def attach_page(self):
-        pass

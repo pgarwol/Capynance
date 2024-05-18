@@ -4,6 +4,7 @@ import json
 import random
 from pathlib import Path
 from typing import Tuple
+from utils.exceptions import CapynanceException, Errors, Warnings
 
 encoding = DBFields.ENCODING.value
 
@@ -46,15 +47,17 @@ def read_user_from_db(id: str | int) -> User:
         encoding=encoding,
     ) as db:
         user_data = json.load(db)[str(id)]
-
-    return User(
-        id=id,
-        profile=user_data[DBFields.PROFILE],
-        calendar=user_data[DBFields.CALENDAR],
-        finances=user_data[DBFields.FINANCES],
-        social=user_data[DBFields.SOCIAL],
-        settings=user_data[DBFields.SETTINGS],
-    )
+    try:
+        return User(
+            id=id,
+            profile=user_data[DBFields.PROFILE],
+            calendar=user_data[DBFields.CALENDAR],
+            finances=user_data[DBFields.FINANCES],
+            social=user_data[DBFields.SOCIAL],
+            settings=user_data[DBFields.SETTINGS],
+        )
+    except Exception as e:
+        raise CapynanceException(Errors.USER_NOT_FOUND) from e
 
 
 def save_user_data(user: User) -> None:
@@ -151,3 +154,8 @@ def get_view_data(view_name: str, user_id: str | int) -> dict:
         dict: The data for the specified view associated with the user.
     """
     return load_db_data(DBFields.USER_DB)[str(user_id)][view_name]
+
+
+def append_build(content: str) -> None:
+    with open("./build.log", "a", encoding=DBFields.ENCODING) as file:
+        file.write(content)
