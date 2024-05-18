@@ -40,18 +40,21 @@ class FletNames(StrEnum):
 
 
 class Colors(StrEnum):
-    PRIMARY_DARKER = "#B1DAC9"
-    PRIMARY_LIGHTER = ft.colors.TEAL_ACCENT_100
-    SECONDARY = "#EEEDD7"
-    ACCENT = "#ffa500"
+    PRIMARY_DARKER = "#B1DAC9"  # light aquamarine
+    PRIMARY_LIGHTER = (
+        ft.colors.TEAL_ACCENT_100
+    )  # light aquamarine (but darker than primary_dark ?)
+    SECONDARY = "#EEEDD7"  # light beige
+    ACCENT = "#ffa500"  # light orange
     WHITE = ft.colors.WHITE
     BLACK = ft.colors.BLACK
-    ING = "#ff6201"
-    MBANK = "#008520"
+
+    ING = "#ff6201"  # orange
+    MBANK = "#008520"  # green
     APPLE_PAY = ft.colors.WHITE
     REVOLUT = ft.colors.WHITE
-    SANTANDER = "#ec0000"
-    PAYPAL = "#019cde"
+    SANTANDER = "#ec0000"  # red
+    PAYPAL = "#019cde"  # blue
     POSITIVE = ft.colors.GREEN_500
     NEGATIVE = ft.colors.RED_500
 
