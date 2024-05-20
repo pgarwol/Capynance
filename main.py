@@ -39,6 +39,8 @@ class App:
 
     def main(self, page: ft.Page) -> None:
         Page.set_page(page=page)
+        # page.vertical_alignment = ft.MainAxisAlignment.CENTER
+        # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
         def on_init() -> None:
             DefaultComponents.NAVIGATION_BAR.value.content[0].content.on_change = (

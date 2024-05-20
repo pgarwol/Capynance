@@ -1,4 +1,4 @@
-from utils.enums import Colors, FletNames
+from utils.enums import Colors
 import copy
 from utils.styles import Style
 from utils.exceptions import CapynanceException
@@ -62,127 +62,30 @@ class Component(AbstractComponent):
         self._content.insert(i, control)
 
 
-class Stats:
-    def __init__(
-        self,
-        hats_owned: str,
-        hat_equiped: str,
-        capy_colors_owned: str,
-        capy_color_equiped: str,
-        shirts_owned: str,
-        shirt_equiped: str,
-        life_hearts: int,
-        capycoins: int,
-        level: str,
-        exp: str,
-    ):
-        self.hats_owned = hats_owned
-        self.hat_equiped = hat_equiped
-        self.capy_colors_owned = capy_colors_owned
-        self.capy_color_equiped = capy_color_equiped
-        self.shirts_owned = shirts_owned
-        self.shirt_equiped = shirt_equiped
-        self.life_hearts = life_hearts
-        self.capycoins = capycoins
-        self.level = level
-        self.exp = exp
-
-
 stats_var = {}
-
-
-# life_hearts = 3
 default_equipped = "https://lh3.googleusercontent.com/pw/AP1GczP22h9zKEFj7hcIiX-9gfwtRm-W8KPJSP-oYdHEt-0pvgZPy0QOduH8KnGHpC9UFQHT2O_m3jTDisvzGqPEDiWxlC6AFGXdoeFzUYenecjZtIn38Xy-7MbRwAD7tN-iH_OM2iw13cy_YdzpixrzK0E=w725-h857-s-no-gm?authuser=0"
-color_equipped = "https://lh3.googleusercontent.com/pw/AP1GczMPMqur_kGbQI-lEY3s8MWERxHPlyNACTOdhCL_hIZYA-rv_FDTz66K6p0szt1OB9r713_Zx8XX41QeM_z-NpZFdB46B6CxLlN_BDZKjBu0y85gVCYHHQc01K5KiD9En7ev3w919g6yI8z2ETzyjD0=w725-h857-s-no-gm?authuser=0"
-shirt_equipped = "https://lh3.googleusercontent.com/pw/AP1GczON_1lHKkFaB3SN3_qU8nYcZA5c5K4naoRar75J6q1ItXLQV6v2KsIy1d4scUioAAnG7MNpuIlysF4bZ72s-imm0ulEtdjBNiwo_AL8QC1jXyVz1dL0Eoj_2T8DxS2PVesX5t0CStXdsPNDmW_FBgs=w725-h857-s-no-gm?authuser=0"
-hat_equipped = "https://lh3.googleusercontent.com/pw/AP1GczOwMmGFN8ARlJ8PqmmdaOP2tgfzPATP2l28Ih1r0myvynQLRr_pvSVMkpdQWE2nntU8GVxVK37CzdG2s1m68NDkQdaO-j-lrlNHoapJU0JzBZCviE_lXzUJyBJQtPJpV3iuMhAJvYeV8O4A0K46blM=w725-h857-s-no-gm?authuser=0"
-
-capycoins = 20000
-lvl = 10
-exp = 110
 exp_img = "https://static.wikia.nocookie.net/minecraft/images/0/0a/ExperienceOrb.gif/revision/latest/smart/width/371/height/332?cb=20190907041203"
+coin_img = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
 
+
+# capycoins = 20000
+# lvl = 10
+# exp = 110
+
+# Stats
 life_hearts = None
-# hat_equiped = stats_var["hat_equiped"]
-# capycoins = stats_var["capycoins"]
+
+hat_equipped = None
+color_equipped = None
+shirt_equipped = None
+
+capycoins = None
+lvl = None
+exp = None
 
 
-image_width = 75
+image_width = 80
 image_height = (71 * image_width) / 60
-
-
-def create_equipped_images(hat_img, color_img, shirt_img, default_img):
-    controls = []
-
-    if color_img:
-        controls.append(
-            ft.Image(
-                src=color_equipped,
-                fit=ft.ImageFit.CONTAIN,
-                width=image_width,
-                height=image_height,
-            )
-        )
-
-    if hat_img:
-        controls.append(
-            ft.Image(
-                src=hat_equipped,
-                fit=ft.ImageFit.CONTAIN,
-                width=image_width,
-                height=image_height,
-            )
-        )
-
-    if shirt_img:
-        controls.append(
-            ft.Image(
-                src=shirt_equipped,
-                fit=ft.ImageFit.CONTAIN,
-                width=image_width,
-                height=image_height,
-            )
-        )
-
-    if not controls:
-        controls.append(
-            ft.Image(
-                src=default_equipped,
-                fit=ft.ImageFit.CONTAIN,
-                width=image_width,
-                height=image_height,
-            )
-        )
-
-    return ft.Container(
-        content=ft.Stack(controls=controls, width=image_width, height=image_height),
-        alignment=ft.alignment.center,
-        bgcolor=Colors.SECONDARY,
-        border_radius=ft.border_radius.all(8),
-        # clip_behavior=ft.ClipBehavior.HARD_EDGE,
-        width=85,
-        height=85,
-        border=ft.border.all(2, Colors.ACCENT),
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=3,
-            color=ft.colors.GREY,
-            offset=ft.Offset(0, 0),
-        ),
-    )
-
-
-def create_currency_display(capycoins):
-    return ft.Row(
-        controls=[
-            ft.Image(
-                src="https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0",
-                width=36,
-                height=36,
-            ),
-            ft.Text(capycoins, color=ft.colors.BLACK),
-        ]
-    )
 
 
 class DefaultComponents(Enum):
@@ -192,28 +95,17 @@ class DefaultComponents(Enum):
         content=[
             ft.AppBar(
                 leading=ft.Row(
-                    # controls=[
-                    #     create_life_hearts(
-                    #         stats_var["life_hearts"]
-                    #         if stats_var is not None
-                    #         else ""
-                    #         # life_hearts
-                    #     ),
-                    # ],
-                    alignment=ft.MainAxisAlignment.START,
+                    alignment=ft.MainAxisAlignment.CENTER,
                 ),
                 title=ft.Container(
-                    content=create_equipped_images(
-                        hat_equipped, color_equipped, shirt_equipped, default_equipped
-                    ),
+                    ft.Row(controls=[], alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     alignment=ft.alignment.center,
-                    padding=ft.Padding(0, 0, 0, 0),  # Ensure no extra padding
-                    margin=ft.Margin(0, 0, 0, 0),  # Ensure no extra margin
-                    width=image_width,
-                    height=image_height,
+                    padding=ft.Padding(5, 0, 5, 0),
+                    margin=ft.Margin(0, 0, 0, 0),
+                    width=300,
+                    height=85,
                 ),
                 actions=[
-                    create_currency_display(capycoins),
                     ft.IconButton(
                         icon=ft.icons.LOGOUT_OUTLINED, icon_color=Colors.BLACK
                     ),
@@ -280,40 +172,195 @@ class DefaultComponents(Enum):
                             ),
                         ),
                     ],
-                    **Style.CupertinoSlidingSegmentedButton.value
+                    **Style.CupertinoSlidingSegmentedButton.value,
                 )
             )
         ],
         description="Contains bottom navigation bar.",
     )
 
-    # stats_var.append(
-    #     Stats(
-    #         hats_owned=view_data["hats_owned"],
-    #         hat_equiped=view_data["hat_equiped"],
-    #         capy_colors_owned=view_data["capy_colors_owned"],
-    #         capy_color_equiped=view_data["capy_color_equiped"],
-    #         shirts_owned=view_data["shirts_owned"],
-    #         shirt_equiped=view_data["shirt_equiped"],
-    #         life_hearts=int(view_data["life_hearts"]),
-    #         capycoins=int(view_data["capycoins"]),
-    #         level=view_data["level"],
-    #         exp=view_data["exp"],
-    #     )
-    # )
+
+def create_life_hearts(life_hearts: str | int):
+    hearts = [
+        ft.Icon(name=ft.icons.FAVORITE_OUTLINED, color=ft.colors.RED, size=28)
+        for _ in range(int(life_hearts))
+    ]
+
+    return [
+        ft.Container(
+            ft.Row(controls=hearts, spacing=5),
+            margin=ft.margin.Margin(10, 0, 10, 0),
+            # bgcolor=Colors.WHITE, # for debug container size
+        )
+    ]
+
+
+def create_equipped_images(hat_img, color_img, shirt_img):
+    controls = []
+
+    if color_img:
+        controls.append(
+            ft.Image(
+                src=color_img,
+                fit=ft.ImageFit.CONTAIN,
+                width=image_width,
+                height=image_height,
+            )
+        )
+
+    if hat_img:
+        controls.append(
+            ft.Image(
+                src=hat_img,
+                fit=ft.ImageFit.CONTAIN,
+                width=image_width,
+                height=image_height,
+            )
+        )
+
+    if shirt_img:
+        controls.append(
+            ft.Image(
+                src=shirt_img,
+                fit=ft.ImageFit.CONTAIN,
+                width=image_width,
+                height=image_height,
+            )
+        )
+
+    if not controls:
+        controls.append(
+            ft.Image(
+                src=default_equipped,
+                fit=ft.ImageFit.CONTAIN,
+                width=image_width,
+                height=image_height,
+            )
+        )
+
+    return ft.Container(
+        content=ft.Stack(controls=controls, width=image_width, height=image_height),
+        alignment=ft.alignment.center,
+        bgcolor=Colors.SECONDARY,
+        border_radius=ft.border_radius.all(8),
+        width=82,
+        height=82,
+        border=ft.border.all(2, Colors.ACCENT),
+        shadow=ft.BoxShadow(
+            spread_radius=1,
+            blur_radius=3,
+            color=ft.colors.BLACK54,
+            offset=ft.Offset(0, 0),
+        ),
+    )
+
+
+def create_currency_display(capycoins):
+    return ft.Container(
+        content=ft.Row(
+            controls=[
+                ft.Image(
+                    src=coin_img,
+                    width=36,
+                    height=36,
+                ),
+                ft.Text(str(capycoins), color=ft.colors.BLACK),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+        ),
+        margin=ft.margin.Margin(10, 0, 10, 0),
+        padding=ft.padding.all(5),
+        # bgcolor=Colors.WHITE, # for debug container size
+    )
+
+
+def create_lvl_display(lvl):
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text(
+                    "LVL",
+                    size=16,
+                    color=Colors.BLACK,
+                ),
+                ft.Text(
+                    str(lvl),
+                    size=16,
+                    color=Colors.BLACK,
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        bgcolor=Colors.SECONDARY,
+        border_radius=ft.border_radius.all(8),
+        width=75,
+        height=50,
+        alignment=ft.alignment.center,
+        shadow=ft.BoxShadow(
+            spread_radius=1,
+            blur_radius=3,
+            color=ft.colors.BLACK54,
+            offset=ft.Offset(0, 0),
+        ),
+    )
+
+
+def create_exp_display(exp):
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text(
+                    "EXP",
+                    size=16,
+                    color=Colors.BLACK,
+                ),
+                ft.Text(
+                    f"{exp} / 100",
+                    size=16,
+                    color=Colors.BLACK,
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        bgcolor=Colors.SECONDARY,
+        border_radius=ft.border_radius.all(8),
+        width=75,
+        height=50,
+        alignment=ft.alignment.center,
+        shadow=ft.BoxShadow(
+            spread_radius=1,
+            blur_radius=3,
+            color=ft.colors.BLACK54,
+            offset=ft.Offset(0, 0),
+        ),
+    )
 
 
 def init_stats() -> None:
-    def create_life_hearts(life_hearts: str | int):
-        hearts = [
-            ft.Icon(name=ft.icons.FAVORITE, color=ft.colors.RED, size=28)
-            for _ in range(int(life_hearts))
-        ]
-
-        return [ft.Row(controls=hearts, spacing=5)]
-
     stats_var = Session.get_logged_user().stats
+
     DefaultComponents.STATISTICS_BAR.value.content[0].leading.controls = (
         create_life_hearts(stats_var["life_hearts"])
+    )
+
+    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
+        create_lvl_display(stats_var["level"])
+    )
+    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
+        create_equipped_images(
+            stats_var["hat_equiped"],
+            stats_var["capy_color_equiped"],
+            stats_var["shirt_equiped"],
+        )
+    )
+
+    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
+        create_exp_display(stats_var["exp"])
+    )
+
+    DefaultComponents.STATISTICS_BAR.value.content[0].actions[0] = (
+        create_currency_display(stats_var["capycoins"])
     )
     Page.update()

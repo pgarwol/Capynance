@@ -1,14 +1,13 @@
 from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
-from utils.enums import FletNames
+from utils.enums import FletNames, Colors
 import flet as ft
 from product import read_product_from_db
 
-
-hats_current_index = 0
-colors_current_index = 0
-shirts_current_index = 0
+image_width = 250
+image_height = 295.3
+buttons_size = 20
 
 
 def update_image(container, images, current_index):
@@ -25,8 +24,13 @@ def move_img_left(e, images, current_index_ref, container):
 def move_img_right(e, images, current_index_ref, container):
     if current_index_ref.current < len(images) - 1:
         current_index_ref.current += 1
+
         update_image(container, images, current_index_ref.current)
 
+
+hats_current_index = 0
+colors_current_index = 0
+shirts_current_index = 0
 
 hats_index_ref = ft.Ref[int]()
 hats_index_ref.current = hats_current_index
@@ -46,7 +50,6 @@ async def dismiss_dialog(e):
 
 cupertino_alert_dialog = ft.CupertinoAlertDialog(
     title=ft.Text("Do you want to buy this"),
-    # content=ft.Text("Do you want to buy this item?"),
     actions=[
         ft.CupertinoDialogAction(
             "Buy", is_destructive_action=True, on_click=dismiss_dialog
@@ -62,95 +65,270 @@ def open_dlg(e):
     e.control.page.update()
 
 
-def create_shop_item(product_id, index_ref):
-    product = read_product_from_db(product_id)
-    if not product:
-        return None
+def create_shop_item(hats_id, colors_id, shirts_id):
+    hats_product = read_product_from_db(hats_id)
+    colors_product = read_product_from_db(colors_id)
+    shirts_product = read_product_from_db(shirts_id)
 
-    name = product.name
-    price = product.price
-    images = product.images
+    hat_images = hats_product.images
+    color_images = colors_product.images
+    shirt_images = shirts_product.images
 
-    container = ft.Container(
+    hat_container = ft.Container(
         content=ft.Image(
-            src=images[index_ref.current], fit=ft.ImageFit.COVER, width=150, height=150
+            src=hat_images[hats_index_ref.current],
+            fit=ft.ImageFit.CONTAIN,
+            width=image_width,
+            height=image_height,
         ),
-        margin=10,
-        padding=10,
         alignment=ft.alignment.center,
-        bgcolor=ft.colors.WHITE,
-        width=150,
-        height=150,
-        border_radius=10,
-        shadow=ft.BoxShadow(
-            spread_radius=3,
-            blur_radius=5,
-            color=ft.colors.WHITE10,
-            offset=ft.Offset(0, 0),
-        ),
+        bgcolor=ft.colors.TRANSPARENT,
     )
 
-    return ft.Column(
-        controls=(
-            ft.Container(
-                content=ft.Text(name),
-                alignment=ft.alignment.center,
-            ),
-            ft.Container(
-                content=ft.Text(price),
-                alignment=ft.alignment.center,
-            ),
-            ft.Row(
-                [
-                    ft.IconButton(
-                        icon=ft.icons.ARROW_BACK,
-                        icon_color="blue400",
-                        icon_size=20,
-                        on_click=lambda e: move_img_left(
-                            e, images, index_ref, container
-                        ),
+    color_container = ft.Container(
+        content=ft.Image(
+            src=color_images[colors_index_ref.current],
+            fit=ft.ImageFit.CONTAIN,
+            width=image_width,
+            height=image_height,
+        ),
+        alignment=ft.alignment.center,
+        bgcolor=ft.colors.TRANSPARENT,
+    )
+
+    shirt_container = ft.Container(
+        content=ft.Image(
+            src=shirt_images[shirts_index_ref.current],
+            fit=ft.ImageFit.CONTAIN,
+            width=image_width,
+            height=image_height,
+        ),
+        alignment=ft.alignment.center,
+        bgcolor=ft.colors.TRANSPARENT,
+    )
+
+    return ft.Container(
+        content=ft.Column(
+            controls=[
+                ft.Container(
+                    ft.Row(
+                        controls=[
+                            ft.Container(
+                                content=ft.Column(
+                                    controls=[
+                                        ft.Text(
+                                            hats_product.name,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                        ft.Text(
+                                            hats_product.price,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                ),
+                                bgcolor=Colors.SECONDARY,
+                                border_radius=ft.border_radius.all(8),
+                                width=75,
+                                height=50,
+                                alignment=ft.alignment.center,
+                                shadow=ft.BoxShadow(
+                                    spread_radius=1,
+                                    blur_radius=3,
+                                    color=ft.colors.BLACK54,
+                                    offset=ft.Offset(0, 0),
+                                ),
+                            ),
+                            ft.Container(
+                                content=ft.Column(
+                                    controls=[
+                                        ft.Text(
+                                            shirts_product.name,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                        ft.Text(
+                                            shirts_product.price,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                ),
+                                bgcolor=Colors.SECONDARY,
+                                border_radius=ft.border_radius.all(8),
+                                width=75,
+                                height=50,
+                                alignment=ft.alignment.center,
+                                shadow=ft.BoxShadow(
+                                    spread_radius=1,
+                                    blur_radius=3,
+                                    color=ft.colors.BLACK54,
+                                    offset=ft.Offset(0, 0),
+                                ),
+                            ),
+                            ft.Container(
+                                content=ft.Column(
+                                    controls=[
+                                        ft.Text(
+                                            colors_product.name,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                        ft.Text(
+                                            colors_product.price,
+                                            size=18,
+                                            color=Colors.BLACK,
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                ),
+                                bgcolor=Colors.SECONDARY,
+                                border_radius=ft.border_radius.all(8),
+                                width=75,
+                                height=50,
+                                alignment=ft.alignment.center,
+                                shadow=ft.BoxShadow(
+                                    spread_radius=1,
+                                    blur_radius=3,
+                                    color=ft.colors.BLACK54,
+                                    offset=ft.Offset(0, 0),
+                                ),
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
                     ),
-                    container,
-                    ft.IconButton(
-                        icon=ft.icons.ARROW_FORWARD,
-                        icon_color="blue400",
-                        icon_size=20,
-                        on_click=lambda e: move_img_right(
-                            e, images, index_ref, container
+                    alignment=ft.alignment.center,
+                    padding=ft.Padding(5, 0, 5, 0),
+                    margin=ft.Margin(0, 0, 0, 0),
+                    width=350,
+                    height=85,
+                ),
+                ft.Row(
+                    controls=[
+                        ft.Column(
+                            controls=[
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_BACK,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_left(
+                                        e, hat_images, hats_index_ref, hat_container
+                                    ),
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_BACK,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_left(
+                                        e,
+                                        color_images,
+                                        colors_index_ref,
+                                        color_container,
+                                    ),
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_BACK,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_left(
+                                        e,
+                                        shirt_images,
+                                        shirts_index_ref,
+                                        shirt_container,
+                                    ),
+                                ),
+                            ],
+                            alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                         ),
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            ),
-            ft.Container(
-                content=ft.ElevatedButton("Buy", on_click=open_dlg),
-                alignment=ft.alignment.center,
-            ),
-            ft.Divider(),
-        )
+                        ft.Stack(
+                            [
+                                color_container,
+                                shirt_container,
+                                hat_container,
+                            ],
+                            width=image_width,
+                            height=image_height,
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_FORWARD,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_right(
+                                        e, hat_images, hats_index_ref, hat_container
+                                    ),
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_FORWARD,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_right(
+                                        e,
+                                        color_images,
+                                        colors_index_ref,
+                                        color_container,
+                                    ),
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_FORWARD,
+                                    icon_color="blue400",
+                                    icon_size=buttons_size,
+                                    on_click=lambda e: move_img_right(
+                                        e,
+                                        shirt_images,
+                                        shirts_index_ref,
+                                        shirt_container,
+                                    ),
+                                ),
+                            ],
+                            alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+                ft.Row(
+                    controls=[
+                        ft.ElevatedButton("Kup czapke", on_click=open_dlg, scale=0.85),
+                        ft.ElevatedButton("Kup ubranko", on_click=open_dlg, scale=0.85),
+                        ft.ElevatedButton("Kup kolor", on_click=open_dlg, scale=0.85),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            # horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        alignment=ft.alignment.center,
     )
 
 
 shop = View(name=FletNames.SHOP, route=f"/{FletNames.SHOP}")
 
-
 shop.add_component(
     Component(
         [
-            ft.Column(
+            ft.Row(
                 [
-                    create_shop_item("hats", hats_index_ref),
-                    create_shop_item("colors", colors_index_ref),
-                    create_shop_item("shirts", shirts_index_ref),
+                    create_shop_item("hats", "colors", "shirts"),
                 ],
-                scroll=ft.ScrollMode.HIDDEN,
+                alignment=ft.MainAxisAlignment.CENTER,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 expand=True,
             )
         ],
-        "test",
+        "Row with purchasable items",
     )
 )
-
+shop.var = {
+    "selected_hat": None,
+}
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
 shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
 ViewsInitialStates.set_shop_copy(shop)
