@@ -7,6 +7,7 @@ from utils.enums import FletNames, Colors
 from components.component import Component, DefaultComponents
 from typing import Literal
 from page import Page
+import numpy as np
 import flet as ft
 
 
@@ -29,22 +30,10 @@ finances.add_component(
                 scroll=ft.ScrollMode.HIDDEN,
                 expand=True,
                 alignment=ft.MainAxisAlignment.START,
+                spacing=100,
             )
         ],
         description="User's spendings",
-    )
-)
-finances.add_component(
-    Component(
-        content=[
-            ft.Image(
-                width=150,
-                height=150,
-                src="https://img.freepik.com/premium-wektory/happy-piggy-bank-maskotka-design_35422-31.jpg?w=1060",
-            ),
-            ft.Text("Udało ci się oszczędzić: xx.xx ZŁ!"),
-        ],
-        description="Money box",
     )
 )
 
@@ -69,7 +58,7 @@ def generate_income_source_tile(
             ft.Column(
                 [
                     ft.Text(
-                        f"{name.capitalize()} | {period}",
+                        f"{name.capitalize()}",
                         weight=ft.FontWeight.BOLD,
                         size=32,
                         text_align=ft.TextAlign.CENTER,
@@ -102,7 +91,7 @@ def generate_income_source_tile(
                         text_align=ft.TextAlign.CENTER,
                     ),
                 ],
-                width=300,
+                width=400,
                 height=120,
                 alignment=theme_color,
             ),
@@ -169,6 +158,8 @@ def get_finance_data(data: dict) -> pd.DataFrame:
     # Set 'date' column as the index
     df.set_index("date", inplace=True)
     df["net"] = df["in"].astype(int) - df["out"].astype(int)
+    df["day"] = df.index.day
+
     return df
 
 
@@ -185,6 +176,56 @@ def retrieve_dto_data(dto) -> None:
                 theme_color=get_theme_color(source),
             )
         )
+
+
+def draw_chart(data: pd.DataFrame) -> ft.LineChart:
+    data_1 = [
+        ft.LineChartData(
+            data_points=[
+                ft.LineChartDataPoint(x, float(y))
+                for x, y in zip(data["day"].values, data["net"].values)
+            ],
+            stroke_width=5,
+            color=ft.colors.CYAN,
+            curved=True,
+            stroke_cap_round=True,
+        )
+    ]
+    x_labels = [
+        ft.ChartAxisLabel(
+            value=day,
+            label=ft.Text(f"{day}", size=14, weight=ft.FontWeight.BOLD),
+        )
+        for day in np.linspace(1, 30, 5, dtype=int)
+    ]
+
+    y_labels = [
+        ft.ChartAxisLabel(
+            value=y_val,
+            label=ft.Text(f"{y_val} ZŁ", size=14, weight=ft.FontWeight.BOLD),
+        )
+        for y_val in np.linspace(0, data["net"].values.max(), 4)
+    ]
+    min_x = data["day"].values.min()
+    max_x = data["day"].values.max()
+    min_y = 0.0
+    max_y = data["net"].values.max()
+    chart = ft.LineChart(
+        data_series=data_1,
+        left_axis=ft.ChartAxis(labels=y_labels, labels_size=24, show_labels=True),
+        bottom_axis=ft.ChartAxis(labels=x_labels, labels_size=24, show_labels=True),
+        tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.BLUE_GREY),
+        min_x=min_x,
+        max_x=max_x,
+        min_y=min_y,
+        max_y=max_y,
+        horizontal_grid_lines=ft.ChartGridLines(
+            interval=250, color=ft.colors.with_opacity(0.2, ft.colors.ON_SURFACE)
+        ),
+        # animate=5000,
+        expand=False,
+    )
+    return chart
 
 
 def reset_finances() -> None:
@@ -206,4 +247,8 @@ def init_finances() -> None:
                 period=f"{source.data.index.month[0]}.{source.data.index.year[0]}",
             )
         )
+        append_income_source(
+            ft.Container(draw_chart(source.data), height=420, width=520, padding=6)
+        )
+
     Page.update()

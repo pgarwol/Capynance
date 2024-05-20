@@ -43,12 +43,10 @@ class FletNames(StrEnum):
 
 class Colors(StrEnum):
     # PRIMARY_DARKER = "#B1DAC9"  # light aquamarine
-    PRIMARY_DARKER = "#93c47d"  # lght green
-    PRIMARY_LIGHTER = (
-        ft.colors.TEAL_ACCENT_100
-    )  # light aquamarine (but darker than primary_dark ?)
-    SECONDARY = "#fce5cd"  # light beige
-    ACCENT = "#ffa500"  # light orange
+    PRIMARY_DARKER = "#2EC4B6"  # lght green
+    PRIMARY_LIGHTER = "#CBF3F0"  # light aquamarine (but darker than primary_dark ?)
+    SECONDARY = "#FFFFFF"  # light beige
+    ACCENT = "#FF9F1C"  # light orange
     WHITE = ft.colors.WHITE
     BLACK = ft.colors.BLACK
 

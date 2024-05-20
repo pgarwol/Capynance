@@ -88,8 +88,7 @@ class Stats:
         self.exp = exp
 
 
-stats = FletNames.STATS
-stats.var = {}
+stats_var = {}
 
 
 # life_hearts = 3
@@ -104,20 +103,8 @@ exp = 110
 exp_img = "https://static.wikia.nocookie.net/minecraft/images/0/0a/ExperienceOrb.gif/revision/latest/smart/width/371/height/332?cb=20190907041203"
 
 life_hearts = None
-# hat_equiped = stats.var["hat_equiped"]
-# capycoins = stats.var["capycoins"]
-
-
-def create_life_hearts(life_hearts):
-    print(stats.var["life_hearts"])
-    if stats.var is None or "life_hearts" not in stats.var:
-        return ft.Text("blad")
-    hearts = [
-        ft.Icon(name=ft.icons.FAVORITE, color=ft.colors.RED, size=28)
-        for _ in range(int(stats.var["life_hearts"]))
-        # for _ in range(life_hearts)
-    ]
-    return ft.Row(controls=hearts, spacing=5)
+# hat_equiped = stats_var["hat_equiped"]
+# capycoins = stats_var["capycoins"]
 
 
 image_width = 75
@@ -207,8 +194,8 @@ class DefaultComponents(Enum):
                 leading=ft.Row(
                     # controls=[
                     #     create_life_hearts(
-                    #         stats.var["life_hearts"]
-                    #         if stats.var is not None
+                    #         stats_var["life_hearts"]
+                    #         if stats_var is not None
                     #         else ""
                     #         # life_hearts
                     #     ),
@@ -300,7 +287,7 @@ class DefaultComponents(Enum):
         description="Contains bottom navigation bar.",
     )
 
-    # stats.var.append(
+    # stats_var.append(
     #     Stats(
     #         hats_owned=view_data["hats_owned"],
     #         hat_equiped=view_data["hat_equiped"],
@@ -317,7 +304,16 @@ class DefaultComponents(Enum):
 
 
 def init_stats() -> None:
-    if "life_hearts" in stats.var and stats.var is not None:
-        DefaultComponents.STATISTICS_BAR.value.content[0].leading[0].controls = (
-            create_life_hearts(stats.var["life_hearts"])
-        )
+    def create_life_hearts(life_hearts: str | int):
+        hearts = [
+            ft.Icon(name=ft.icons.FAVORITE, color=ft.colors.RED, size=28)
+            for _ in range(int(life_hearts))
+        ]
+
+        return [ft.Row(controls=hearts, spacing=5)]
+
+    stats_var = Session.get_logged_user().stats
+    DefaultComponents.STATISTICS_BAR.value.content[0].leading.controls = (
+        create_life_hearts(stats_var["life_hearts"])
+    )
+    Page.update()
