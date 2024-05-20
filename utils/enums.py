@@ -21,6 +21,7 @@ class DBFields(StrEnum):
     FINANCES = "finances"
     SOCIAL = "social"
     SETTINGS = "settings"
+    STATS = "stats"
 
 
 class FletNames(StrEnum):
@@ -37,14 +38,16 @@ class FletNames(StrEnum):
     SETTINGS = "settings"
     SHOP = "shop"
     SOCIAL = "social"
+    STATS = "stats"
 
 
 class Colors(StrEnum):
-    PRIMARY_DARKER = "#B1DAC9"  # light aquamarine
+    # PRIMARY_DARKER = "#B1DAC9"  # light aquamarine
+    PRIMARY_DARKER = "#93c47d"  # lght green
     PRIMARY_LIGHTER = (
         ft.colors.TEAL_ACCENT_100
     )  # light aquamarine (but darker than primary_dark ?)
-    SECONDARY = "#EEEDD7"  # light beige
+    SECONDARY = "#fce5cd"  # light beige
     ACCENT = "#ffa500"  # light orange
     WHITE = ft.colors.WHITE
     BLACK = ft.colors.BLACK

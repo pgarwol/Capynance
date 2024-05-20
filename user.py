@@ -11,6 +11,7 @@ class User:
         finances: dict,
         social: dict,
         settings: dict,
+        stats: dict,
     ):
         self.id = id
         self.profile = profile
@@ -18,6 +19,7 @@ class User:
         self.finances = finances
         self.social = social
         self.settings = settings
+        self.stats = stats
 
         # settings = Settings(language=Langs.PL)
 
@@ -34,6 +36,7 @@ class User:
             DBFields.FINANCES: self.finances,
             DBFields.SOCIAL: self.social,
             DBFields.SETTINGS: self.settings,
+            DBFields.STATS: self.stats,
         }
 
     # Calendar view

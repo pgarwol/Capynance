@@ -74,7 +74,19 @@
       }
     },
     "social": {},
-    "settings": { "language": "pl" }
+    "settings": { "language": "pl" },
+    "stats": {
+      "hats_owned": "",
+      "hat_equiped": "https://lh3.googleusercontent.com/pw/AP1GczP-XWg8bY_Y-ZKnP1fAeQDsxP58sGY8N3xTyUGYJlV0uGk1-LXxB3C7osxRUhLshO6YOjKX6ehuMBFP8p0ouR-1YzeMxVZa6PAhhPJIRyneTDi-vMpzxWcpQygFpPnM1A-aGbYXxp6nsY11NB8rKRA=w857-h857-s-no-gm?authuser=0",
+      "capy_colors_owned": "",
+      "capy_color_equiped": "",
+      "shirts_owned": "",
+      "shirt_equiped": "",
+      "life_hearts": "2",
+      "capycoins": "21370",
+      "level": "",
+      "exp": ""
+    }
   },
   "1": {
     "profile": {
@@ -145,6 +157,18 @@
       }
     },
     "social": {},
-    "settings": { "language": "en" }
+    "settings": { "language": "en" },
+    "stats": {
+      "hats_owned": "",
+      "hat_equiped": "",
+      "capy_colors_owned": "",
+      "capy_color_equiped": "",
+      "shirts_owned": "",
+      "shirt_equiped": "",
+      "life_hearts": "1",
+      "capycoins": "20000",
+      "level": "",
+      "exp": ""
+    }
   }
 }

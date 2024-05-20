@@ -61,6 +61,7 @@ def read_user_from_db(id: str | int) -> User:
             finances=user_data[DBFields.FINANCES],
             social=user_data[DBFields.SOCIAL],
             settings=user_data[DBFields.SETTINGS],
+            stats=user_data[DBFields.STATS],
         )
     except Exception as e:
         raise CapynanceException(Errors.USER_NOT_FOUND) from e

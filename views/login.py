@@ -8,6 +8,7 @@ from session import Session
 from views.calendar import init_calendar
 from views.finances import init_finances
 from components.component import Component
+from components.component import DefaultComponents, init_stats
 from page import Page
 from typing import Tuple
 import flet as ft
@@ -85,6 +86,7 @@ def log_user_in(email: str | None, password: str | None):
                 view.refresh_language_contents()
         init_calendar()
         init_finances()
+        init_stats()
         Page.go(home.route)
 
 
