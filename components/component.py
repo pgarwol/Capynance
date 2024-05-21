@@ -68,10 +68,6 @@ exp_img = "https://static.wikia.nocookie.net/minecraft/images/0/0a/ExperienceOrb
 coin_img = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
 
 
-# capycoins = 20000
-# lvl = 10
-# exp = 110
-
 # Stats
 life_hearts = None
 
@@ -84,7 +80,7 @@ lvl = None
 exp = None
 
 
-image_width = 80
+image_width = 75
 image_height = (71 * image_width) / 60
 
 
@@ -94,15 +90,15 @@ class DefaultComponents(Enum):
     STATISTICS_BAR = Component(
         content=[
             ft.AppBar(
-                leading=ft.Row(
+                title=ft.Row(
                     alignment=ft.MainAxisAlignment.CENTER,
                 ),
-                title=ft.Container(
+                leading=ft.Container(
                     ft.Row(controls=[], alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     alignment=ft.alignment.center,
                     padding=ft.Padding(5, 0, 5, 0),
                     margin=ft.Margin(0, 0, 0, 0),
-                    width=300,
+                    width=250,
                     height=85,
                 ),
                 actions=[
@@ -180,19 +176,7 @@ class DefaultComponents(Enum):
     )
 
 
-def create_life_hearts(life_hearts: str | int):
-    hearts = [
-        ft.Icon(name=ft.icons.FAVORITE_OUTLINED, color=ft.colors.RED, size=28)
-        for _ in range(int(life_hearts))
-    ]
-
-    return [
-        ft.Container(
-            ft.Row(controls=hearts, spacing=5),
-            margin=ft.margin.Margin(10, 0, 10, 0),
-            # bgcolor=Colors.WHITE, # for debug container size
-        )
-    ]
+import math
 
 
 def create_equipped_images(hat_img, color_img, shirt_img):
@@ -246,12 +230,100 @@ def create_equipped_images(hat_img, color_img, shirt_img):
         width=82,
         height=82,
         border=ft.border.all(2, Colors.ACCENT),
+        margin=ft.margin.Margin(10, 0, 5, 0),
+        padding=ft.padding.all(3),
         shadow=ft.BoxShadow(
             spread_radius=1,
             blur_radius=3,
             color=ft.colors.BLACK54,
             offset=ft.Offset(0, 0),
         ),
+        gradient=ft.LinearGradient(
+            begin=ft.alignment.top_left,
+            end=ft.alignment.Alignment(0.8, 1),
+            colors=[
+                "0xff1f005c",
+                "0xff5b0060",
+                "0xff870160",
+                "0xffac255e",
+                "0xffca485c",
+                "0xffe16b5c",
+                "0xfff39060",
+                "0xffffb56b",
+            ],
+            tile_mode=ft.GradientTileMode.MIRROR,
+            rotation=math.pi / 3,
+        ),
+    )
+
+
+def create_exp_lvl_display(lvl, exp):
+    return ft.Container(
+        ft.Column(
+            [
+                ft.Text(
+                    f"LVL {lvl}",
+                    size=12,
+                    color=Colors.BLACK,
+                    weight="bold",
+                ),
+                ft.Row(
+                    controls=[
+                        ft.Image(
+                            src=exp_img,
+                            width=12,
+                            height=12,
+                        ),
+                        ft.Text(
+                            f"{exp} / 100",
+                            size=12,
+                            color=Colors.BLACK,
+                            weight="bold",
+                        ),
+                    ]
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
+        ),
+        margin=ft.margin.Margin(10, 0, 10, 0),
+        padding=ft.padding.all(3),
+        bgcolor=Colors.ACCENT,
+        border_radius=ft.border_radius.all(8),
+        width=80,
+        height=40,
+        alignment=ft.alignment.center,
+        shadow=ft.BoxShadow(
+            spread_radius=1,
+            blur_radius=3,
+            color=ft.colors.BLACK54,
+            offset=ft.Offset(0, 0),
+        ),
+    )
+
+
+def create_life_hearts(life_hearts: str | int):
+    hearts = [
+        ft.Icon(name=ft.icons.FAVORITE_OUTLINED, color=ft.colors.RED, size=28)
+        for _ in range(int(life_hearts))
+    ]
+
+    hearts_bordered = [
+        ft.Icon(name=ft.icons.FAVORITE_BORDER, color=ft.colors.RED_900, size=28)
+        for _ in range(3)
+    ]
+
+    return ft.Container(
+        ft.Stack(
+            controls=[
+                ft.Row(controls=hearts_bordered, spacing=5),
+                ft.Row(controls=hearts, spacing=5),
+            ],
+            width=(28 + 5) * 3,
+            height=28,
+            # bgcolor=Colors.WHITE, # for debug container size
+        ),
+        margin=ft.margin.Margin(10, 10, 10, 0),
     )
 
 
@@ -261,10 +333,14 @@ def create_currency_display(capycoins):
             controls=[
                 ft.Image(
                     src=coin_img,
-                    width=36,
-                    height=36,
+                    width=24,
+                    height=24,
                 ),
-                ft.Text(str(capycoins), color=ft.colors.BLACK),
+                ft.Text(
+                    str(capycoins),
+                    color=ft.colors.BLACK,
+                    weight="bold",
+                ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
         ),
@@ -274,81 +350,16 @@ def create_currency_display(capycoins):
     )
 
 
-def create_lvl_display(lvl):
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text(
-                    "LVL",
-                    size=16,
-                    color=Colors.BLACK,
-                ),
-                ft.Text(
-                    str(lvl),
-                    size=16,
-                    color=Colors.BLACK,
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.SPACE_AROUND,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        ),
-        bgcolor=Colors.SECONDARY,
-        border_radius=ft.border_radius.all(8),
-        width=75,
-        height=50,
-        alignment=ft.alignment.center,
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=3,
-            color=ft.colors.BLACK54,
-            offset=ft.Offset(0, 0),
-        ),
-    )
-
-
-def create_exp_display(exp):
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text(
-                    "EXP",
-                    size=16,
-                    color=Colors.BLACK,
-                ),
-                ft.Text(
-                    f"{exp} / 100",
-                    size=16,
-                    color=Colors.BLACK,
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.SPACE_AROUND,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        ),
-        bgcolor=Colors.SECONDARY,
-        border_radius=ft.border_radius.all(8),
-        width=75,
-        height=50,
-        alignment=ft.alignment.center,
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=3,
-            color=ft.colors.BLACK54,
-            offset=ft.Offset(0, 0),
-        ),
+def create_life_currency_display(life_hearts, capycoins):
+    return ft.Column(
+        [create_life_hearts(life_hearts), create_currency_display(capycoins)]
     )
 
 
 def init_stats() -> None:
     stats_var = Session.get_logged_user().stats
 
-    DefaultComponents.STATISTICS_BAR.value.content[0].leading.controls = (
-        create_life_hearts(stats_var["life_hearts"])
-    )
-
-    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
-        create_lvl_display(stats_var["level"])
-    )
-    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
+    DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
         create_equipped_images(
             stats_var["hat_equiped"],
             stats_var["capy_color_equiped"],
@@ -356,11 +367,11 @@ def init_stats() -> None:
         )
     )
 
-    DefaultComponents.STATISTICS_BAR.value.content[0].title.content.controls.append(
-        create_exp_display(stats_var["exp"])
+    DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
+        create_exp_lvl_display(stats_var["level"], stats_var["exp"])
     )
 
     DefaultComponents.STATISTICS_BAR.value.content[0].actions[0] = (
-        create_currency_display(stats_var["capycoins"])
+        create_life_currency_display(stats_var["life_hearts"], stats_var["capycoins"])
     )
     Page.update()
