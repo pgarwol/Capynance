@@ -1,0 +1,182 @@
+Product,Price (PLN)
+Coca-Cola (0.33L),4.50
+Pepsi (0.33L),4.00
+Milk (1L),3.80
+Fresh White Bread (0.5 kg),4.70
+Eggs (10 pcs),12.00
+Local Cheese (1 kg),35.00
+Chicken Fillets (1 kg),24.00
+Beef Round (1 kg),60.00
+Apples (1 kg),3.70
+Bananas (1 kg),5.70
+Oranges (1 kg),6.00
+Tomatoes (1 kg),9.50
+Potatoes (1 kg),2.90
+Onions (1 kg),4.20
+Lettuce (1 head),4.70
+Water (1.5L),3.15
+Domestic Beer (0.5L),6.00
+Imported Beer (0.33L),9.00
+Bottle of Wine (mid-range),40.00
+Cigarettes (Marlboro 20 pack),20.50
+McDonald's Big Mac,17.00
+McDonald's Large Fries,10.90
+McDonald's McWrap Crispy Classic,25.00
+McDonald's Chicken McNuggets (6 pcs),21.00
+McDonald's Caramel Latte Macchiato (0.4L),17.90
+McDonald's Café Latte,14.40
+McDonald's Cheeseburger,12.00
+McDonald's Hamburger,12.00
+Sausage (1 kg),51.00
+Chicken Salad Premium,25.00
+Chocolate Bar (100g),4.00
+Coffee (1 kg),40.00
+Tea (100 bags),20.00
+Sugar (1 kg),5.00
+Flour (1 kg),4.00
+Olive Oil (1L),25.00
+Butter (200g),6.00
+Yogurt (150g),3.00
+Rice (1 kg),8.00
+Pasta (1 kg),5.00
+Juice (1L),6.00
+Ketchup (500g),7.00
+Mustard (200g),4.00
+Mayonnaise (400g),8.00
+Frozen Pizza,15.00
+Ice Cream (1L),12.00
+Toothpaste (100 ml),10.00
+Shampoo (400 ml),15.00
+Toilet Paper (8 rolls),12.00
+Soap (100g),3.00
+Dishwashing Liquid (1L),6.00
+Laundry Detergent (1.5 kg),20.00
+Garbage Bags (30 pcs),10.00
+Paper Towels (4 rolls),8.00
+Tissues (100 pcs),5.00
+Hand Sanitizer (500 ml),15.00
+Face Mask (disposable 50 pcs),20.00
+Baby Diapers (50 pcs),50.00
+Dog Food (2 kg),30.00
+Cat Food (1.5 kg),25.00
+Pet Shampoo (250 ml),10.00
+Cooking Oil (1L),8.00
+Canned Tomatoes (400g),4.00
+Canned Tuna (200g),6.00
+Instant Noodles (pack of 5),10.00
+Frozen Vegetables (1 kg),10.00
+Frozen Fish (1 kg),30.00
+Fresh Fish (1 kg),50.00
+Pork Chops (1 kg),30.00
+Lamb (1 kg),80.00
+Ham (1 kg),40.00
+Salami (1 kg),60.00
+Bacon (1 kg),35.00
+Butter Cookies (200g),10.00
+Dark Chocolate (100g),5.00
+Breakfast Cereal (500g),12.00
+Honey (500g),20.00
+Peanut Butter (500g),15.00
+Jam (370g),10.00
+Pickles (1L),12.00
+Soy Sauce (250 ml),8.00
+Hot Sauce (150 ml),6.00
+Vinegar (1L),5.00
+Baking Powder (100g),4.00
+Yeast (100g),3.00
+Whipping Cream (250 ml),6.00
+Sour Cream (200g),4.00
+Cottage Cheese (200g),5.00
+Parmesan Cheese (200g),20.00
+Mozzarella Cheese (200g),10.00
+Cheddar Cheese (200g),12.00
+Provolone Cheese (200g),15.00
+Gouda Cheese (200g),10.00
+Cream Cheese (200g),8.00
+Greek Yogurt (150g),3.50
+Protein Bar (60g),7.00
+Granola (500g),15.00
+Oatmeal (1 kg),6.00
+Almond Milk (1L),12.00
+Coconut Milk (1L),10.00
+Soy Milk (1L),8.00
+Rice Milk (1L),9.00
+Energy Drink (250 ml),5.00
+Sports Drink (500 ml),6.00
+Mineral Water (1.5L),3.00
+Sparkling Water (1.5L),3.00
+Fruit Yogurt (150g),3.50
+Vegetable Juice (1L),6.00
+Smoothie (250 ml),8.00
+Herbal Tea (20 bags),10.00
+Green Tea (20 bags),12.00
+Black Tea (20 bags),8.00
+Chamomile Tea (20 bags),10.00
+Peppermint Tea (20 bags),10.00
+Ginger Tea (20 bags),12.00
+Lemon Tea (20 bags),10.00
+Pasta Sauce (400g),10.00
+Tomato Sauce (400g),8.00
+Pizza Sauce (400g),10.00
+Barbecue Sauce (400g),12.00
+Pesto Sauce (190g),15.00
+Alfredo Sauce (400g),12.00
+Ranch Dressing (250 ml),8.00
+Caesar Dressing (250 ml),10.00
+Italian Dressing (250 ml),8.00
+French Dressing (250 ml),8.00
+Thousand Island Dressing (250 ml),8.00
+Blue Cheese Dressing (250 ml),10.00
+Balsamic Vinaigrette (250 ml),12.00
+Soy Sauce (250 ml),6.00
+Worcestershire Sauce (250 ml),8.00
+Hot Sauce (150 ml),6.00
+Salsa (400g),10.00
+Taco Sauce (250 ml),8.00
+Buffalo Sauce (250 ml),10.00
+Teriyaki Sauce (250 ml),8.00
+Marinara Sauce (400g),10.00
+Pizza Crust (pack of 2),12.00
+Bagels (pack of 4),10.00
+English Muffins (pack of 6),8.00
+Croissants (pack of 6),12.00
+Donuts (pack of 6),10.00
+Pita Bread (pack of 6),8.00
+Tortilla Wraps (pack of 8),10.00
+Burger Buns (pack of 8),8.00
+Hot Dog Buns (pack of 8),8.00
+Sub Rolls (pack of 4),10.00
+Garlic Bread (pack of 2),12.00
+Naan Bread (pack of 4),10.00
+Rice Cakes (pack of 10),6.00
+Popcorn (pack of 3),8.00
+Pretzels (200g),5.00
+Potato Chips (200g),7.00
+Corn Chips (200g),6.00
+Nacho Chips (200g),8.00
+Tortilla Chips (200g),7.00
+Trail Mix (200g),15.00
+Mixed Nuts (200g),20.00
+Peanuts (200g),10.00
+Cashews (200g),25.00
+Almonds (200g),20.00
+Pistachios (200g),30.00
+Walnuts (200g),20.00
+Hazelnuts (200g),25.00
+Sunflower Seeds (200g),10.00
+Pumpkin Seeds (200g),12.00
+Dried Cranberries (200g),15.00
+Raisins (200g),10.00
+Dried Apricots (200g),15.00
+Prunes (200g),12.00
+Dates (200g),15.00
+Coconut Flakes (200g),10.00
+Granola Bars (pack of 6),15.00
+Breakfast Bars (pack of 6),12.00
+Fruit Snacks (pack of 10),15.00
+Yogurt Covered Pretzels (200g),15.00
+Cheese Crackers (200g),10.00
+Peanut Butter Crackers (200g),12.00
+Oatmeal Cookies (200g),10.00
+Chocolate Chip Cookies (200g),12.00
+Gingerbread Cookies (200g),10.00

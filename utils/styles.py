@@ -14,7 +14,9 @@ class Style(Enum):
         "filled": True,
         "cursor_color": Colors.PRIMARY_LIGHTER,
         "label_style": ft.TextStyle(
-            color=Colors.PRIMARY_LIGHTER, weight=ft.FontWeight.W_400
+            color=Colors.PRIMARY_LIGHTER,
+            weight=ft.FontWeight.W_400,
+            font_family="RobotoSlab",
         ),
     }
     IconButton = {
@@ -25,6 +27,7 @@ class Style(Enum):
         "bgcolor": Colors.PRIMARY_DARKER,
         "color": Colors.BLACK,
     }
+    Text = {"font_family": "RobotoSlab"}
     CupertinoSlidingSegmentedButton = {
         "thumb_color": Colors.PRIMARY_DARKER,
         "bgcolor": Colors.SECONDARY,

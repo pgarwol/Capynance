@@ -38,6 +38,9 @@ class App:
     }
 
     def main(self, page: ft.Page) -> None:
+        page.fonts = {
+            "RobotoSlab": "https://github.com/google/fonts/raw/main/apache/robotoslab/RobotoSlab%5Bwght%5D.ttf"
+        }
         Page.set_page(page=page)
         # page.vertical_alignment = ft.MainAxisAlignment.CENTER
         # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER

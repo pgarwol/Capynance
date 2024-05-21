@@ -4,6 +4,7 @@ import pandas as pd
 from session import Session
 from enum import StrEnum
 from utils.enums import FletNames, Colors
+from utils.styles import Style
 from components.component import Component, DefaultComponents
 from typing import Literal
 from page import Page
@@ -12,7 +13,7 @@ import flet as ft
 
 
 class SourcePhotos(StrEnum):
-    APPLE_PAY = "https://lh3.googleusercontent.com/pw/AP1GczN-HOJWx3vEDSrBzchYoPQrJ-KS6P1owlvTurUMc1PV-XAxM_lSMdrsI4Zph_E6zaVUIrVSJOrrZHhfKrcvOxH86HEGeRAC3Oh2dyW1YIHxM0ooe93kEgEfmLsg3HK5C2FOGlu04Sk4zvAlIDLPMRk=w160-h160-s-no-gm"
+    APPLE_PAY = "https://lh3.googleusercontent.com/pw/AP1GczOCyddBGnewDifbL7irCXF1IUkAYWjpJNRNOKwQ_WFJiOmthp-h4IeiCT-MfzJ2cg9G-n51jAbkf6X-ptkeHc5TNNM8K6EgghtN8WGcW9MCC6bIvGfYJuk8jaYKz8wLjOxLFp6JoX1f7cx2y59yc2Q=w150-h150-s-no-gm"
     MBANK = "https://lh3.googleusercontent.com/pw/AP1GczMGmclVSSzuCUoWlVTmhjYvo42j1mI9LZ6hQDH3uwuD2na9Extl4EEnntFDn1a4DaWahK9trRvVKJqb2HFC9zq3lxQWiuumXufGH2NBO-7gwTpFXWwYqQofoYyBAdxKm1le5FOWXSInDhYa47dYjvY=w160-h160-s-no-gm"
     REVOLUT = "https://lh3.googleusercontent.com/pw/AP1GczO3xHEolUpxRVqhfpa3Aw2xFjG5s0ILBc3ui7kaWydz53nwpnipkJNjKMXFnSocEitxIVi5YhPUyxk5P2fawavPz-gX4HeVuO9Z9NwxfqBja8OhjkQktqCeO7YMRgFty76IDofVMriFXzyvptcIQQk=w160-h160-s-no-gm"
     SANTANDER = "https://lh3.googleusercontent.com/pw/AP1GczMgTKDgaFIH_9R5tCXLvM-8Jqg3tAbhymE0fL1K0s2AOhvceaLmdL7f-OuckyAr2y7eDUbhrmc5b1CWyO_ztxfOjwqYNY8K6VjXjpGb7CihezWKr8C3-WgJ33MHuFaP7YgOKwR_NFPQroev0WvKSSA=w160-h160-s-no-gm"
@@ -62,6 +63,7 @@ def generate_income_source_tile(
                         weight=ft.FontWeight.BOLD,
                         size=32,
                         text_align=ft.TextAlign.CENTER,
+                        **Style.Text.value,
                     ),
                     ft.Row(
                         [
@@ -70,6 +72,7 @@ def generate_income_source_tile(
                                 weight=ft.FontWeight.BOLD,
                                 size=16,
                                 color=Colors.NEGATIVE,
+                                **Style.Text.value,
                             ),
                             ft.Icon(
                                 ft.icons.COMPARE_ARROWS_OUTLINED,
@@ -81,6 +84,7 @@ def generate_income_source_tile(
                                 weight=ft.FontWeight.BOLD,
                                 size=16,
                                 color=Colors.POSITIVE,
+                                **Style.Text.value,
                             ),
                         ]
                     ),
@@ -89,6 +93,7 @@ def generate_income_source_tile(
                         weight=ft.FontWeight.BOLD,
                         size=16,
                         text_align=ft.TextAlign.CENTER,
+                        **Style.Text.value,
                     ),
                 ],
                 width=400,
@@ -179,6 +184,14 @@ def retrieve_dto_data(dto) -> None:
 
 
 def draw_chart(data: pd.DataFrame) -> ft.LineChart:
+    def format_y_label(value: float) -> str:
+        if value == 0:
+            return "0"
+        elif value > 1000.00:
+            return "{value / 1000}K"
+        else:
+            f"{value:.2f}"
+
     data_1 = [
         ft.LineChartData(
             data_points=[
@@ -194,21 +207,35 @@ def draw_chart(data: pd.DataFrame) -> ft.LineChart:
     x_labels = [
         ft.ChartAxisLabel(
             value=day,
-            label=ft.Text(f"{day}", size=14, weight=ft.FontWeight.BOLD),
+            label=ft.Container(
+                ft.Text(f"{day}", size=12, weight=ft.FontWeight.BOLD, **Style.Text.value),
+                expand=True,
+            ),
         )
-        for day in np.linspace(1, 30, 5, dtype=int)
+        for day in np.linspace(1, 30, 6, dtype=int)
     ]
 
     y_labels = [
         ft.ChartAxisLabel(
             value=y_val,
-            label=ft.Text(f"{y_val} ZŁ", size=14, weight=ft.FontWeight.BOLD),
+            label=ft.Container(
+                ft.Text(
+                    format_y_label(y_val),
+                    size=12,
+                    weight=ft.FontWeight.BOLD,
+                    **Style.Text.value,
+                ),
+                width=300,
+                height=20,
+                expand=True,
+            ),
         )
-        for y_val in np.linspace(0, data["net"].values.max(), 4)
+        for y_val in list(range(0, data["net"].values.max(), 250))
     ]
+    print(y_labels)
     min_x = data["day"].values.min()
     max_x = data["day"].values.max()
-    min_y = 0.0
+    min_y = 0.0 if data["net"].values.min() > 0.0 else data["net"].values.min() - 100
     max_y = data["net"].values.max()
     chart = ft.LineChart(
         data_series=data_1,
@@ -219,9 +246,7 @@ def draw_chart(data: pd.DataFrame) -> ft.LineChart:
         max_x=max_x,
         min_y=min_y,
         max_y=max_y,
-        horizontal_grid_lines=ft.ChartGridLines(
-            interval=250, color=ft.colors.with_opacity(0.2, ft.colors.ON_SURFACE)
-        ),
+        vertical_grid_lines=ft.ChartGridLines(interval=1, color=ft.colors.GREY_900),
         # animate=5000,
         expand=False,
     )
@@ -248,7 +273,7 @@ def init_finances() -> None:
             )
         )
         append_income_source(
-            ft.Container(draw_chart(source.data), height=420, width=520, padding=6)
+            ft.Container(draw_chart(source.data), height=200, width=460, padding=8)
         )
 
     Page.update()

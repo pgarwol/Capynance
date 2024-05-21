@@ -75,9 +75,11 @@ calendar.add_component(
             ft.DataTable(
                 sort_ascending=True,
                 columns=[
-                    ft.DataColumn(date_col_header := ft.Text()),
-                    ft.DataColumn(goal_col_header := ft.Text()),
-                    ft.DataColumn(amount_col_header := ft.Text(), numeric=True),
+                    ft.DataColumn(date_col_header := ft.Text(**Style.Text.value)),
+                    ft.DataColumn(goal_col_header := ft.Text(**Style.Text.value)),
+                    ft.DataColumn(
+                        amount_col_header := ft.Text(**Style.Text.value), numeric=True
+                    ),
                 ],
                 rows=[],
             )
@@ -119,9 +121,9 @@ def add_savings_row(
         ft.DataRow(
             on_long_press=lambda row: remove_savings_row(row),
             cells=[
-                ft.DataCell(ft.Text(f"{date:%d-%m-%Y}")),
-                ft.DataCell(ft.Text(goal)),
-                ft.DataCell(ft.Text(f"{amount:.2f} {currency}")),
+                ft.DataCell(ft.Text(f"{date:%d-%m-%Y}", **Style.Text.value)),
+                ft.DataCell(ft.Text(goal, **Style.Text.value)),
+                ft.DataCell(ft.Text(f"{amount:.2f} {currency}", **Style.Text.value)),
             ],
         )
     )

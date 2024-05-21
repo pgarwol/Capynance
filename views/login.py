@@ -7,6 +7,7 @@ from views.register import register
 from session import Session
 from views.calendar import init_calendar
 from views.finances import init_finances
+from views.scan import init_scan
 from components.component import Component
 from components.component import DefaultComponents, init_stats
 from page import Page
@@ -87,6 +88,7 @@ def log_user_in(email: str | None, password: str | None):
         init_calendar()
         init_finances()
         init_stats()
+        init_scan()
         Page.go(home.route)
 
 
