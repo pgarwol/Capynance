@@ -224,4 +224,4 @@ def get_view_data(view_name: str, user_id: str | int) -> dict:
     Returns:
         dict: The data for the specified view associated with the user.
     """
-    return load_db_data(DBFields.USER_DB)[str(user_id)][view_name]
+    return load_db_data(f"{DBFields.USER_DB}{str(user_id)}/{view_name}.json")

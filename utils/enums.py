@@ -12,7 +12,7 @@ class DBFields(StrEnum):
     BUILD_LOG_PATH = "./database/built_views.log"
     ENCODING = "utf-8"
     LOGIN_DB = "login_database.json"
-    USER_DB = "user_database.json"
+    USER_DB = "users/"
     PROFILE = "profile"
     PASSWORD = "password"
     FIRST_NAME = "first_name"
