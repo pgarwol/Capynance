@@ -4,6 +4,7 @@ import flet as ft
 
 class String(StrEnum):
     EMPTY = ""
+    SPACE = " "
 
 
 class DBFields(StrEnum):
@@ -39,6 +40,7 @@ class FletNames(StrEnum):
     SHOP = "shop"
     SOCIAL = "social"
     STATS = "stats"
+    PROFILE = "profile"
 
 
 class Colors(StrEnum):
