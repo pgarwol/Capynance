@@ -263,35 +263,26 @@ def create_exp_lvl_display(lvl, exp):
             [
                 ft.Text(
                     f"LVL {lvl}",
-                    size=12,
+                    size=14,
                     color=Colors.BLACK,
-                    weight="bold",
+                    font_family="ConcertOne",
                 ),
-                ft.Row(
-                    controls=[
-                        ft.Image(
-                            src=exp_img,
-                            width=12,
-                            height=12,
-                        ),
-                        ft.Text(
-                            f"{exp} / 100",
-                            size=12,
-                            color=Colors.BLACK,
-                            weight="bold",
-                        ),
-                    ]
+                ft.Text(
+                    f"EXP {exp}/100",
+                    size=14,
+                    color=Colors.BLACK,
+                    font_family="ConcertOne",
                 ),
             ],
-            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.START,
         ),
-        margin=ft.margin.Margin(10, 0, 10, 0),
-        padding=ft.padding.all(3),
+        margin=ft.margin.Margin(10, 0, 0, 0),
+        padding=ft.padding.Padding(3, 2, 3, 2),
         bgcolor=Colors.ACCENT,
         border_radius=ft.border_radius.all(8),
-        width=80,
-        height=40,
+        width=85,
+        height=45,
         alignment=ft.alignment.center,
         shadow=ft.BoxShadow(
             spread_radius=1,
@@ -339,7 +330,8 @@ def create_currency_display(capycoins):
                 ft.Text(
                     str(capycoins),
                     color=ft.colors.BLACK,
-                    weight="bold",
+                    size=14,
+                    font_family="ConcertOne",
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,

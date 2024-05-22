@@ -8,6 +8,7 @@ from product import read_product_from_db
 image_width = 250
 image_height = 295.3
 buttons_size = 20
+coin_img = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
 
 
 def update_image(container, images, current_index):
@@ -110,112 +111,13 @@ def create_shop_item(hats_id, colors_id, shirts_id):
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Container(
-                    ft.Row(
-                        controls=[
-                            ft.Container(
-                                content=ft.Column(
-                                    controls=[
-                                        ft.Text(
-                                            hats_product.name,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                        ft.Text(
-                                            hats_product.price,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                ),
-                                bgcolor=Colors.SECONDARY,
-                                border_radius=ft.border_radius.all(8),
-                                width=75,
-                                height=50,
-                                alignment=ft.alignment.center,
-                                shadow=ft.BoxShadow(
-                                    spread_radius=1,
-                                    blur_radius=3,
-                                    color=ft.colors.BLACK54,
-                                    offset=ft.Offset(0, 0),
-                                ),
-                            ),
-                            ft.Container(
-                                content=ft.Column(
-                                    controls=[
-                                        ft.Text(
-                                            shirts_product.name,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                        ft.Text(
-                                            shirts_product.price,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                ),
-                                bgcolor=Colors.SECONDARY,
-                                border_radius=ft.border_radius.all(8),
-                                width=75,
-                                height=50,
-                                alignment=ft.alignment.center,
-                                shadow=ft.BoxShadow(
-                                    spread_radius=1,
-                                    blur_radius=3,
-                                    color=ft.colors.BLACK54,
-                                    offset=ft.Offset(0, 0),
-                                ),
-                            ),
-                            ft.Container(
-                                content=ft.Column(
-                                    controls=[
-                                        ft.Text(
-                                            colors_product.name,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                        ft.Text(
-                                            colors_product.price,
-                                            size=18,
-                                            color=Colors.BLACK,
-                                        ),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                ),
-                                bgcolor=Colors.SECONDARY,
-                                border_radius=ft.border_radius.all(8),
-                                width=75,
-                                height=50,
-                                alignment=ft.alignment.center,
-                                shadow=ft.BoxShadow(
-                                    spread_radius=1,
-                                    blur_radius=3,
-                                    color=ft.colors.BLACK54,
-                                    offset=ft.Offset(0, 0),
-                                ),
-                            ),
-                        ],
-                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                    ),
-                    alignment=ft.alignment.center,
-                    padding=ft.Padding(5, 0, 5, 0),
-                    margin=ft.Margin(0, 0, 0, 0),
-                    width=350,
-                    height=85,
-                ),
                 ft.Row(
                     controls=[
                         ft.Column(
                             controls=[
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_BACK,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_left(
                                         e, hat_images, hats_index_ref, hat_container
@@ -223,7 +125,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                 ),
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_BACK,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_left(
                                         e,
@@ -234,7 +136,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                 ),
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_BACK,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_left(
                                         e,
@@ -259,7 +161,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                             controls=[
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_FORWARD,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_right(
                                         e, hat_images, hats_index_ref, hat_container
@@ -267,7 +169,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                 ),
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_FORWARD,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_right(
                                         e,
@@ -278,7 +180,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                 ),
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_FORWARD,
-                                    icon_color="blue400",
+                                    icon_color=Colors.PRIMARY_LIGHTER,
                                     icon_size=buttons_size,
                                     on_click=lambda e: move_img_right(
                                         e,
@@ -288,22 +190,138 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                     ),
                                 ),
                             ],
-                            alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
+                    height=200,
+                    width=350,
                 ),
                 ft.Row(
                     controls=[
-                        ft.ElevatedButton("Kup czapke", on_click=open_dlg, scale=0.85),
-                        ft.ElevatedButton("Kup ubranko", on_click=open_dlg, scale=0.85),
-                        ft.ElevatedButton("Kup kolor", on_click=open_dlg, scale=0.85),
+                        ft.Column(
+                            controls=[
+                                ft.ElevatedButton(
+                                    content=ft.Column(
+                                        [
+                                            ft.Text(
+                                                "Czapka",
+                                                size=12,
+                                                color=Colors.BLACK,
+                                                font_family="ConcertOne",
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    ft.Image(
+                                                        src=coin_img,
+                                                        width=18,
+                                                        height=18,
+                                                    ),
+                                                    ft.Text(
+                                                        f" {hats_product.price}",
+                                                        size=12,
+                                                        color=Colors.BLACK,
+                                                        font_family="ConcertOne",
+                                                    ),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    ),
+                                    on_click=open_dlg,
+                                    color=Colors.BLACK.value,
+                                    bgcolor=Colors.ACCENT.value,
+                                    width=105,
+                                    height=42,
+                                ),
+                            ]
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.ElevatedButton(
+                                    content=ft.Column(
+                                        [
+                                            ft.Text(
+                                                "Ubranko",
+                                                size=12,
+                                                color=Colors.BLACK,
+                                                font_family="ConcertOne",
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    ft.Image(
+                                                        src=coin_img,
+                                                        width=18,
+                                                        height=18,
+                                                    ),
+                                                    ft.Text(
+                                                        f" {shirts_product.price}",
+                                                        size=12,
+                                                        color=Colors.BLACK,
+                                                        font_family="ConcertOne",
+                                                    ),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    ),
+                                    on_click=open_dlg,
+                                    color=Colors.BLACK.value,
+                                    bgcolor=Colors.ACCENT.value,
+                                    width=105,
+                                    height=42,
+                                ),
+                            ]
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.ElevatedButton(
+                                    content=ft.Column(
+                                        [
+                                            ft.Text(
+                                                "Kolor",
+                                                size=12,
+                                                color=Colors.BLACK,
+                                                font_family="ConcertOne",
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    ft.Image(
+                                                        src=coin_img,
+                                                        width=18,
+                                                        height=18,
+                                                    ),
+                                                    ft.Text(
+                                                        f" {colors_product.price}",
+                                                        size=12,
+                                                        color=Colors.BLACK,
+                                                        font_family="ConcertOne",
+                                                    ),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    ),
+                                    on_click=open_dlg,
+                                    color=Colors.BLACK.value,
+                                    bgcolor=Colors.ACCENT.value,
+                                    width=105,
+                                    height=42,
+                                ),
+                            ]
+                        ),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                    width=350,
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
-            # horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
         alignment=ft.alignment.center,
     )
