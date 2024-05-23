@@ -5,7 +5,6 @@ from views.shop import shop
 from views.home import home
 from views.scan import scan
 from views.login import login
-from views.social import social
 from utils.enums import DBFields, FletNames
 from views.register import register
 from views.calendar import calendar
@@ -28,13 +27,11 @@ class App:
     navigation_bar_items = {
         0: {FletNames.VIEW: scan, FletNames.ROUTE: scan.route},
         1: {FletNames.VIEW: shop, FletNames.ROUTE: shop.route},
-        2: {FletNames.VIEW: calendar, FletNames.ROUTE: calendar.route},
-        3: {FletNames.VIEW: home, FletNames.ROUTE: home.route},
+        2: {FletNames.VIEW: home, FletNames.ROUTE: home.route},
+        3: {FletNames.VIEW: calendar, FletNames.ROUTE: calendar.route},
         4: {FletNames.VIEW: finances, FletNames.ROUTE: finances.route},
-        5: {FletNames.VIEW: social, FletNames.ROUTE: social.route},
-        6: {FletNames.VIEW: settings, FletNames.ROUTE: settings.route},
-        7: {FletNames.VIEW: login, FletNames.ROUTE: login.route},
-        8: {FletNames.VIEW: register, FletNames.ROUTE: register.route},
+        5: {FletNames.VIEW: login, FletNames.ROUTE: login.route},
+        6: {FletNames.VIEW: register, FletNames.ROUTE: register.route},
     }
 
     def main(self, page: ft.Page) -> None:
@@ -120,6 +117,6 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, cleanup)
     try:
         app = App()
-        ft.app(target=app.main, view=ft.AppView.WEB_BROWSER)
+        ft.app(target=app.main)
     finally:
         cleanup()

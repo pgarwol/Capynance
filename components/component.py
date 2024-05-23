@@ -119,7 +119,7 @@ class DefaultComponents(Enum):
         content=[
             ft.BottomAppBar(
                 ft.CupertinoSlidingSegmentedButton(
-                    selected_index=3,
+                    selected_index=2,
                     controls=[
                         ft.Container(
                             padding=ft.padding.symmetric(0, 10),
@@ -138,13 +138,6 @@ class DefaultComponents(Enum):
                         ft.Container(
                             padding=ft.padding.symmetric(0, 10),
                             content=ft.Icon(
-                                name=ft.icons.CALENDAR_MONTH,
-                                color=Colors.BLACK,
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.padding.symmetric(0, 10),
-                            content=ft.Icon(
                                 name=ft.icons.HOME_ROUNDED,
                                 color=Colors.BLACK,
                             ),
@@ -152,18 +145,14 @@ class DefaultComponents(Enum):
                         ft.Container(
                             padding=ft.padding.symmetric(0, 10),
                             content=ft.Icon(
-                                name=ft.icons.ATTACH_MONEY,
+                                name=ft.icons.CALENDAR_MONTH,
                                 color=Colors.BLACK,
                             ),
                         ),
                         ft.Container(
                             padding=ft.padding.symmetric(0, 10),
-                            content=ft.Icon(name=ft.icons.PEOPLE, color=Colors.BLACK),
-                        ),
-                        ft.Container(
-                            padding=ft.padding.symmetric(0, 10),
                             content=ft.Icon(
-                                name=ft.icons.SETTINGS_ROUNDED,
+                                name=ft.icons.ATTACH_MONEY,
                                 color=Colors.BLACK,
                             ),
                         ),

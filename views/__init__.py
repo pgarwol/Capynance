@@ -8,6 +8,5 @@ from .home import *
 from .scan import *
 from .settings import *
 from .shop import *
-from .social import *
 from .register import *
 from .login import *
