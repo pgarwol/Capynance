@@ -5,7 +5,6 @@ from views.shop import shop
 from views.home import home
 from views.scan import scan
 from views.login import login
-from views.social import social
 from utils.enums import DBFields, FletNames
 from views.register import register
 from views.calendar import calendar
