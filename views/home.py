@@ -7,13 +7,7 @@ import random
 
 
 class TipsOfTheDay(Enum):
-    """
-    This class is an enumeration that represents the tips of the day.
-
-    It is a subclass of the Enum class provided by the enum module in Python.
-    Each attribute of this class represents a tip of the day. The attribute's name is a unique identifier for the tip,
-    and its value is the text of the tip.
-    """
+    """Enumeration for daily tips."""
     TIP_1 = 'Codziennie odkładając choćby niewielką kwotę, budujesz swoją finansową przyszłość'
     TIP_2 = 'Planuj wydatki z wyprzedzeniem, aby uniknąć niepotrzebnych zakupów'
     TIP_3 = 'Korzystaj z promocji, ale tylko wtedy, gdy faktycznie potrzebujesz produktu'
@@ -47,14 +41,17 @@ def generate_daily_tip() -> ft.Container:
     )
 
 
+# Placeholder functions for the button actions
 def add_spending_manual(_):
     print('Spending added manually')
 
 
+# Placeholder functions for the button actions
 def go_to_settings(_):
     print('Settings opened')
 
 
+# Placeholder functions for the button actions
 def log_out(_):
     print('Logged out')
 
@@ -137,6 +134,9 @@ cont_achievements = ft.Container(
 
 # A container for the spending section on the home page.
 # noinspection SpellCheckingInspection
+url_dolar_sign = ('https://lh3.googleusercontent.com/pw/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT'
+                  '-nMzA3A6Pg4Rhy-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                  '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0')
 cont_spending = ft.Container(
     ft.Column(
         [
@@ -153,10 +153,7 @@ cont_spending = ft.Container(
                             [
                                 # An image element for the first spending item.
                                 ft.Image(
-                                    src='https://lh3.googleusercontent.com/pw'
-                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    src=url_dolar_sign,
                                     width=25,
                                     height=25,
                                 ),
@@ -173,10 +170,7 @@ cont_spending = ft.Container(
                         ft.Row(
                             [
                                 ft.Image(
-                                    src='https://lh3.googleusercontent.com/pw'
-                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    src=url_dolar_sign,
                                     width=25,
                                     height=25,
                                 ),
@@ -190,10 +184,7 @@ cont_spending = ft.Container(
                         ft.Row(
                             [
                                 ft.Image(
-                                    src='https://lh3.googleusercontent.com/pw'
-                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    src=url_dolar_sign,
                                     width=25,
                                     height=25,
                                 ),
