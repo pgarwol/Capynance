@@ -44,7 +44,7 @@ cont_usr_data = ft.Container(
     ft.Column(
         [
             ft.Text('Imię i nazwisko', size=35, weight=ft.FontWeight.W_300),
-            ft.Text('Nick123456', size=18, weight=ft.FontWeight.W_400),
+            ft.Text('Nick1234', size=18, weight=ft.FontWeight.W_400),
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         spacing=5
@@ -95,6 +95,59 @@ new_post_btn = ft.FloatingActionButton(
     shape=ft.CircleBorder(),
 )
 
+# noinspection SpellCheckingInspection
+cont_spending = ft.Container(
+    ft.Column(
+        [
+            ft.Row(
+                [
+                    ft.Image(
+                        src='https://lh3.googleusercontent.com/pw'
+                                 '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                                 '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                                 '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                        width=25,
+                        height=25,
+                    ),
+                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
+                    ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
+                ]
+            ),
+            ft.Row(
+                [
+                    ft.Image(
+                        src='https://lh3.googleusercontent.com/pw'
+                            '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                            '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                            '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                        width=25,
+                        height=25,
+                    ),
+                    ft.Container(
+                        ft.Text('Draże korsarze XXL', size=18, weight=ft.FontWeight.W_300)
+                    ),
+                    ft.Text('4,47 zł', size=18, weight=ft.FontWeight.W_300),
+                ]
+            ),
+            ft.Row(
+                [
+                    ft.Image(
+                        src='https://lh3.googleusercontent.com/pw'
+                            '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                            '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                            '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                        width=25,
+                        height=25,
+                    ),
+                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
+                    ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
+                ]
+            )
+        ]
+    )
+)
+
+
 home = View(name=FletNames.HOME, route=f"/{FletNames.HOME}")
 home.add_component(DefaultComponents.STATISTICS_BAR.value)
 home.add_component(Component([
@@ -105,6 +158,8 @@ home.add_component(Component([
             cont_daily_tip,
             ft.Divider(),
             achievements,
+            ft.Divider(),
+            cont_spending,
             ft.Divider(),
         ],
         scroll=ft.ScrollMode.HIDDEN,
