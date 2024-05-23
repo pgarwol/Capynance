@@ -23,6 +23,7 @@ class DBFields(StrEnum):
     SOCIAL = "social"
     SETTINGS = "settings"
     STATS = "stats"
+    MANUAL_SPENDING = "manual-spending"
 
 
 class FletNames(StrEnum):

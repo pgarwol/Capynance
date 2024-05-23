@@ -67,14 +67,14 @@ def read_user_from_db(id: str | int) -> User:
             finances=load_db_data(
                 db_filepath=merge_user_db_path(user_id=id, filename=DBFields.FINANCES)
             ),
-            social=load_db_data(
-                db_filepath=merge_user_db_path(user_id=id, filename=DBFields.SOCIAL)
-            ),
             settings=load_db_data(
                 db_filepath=merge_user_db_path(user_id=id, filename=DBFields.SETTINGS)
             ),
             stats=load_db_data(
                 db_filepath=merge_user_db_path(user_id=id, filename=DBFields.STATS)
+            ),
+            manual_spending=load_db_data(
+                db_filepath=merge_user_db_path(user_id=id, filename=DBFields.MANUAL_SPENDING)
             ),
         )
     except Exception as e:

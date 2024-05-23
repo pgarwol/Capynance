@@ -9,17 +9,17 @@ class User:
         profile: dict,
         calendar: dict,
         finances: dict,
-        social: dict,
         settings: dict,
         stats: dict,
+        manual_spending: dict,
     ):
         self.id = id
         self.profile = profile
         self.calendar = calendar
         self.finances = finances
-        self.social = social
         self.settings = settings
         self.stats = stats
+        self.manual_spending = manual_spending
 
         # settings = Settings(language=Langs.PL)
 

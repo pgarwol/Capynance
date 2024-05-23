@@ -1,4 +1,6 @@
 from components.component import Component, DefaultComponents
+from session import Session
+from utils import services
 from utils.enums import FletNames, Colors
 from views.view import View, ViewsInitialStates
 from enum import Enum
@@ -44,6 +46,72 @@ def generate_daily_tip() -> ft.Container:
 # Placeholder functions for the button actions
 def add_spending_manual(_):
     print('Spending added manually')
+
+
+def retrieve_dto_data(dto) -> None:
+    view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
+    spending_dict = view_data["spending"]
+    read_latest_spending(spending_dict)
+
+
+def init_home() -> None:
+    """
+    Initializes the home view.
+
+    This function retrieves the data transfer object (DTO) of the currently logged-in user and passes it to the
+    retrieve_dto_data function. The retrieve_dto_data function is responsible for loading the data for the
+    'manual-spending' of the logged-in user.
+    """
+    retrieve_dto_data(dto=Session.get_logged_user())
+
+
+def read_latest_spending(spending_dict: dict[str, list[str, float]]) -> None:
+    sorted_dates = sorted(spending_dict.keys(), reverse=True)
+    latest_three = sorted_dates[:3]
+    latest_spending = [(spending_dict[date][0], spending_dict[date][1]) for date in latest_three]
+    generate_spending_rows(latest_spending)
+
+
+def generate_spending_rows(latest_spending: list[tuple[str, float]]) -> None:
+    # noinspection SpellCheckingInspection
+    for spending_item in latest_spending:
+        spending_rows.append(generate_one_spending_row(spending_item))
+
+
+# noinspection SpellCheckingInspection
+def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
+    """
+    This function generates a row for a single spending item.
+
+    It takes the spending data and the row index as input and creates a row with an image, a text container for the
+    name of the spending item, and a text for the price of the spending item.
+
+    Args:
+        spending_item (tuple[str, float]): A tuple containing the name and price of the spending item.
+
+    Returns:
+        ft.Row: A row component for the spending item.
+    """
+    return ft.Row(
+        [
+            # An image element for the spending item.
+            ft.Image(
+                src='https://lh3.googleusercontent.com/pw/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT'
+                    '-nMzA3A6Pg4Rhy-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                    '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                width=25,
+                height=25,
+            ),
+            # A text container for the name of the spending item.
+            ft.Container(
+                ft.Text(spending_item[0], size=18, weight=ft.FontWeight.W_300),
+                width=200,
+            ),
+            # A text for the price of the first spending item.
+            ft.Text('{:.2f} zł'.format(spending_item[1]), size=18, weight=ft.FontWeight.W_300),
+        ],
+        spacing=10,
+    )
 
 
 # Placeholder functions for the button actions
@@ -132,11 +200,8 @@ cont_achievements = ft.Container(
     )
 )
 
-# A container for the spending section on the home page.
+# Spending section
 # noinspection SpellCheckingInspection
-url_dolar_sign = ('https://lh3.googleusercontent.com/pw/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT'
-                  '-nMzA3A6Pg4Rhy-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                  '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0')
 cont_spending = ft.Container(
     ft.Column(
         [
@@ -146,57 +211,7 @@ cont_spending = ft.Container(
             # A container for the list of spending items. Each item is represented as a row of elements: an
             # image, a text container for the item name, and a text for the item price.
             ft.Container(
-                ft.Column(
-                    [
-                        # A row for the first spending item.
-                        ft.Row(
-                            [
-                                # An image element for the first spending item.
-                                ft.Image(
-                                    src=url_dolar_sign,
-                                    width=25,
-                                    height=25,
-                                ),
-                                # A text container for the name of the first spending item.
-                                ft.Container(
-                                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
-                                    width=200,
-                                ),
-                                # A text for the price of the first spending item.
-                                ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
-                            ],
-                        ),
-                        # The following rows have the same structure.
-                        ft.Row(
-                            [
-                                ft.Image(
-                                    src=url_dolar_sign,
-                                    width=25,
-                                    height=25,
-                                ),
-                                ft.Container(
-                                    ft.Text('Draże korsarze XXL', size=18, weight=ft.FontWeight.W_300),
-                                    width=200,
-                                ),
-                                ft.Text('4,47 zł', size=18, weight=ft.FontWeight.W_300),
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                ft.Image(
-                                    src=url_dolar_sign,
-                                    width=25,
-                                    height=25,
-                                ),
-                                ft.Container(
-                                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
-                                    width=200,
-                                ),
-                                ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
-                            ],
-                        )
-                    ]
-                ),
+                ft.Column(spending_rows := []),
                 padding=ft.padding.all(10),
             ),
         ]
