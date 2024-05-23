@@ -1,0 +1,22 @@
+{
+  "savings_rows": {
+    "0": {
+      "savings_deadline": "27-05-2024",
+      "savings_goal": "Saab 9-3 Turbo",
+      "savings_amount": "15000.00",
+      "savings_currency": "Z\u0141"
+    },
+    "1": {
+      "savings_deadline": "27-05-2024",
+      "savings_goal": "Guma Turbo",
+      "savings_amount": "1.00",
+      "savings_currency": "Z\u0141"
+    },
+    "2": {
+      "savings_deadline": "30-05-2024",
+      "savings_goal": "jajco",
+      "savings_amount": "50.00",
+      "savings_currency": "USD"
+    }
+  }
+}

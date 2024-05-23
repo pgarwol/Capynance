@@ -37,7 +37,10 @@ class App:
 
     def main(self, page: ft.Page) -> None:
         page.fonts = {
-            "RobotoSlab": "https://github.com/google/fonts/raw/main/apache/robotoslab/RobotoSlab%5Bwght%5D.ttf"
+            "RobotoSlab": "https://github.com/google/fonts/raw/main/apache/robotoslab/RobotoSlab%5Bwght%5D.ttf",
+            "ConcertOne": "https://github.com/M4agicBean/Capynance-fonts/blob/main/ConcertOne-Regular.ttf?raw=true",
+            "Kanit": "https://raw.githubusercontent.com/google/fonts/master/ofl/kanit/Kanit-Bold.ttf",
+            "RubikMonoOne": "https://github.com/M4agicBean/Capynance-fonts/blob/main/RubikMonoOne-Regular.ttf?raw=true",
         }
         Page.set_page(page=page)
         # page.vertical_alignment = ft.MainAxisAlignment.CENTER

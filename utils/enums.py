@@ -4,6 +4,7 @@ import flet as ft
 
 class String(StrEnum):
     EMPTY = ""
+    SPACE = " "
 
 
 class DBFields(StrEnum):
@@ -11,7 +12,7 @@ class DBFields(StrEnum):
     BUILD_LOG_PATH = "./database/built_views.log"
     ENCODING = "utf-8"
     LOGIN_DB = "login_database.json"
-    USER_DB = "user_database.json"
+    USER_DB = "users/"
     PROFILE = "profile"
     PASSWORD = "password"
     FIRST_NAME = "first_name"
@@ -39,6 +40,7 @@ class FletNames(StrEnum):
     SHOP = "shop"
     SOCIAL = "social"
     STATS = "stats"
+    PROFILE = "profile"
 
 
 class Colors(StrEnum):
