@@ -39,6 +39,14 @@ def add_spending_manual(_):
     print('Spending added manually')
 
 
+def go_to_settings(_):
+    print('Settings opened')
+
+
+def log_out(_):
+    print('Logged out')
+
+
 # Name, surname and nickname
 cont_usr_data = ft.Container(
     ft.Column(
@@ -70,8 +78,11 @@ cont_daily_tip = ft.Container(ft.Column(
 achievements_cont = ft.Container(
     ft.Row(
         [
-            ft.Image(src='https://placehold.co/60x60/png'),
-            ft.Image(src='https://placehold.co/60x60/png')
+            ft.Image(src='https://lh3.googleusercontent.com/pw/AP1GczMFKtBRf4tjMcjFzfl'
+                         '-IiaSNuy9cQm1mQTiMtMzvprCNBM14ANYb_BWgGGazk2yMvmJzM'
+                         '-zwjaWks4U3iOjtZT5uWPa_9B_E1gw9svLCPIApesLesfIhyObC1MOzBB1tM13TXgcmHXD6j4-KS6Q_Hg=w53-h50-s'
+                         '-no?authuser=0',
+                     width=60, height=60),
         ]
     ),
     padding=ft.padding.all(13),
@@ -99,54 +110,116 @@ new_post_btn = ft.FloatingActionButton(
 cont_spending = ft.Container(
     ft.Column(
         [
-            ft.Row(
-                [
-                    ft.Image(
-                        src='https://lh3.googleusercontent.com/pw'
-                                 '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                                 '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                                 '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
-                        width=25,
-                        height=25,
-                    ),
-                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
-                    ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
-                ]
+            ft.Text('Ostatnie wydatki', size=25, weight=ft.FontWeight.W_200),
+            ft.Container(
+                ft.Column(
+                    [
+
+                        ft.Row(
+                            [
+                                ft.Image(
+                                    src='https://lh3.googleusercontent.com/pw'
+                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    width=25,
+                                    height=25,
+                                ),
+                                ft.Container(
+                                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
+                                    width=200,
+                                ),
+                                ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                ft.Image(
+                                    src='https://lh3.googleusercontent.com/pw'
+                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    width=25,
+                                    height=25,
+                                ),
+                                ft.Container(
+                                    ft.Text('Draże korsarze XXL', size=18, weight=ft.FontWeight.W_300),
+                                    width=200,
+                                ),
+                                ft.Text('4,47 zł', size=18, weight=ft.FontWeight.W_300),
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                ft.Image(
+                                    src='https://lh3.googleusercontent.com/pw'
+                                        '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
+                                        '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
+                                        '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
+                                    width=25,
+                                    height=25,
+                                ),
+                                ft.Container(
+                                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
+                                    width=200,
+                                ),
+                                ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
+                            ],
+                        )
+                    ]
+                ),
+                padding=ft.padding.all(10),
             ),
-            ft.Row(
-                [
-                    ft.Image(
-                        src='https://lh3.googleusercontent.com/pw'
-                            '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                            '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                            '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
-                        width=25,
-                        height=25,
-                    ),
-                    ft.Container(
-                        ft.Text('Draże korsarze XXL', size=18, weight=ft.FontWeight.W_300)
-                    ),
-                    ft.Text('4,47 zł', size=18, weight=ft.FontWeight.W_300),
-                ]
-            ),
-            ft.Row(
-                [
-                    ft.Image(
-                        src='https://lh3.googleusercontent.com/pw'
-                            '/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT-nMzA3A6Pg4Rhy'
-                            '-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                            '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
-                        width=25,
-                        height=25,
-                    ),
-                    ft.Text('Guma Turbo', size=18, weight=ft.FontWeight.W_300),
-                    ft.Text('0,50 zł', size=18, weight=ft.FontWeight.W_300),
-                ]
-            )
         ]
+    ),
+)
+
+# noinspection SpellCheckingInspection
+cont_aim = ft.Container(
+    ft.Column(
+        [
+            ft.Text('Nadchodzący cel', size=25, weight=ft.FontWeight.W_200),
+            ft.Container(
+                ft.Column(
+                    [
+                        ft.Image(src='https://lh3.googleusercontent.com/pw'
+                                     '/AP1GczM7EACZEZZFYqXj4fxQg4Ywi8cMId_Y7WQqGgFyoglA1knlUff4ARnsnItRMClxxI5Xea'
+                                     'DRJsqqYWowsS1zi_vhxpkgqXDfGy7ZIXMtpLRxxow_MR1ycO-gGkc8TTjb6IdfYKVyU19VJLhzmpJQjSQ'
+                                     '=w96-h96-s-no?authuser=0', width=50, height=50),
+                        ft.Text('4,28 zł', size=18, weight=ft.FontWeight.W_300),
+                        ft.Text('Piwo po zdanej obronie', size=18, weight=ft.FontWeight.W_300),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=5,
+                ),
+                alignment=ft.alignment.center,
+            )
+        ],
     )
 )
 
+cont_last_buttons = ft.Container(
+    ft.Column(
+        [
+            ft.ElevatedButton(
+                text='Ustawienia aplikacji',
+                on_click=go_to_settings,
+                width=200,
+                bgcolor=ft.colors.GREY_200,
+                color=ft.colors.BLACK,
+            ),
+            ft.ElevatedButton(
+                text='Wyloguj się',
+                on_click=log_out,
+                width=200,
+                bgcolor=ft.colors.GREY_200,
+                color=ft.colors.BLACK,
+            ),
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    ),
+    alignment=ft.alignment.center,
+)
 
 home = View(name=FletNames.HOME, route=f"/{FletNames.HOME}")
 home.add_component(DefaultComponents.STATISTICS_BAR.value)
@@ -161,6 +234,9 @@ home.add_component(Component([
             ft.Divider(),
             cont_spending,
             ft.Divider(),
+            cont_aim,
+            ft.Divider(),
+            cont_last_buttons,
         ],
         scroll=ft.ScrollMode.HIDDEN,
         expand=True

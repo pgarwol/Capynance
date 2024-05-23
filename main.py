@@ -118,6 +118,6 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, cleanup)
     try:
         app = App()
-        ft.app(target=app.main, view=ft.AppView.WEB_BROWSER)
+        ft.app(target=app.main)
     finally:
         cleanup()
