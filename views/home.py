@@ -1,3 +1,7 @@
+import datetime
+
+from flet_core import KeyboardType
+
 from components.component import Component, DefaultComponents
 from session import Session
 from utils import services
@@ -6,6 +10,7 @@ from views.view import View, ViewsInitialStates
 from enum import Enum
 import flet as ft
 import random
+from page import Page
 
 
 class TipsOfTheDay(Enum):
@@ -20,6 +25,9 @@ class TipsOfTheDay(Enum):
     TIP_8 = 'Regularnie przeglądaj swoje subskrypcje i rezygnuj z nieużywanych'
     TIP_9 = 'Zainwestuj w jakość – lepsze produkty często służą dłużej'
     TIP_10 = 'Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże'
+
+
+spending_dict = {}
 
 
 def generate_daily_tip() -> ft.Container:
@@ -43,12 +51,66 @@ def generate_daily_tip() -> ft.Container:
     )
 
 
-# Placeholder functions for the button actions
-def add_spending_manual(_):
-    print('Spending added manually')
+def add_spending_manual(e):
+    e.page.dialog = manual_spending_dialog
+    manual_spending_dialog.open = True
+    e.page.update()
+
+
+def discard_manual_spending_dialog(e):
+    e.page.dialog.open = False
+    e.page.update()
+    clear_manual_spending_dialog()
+
+
+def clear_manual_spending_dialog():
+    tf_spending_desc.value = ''
+    tf_spending_value.value = ''
+
+
+def confirm_manual_spending_dialog(e):
+    global spending_dict
+    e.page.dialog.open = False
+    e.page.update()
+    spending_dict[datetime.datetime.now().strftime('%Y-%m-%d')] = \
+        [tf_spending_desc.value, float(tf_spending_value.value)]
+    read_latest_spending(spending_dict)
+    clear_manual_spending_dialog()
+
+
+manual_spending_dialog = ft.AlertDialog(
+    modal=True,
+    title=ft.Text("Wprowadź wydatek"),
+    content=ft.Container(
+        content=ft.Column(
+            controls=[
+                ft.Text('Opis wydatku'),
+                tf_spending_desc := ft.TextField(),
+                ft.Text('Kwota'),
+                tf_spending_value := ft.TextField(keyboard_type=KeyboardType.NUMBER),
+            ]
+        ),
+        height=300,
+    ),
+    actions=[
+        ft.TextButton(
+            text="Anuluj",
+            on_click=discard_manual_spending_dialog,
+            style=ft.ButtonStyle(color=ft.colors.RED)
+        ),
+        ft.TextButton(
+            text="Zatwierdź",
+            on_click=confirm_manual_spending_dialog,
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+        ),
+    ],
+    actions_alignment=ft.MainAxisAlignment.END,
+    on_dismiss=lambda e: print("Modal dialog dismissed!"),
+)
 
 
 def retrieve_dto_data(dto) -> None:
+    global spending_dict
     view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
     spending_dict = view_data["spending"]
     read_latest_spending(spending_dict)
@@ -65,17 +127,19 @@ def init_home() -> None:
     retrieve_dto_data(dto=Session.get_logged_user())
 
 
-def read_latest_spending(spending_dict: dict[str, list[str, float]]) -> None:
-    sorted_dates = sorted(spending_dict.keys(), reverse=True)
+def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
+    sorted_dates = sorted(spending.keys(), reverse=True)
     latest_three = sorted_dates[:3]
-    latest_spending = [(spending_dict[date][0], spending_dict[date][1]) for date in latest_three]
+    latest_spending = [(spending[date][0], spending[date][1]) for date in latest_three]
     generate_spending_rows(latest_spending)
 
 
 def generate_spending_rows(latest_spending: list[tuple[str, float]]) -> None:
     # noinspection SpellCheckingInspection
+    spending_rows.clear()
     for spending_item in latest_spending:
         spending_rows.append(generate_one_spending_row(spending_item))
+    Page.update()
 
 
 # noinspection SpellCheckingInspection

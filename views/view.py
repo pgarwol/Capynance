@@ -228,11 +228,3 @@ class ViewsInitialStates:
     @classmethod
     def get_shop_copy(cls):
         return cls.shop
-
-    @classmethod
-    def set_social_copy(cls, social):
-        cls.social = copy.copy(social)
-
-    @classmethod
-    def get_social_copy(cls):
-        return cls.social
