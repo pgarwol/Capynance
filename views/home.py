@@ -3,8 +3,10 @@ import random
 from enum import Enum
 
 import flet as ft
+import flet_core.control_event
 from flet_core import KeyboardType
 
+import user
 from components.component import Component, DefaultComponents
 from page import Page
 from session import Session
@@ -52,24 +54,71 @@ def generate_daily_tip() -> ft.Container:
     )
 
 
-def add_spending_manual(e):
+def add_spending_manual(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function opens a dialog for manual spending input.
+
+    It sets the current page's dialog to the manual spending dialog and opens it.
+    After that, it updates the page to reflect these changes.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event object that triggered this function.
+
+    Returns:
+        None
+    """
     e.page.dialog = manual_spending_dialog
     manual_spending_dialog.open = True
     e.page.update()
 
 
-def discard_manual_spending_dialog(e):
+def discard_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function closes the manual spending input dialog.
+
+    It sets the 'open' attribute of the current page's dialog to False, effectively closing it.
+    After that, it updates the page to reflect these changes and clears the dialog.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event object that triggered this function.
+
+    Returns:
+        None
+    """
     e.page.dialog.open = False
     e.page.update()
     clear_manual_spending_dialog()
 
 
-def clear_manual_spending_dialog():
+def clear_manual_spending_dialog() -> None:
+    """
+    This function clears the manual spending input dialog.
+
+    It sets the 'value' attribute of the 'tf_spending_desc' and 'tf_spending_value' text fields to an empty string,
+    effectively clearing the input fields in the dialog.
+
+    Returns:
+        None
+    """
     tf_spending_desc.value = ''
     tf_spending_value.value = ''
 
 
-def confirm_manual_spending_dialog(e):
+def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function confirms the manual spending input dialog.
+
+    It sets the 'open' attribute of the current page's dialog to False, effectively closing it.
+    After that, it updates the page to reflect these changes.
+    It then adds the spending description and value to the global spending dictionary with the current date as the key.
+    Finally, it updates the spending display and clears the dialog.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event object that triggered this function.
+
+    Returns:
+        None
+    """
     global spending_dict
     e.page.dialog.open = False
     e.page.update()
@@ -110,12 +159,28 @@ manual_spending_dialog = ft.AlertDialog(
 )
 
 
-def retrieve_dto_data(dto) -> None:
+def retrieve_dto_data(dto: user.User) -> None:
     retrieve_dto_spending(dto)
     retrieve_dto_calendar(dto)
 
 
 def retrieve_dto_spending(dto) -> None:
+    """
+    This function retrieves the spending data for a given user.
+
+    It calls the get_view_data function from the services module, passing in 'manual-spending' as the view name and the
+    id of the user as the user_id. The function returns a dictionary containing the view data for the user.
+
+    If 'spending' is not in the view data, the function returns None. Otherwise, it updates the global spending_dict
+    with the spending data from the view data and calls the read_latest_spending function, passing in the updated
+    spending_dict.
+
+    Args:
+        dto: The data transfer object (DTO) of the user.
+
+    Returns:
+        None
+    """
     global spending_dict
     view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
     if 'spending' not in view_data:
@@ -124,7 +189,22 @@ def retrieve_dto_spending(dto) -> None:
     read_latest_spending(spending_dict)
 
 
-def retrieve_dto_calendar(dto) -> None:
+def retrieve_dto_calendar(dto: user.User) -> None:
+    """
+    This function retrieves the calendar data for a given user and updates the upcoming goal section.
+
+    It calls the get_view_data function from the services module, passing in 'calendar' as the view name and the
+    id of the user as the user_id. The function returns a dictionary containing the view data for the user.
+
+    If 'savings_rows' is not in the view data, the function returns None. Otherwise, it iterates over the entries
+    to find the closest deadline and updates the upcoming goal section with the closest entry.
+
+    Args:
+        dto: The data transfer object (DTO) of the user.
+
+    Returns:
+        None
+    """
     view_data = services.get_view_data(view_name='calendar', user_id=dto.id)
     if 'savings_rows' not in view_data:
         return
@@ -136,9 +216,7 @@ def retrieve_dto_calendar(dto) -> None:
     min_diff = float('inf')
     for key, value in aims_dict.items():
         deadline = datetime.datetime.strptime(value["savings_deadline"], "%d-%m-%Y")
-
         diff = (deadline - today).days
-        print(f'For date {deadline} the difference is {diff}')
         if 0 < diff < min_diff:
             min_diff = diff
             closest_entry = value
@@ -174,11 +252,13 @@ def retrieve_dto_calendar(dto) -> None:
 
 def init_home() -> None:
     """
-    Initializes the home view.
+    This function initializes the home page.
 
-    This function retrieves the data transfer object (DTO) of the currently logged-in user and passes it to the
-    retrieve_dto_data function. The retrieve_dto_data function is responsible for loading the data for the
-    'manual-spending' of the logged-in user.
+    It clears the spending rows and the upcoming goal section.
+    After that, it retrieves the data for the logged-in user.
+
+    Returns:
+        None
     """
     spending_rows.clear()
     cont_aim_controls.clear()
@@ -186,6 +266,20 @@ def init_home() -> None:
 
 
 def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
+    """
+    This function reads the latest spending data and updates the spending rows.
+
+    It sorts the dates in the spending dictionary in descending order and selects the three latest dates.
+    It then retrieves the spending items for these dates and generates spending rows for them.
+    Finally, it updates the page to reflect these changes.
+
+    Args:
+        spending (dict[str, list[str, float]]): A dictionary where the keys are dates in the format 'YYYY-MM-DD' and
+        the values are lists containing the spending description and value.
+
+    Returns:
+        None
+    """
     sorted_dates = sorted(spending.keys(), reverse=True)
     latest_three = sorted_dates[:3]
     latest_spending = [(spending[date][0], spending[date][1]) for date in latest_three]
@@ -233,12 +327,36 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
 
 
 # Placeholder functions for the button actions
-def go_to_settings(_):
+def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function navigates to the settings page.
+
+    It uses the Page.go method to navigate to the settings page. The route to the settings page is defined by the
+    FletNames.SETTINGS constant.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
     Page.go(f"/{FletNames.SETTINGS}")
 
 
-# Placeholder functions for the button actions
-def log_user_out(_):
+def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function logs the user out of the application.
+
+    It resets the selected index of the navigation bar to the default menu selection.
+    It then resets the views, the calendar, and the finances.
+    Finally, it updates the page to reflect these changes.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
     DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
         DefaultComponents.DEFAULT_MENU_SELECTION.value
     )
