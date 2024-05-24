@@ -6,6 +6,7 @@ from components.component import Component, DefaultComponents
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from views import settings
 from views.view import View, ViewsInitialStates
 from enum import Enum
 import flet as ft
@@ -180,7 +181,7 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
 
 # Placeholder functions for the button actions
 def go_to_settings(_):
-    print('Settings opened')
+    Page.go(f"/{FletNames.SETTINGS}")
 
 
 # Placeholder functions for the button actions

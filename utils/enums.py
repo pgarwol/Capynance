@@ -39,7 +39,6 @@ class FletNames(StrEnum):
     SCAN = "scan"
     SETTINGS = "settings"
     SHOP = "shop"
-    SOCIAL = "social"
     STATS = "stats"
     PROFILE = "profile"
 
