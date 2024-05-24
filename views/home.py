@@ -1,17 +1,17 @@
 import datetime
+import random
+from enum import Enum
 
+import flet as ft
 from flet_core import KeyboardType
 
 from components.component import Component, DefaultComponents
+from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
-from views import settings
+from views import reset_calendar, reset_finances
 from views.view import View, ViewsInitialStates
-from enum import Enum
-import flet as ft
-import random
-from page import Page
 
 
 class TipsOfTheDay(Enum):
@@ -113,7 +113,9 @@ manual_spending_dialog = ft.AlertDialog(
 def retrieve_dto_data(dto) -> None:
     global spending_dict
     view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
-    spending_dict = view_data["spending"]
+    if 'spending' not in view_data:
+        return
+    spending_dict = view_data['spending']
     read_latest_spending(spending_dict)
 
 
@@ -125,6 +127,7 @@ def init_home() -> None:
     retrieve_dto_data function. The retrieve_dto_data function is responsible for loading the data for the
     'manual-spending' of the logged-in user.
     """
+    spending_rows.clear()
     retrieve_dto_data(dto=Session.get_logged_user())
 
 
@@ -137,7 +140,6 @@ def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
 
 def generate_spending_rows(latest_spending: list[tuple[str, float]]) -> None:
     # noinspection SpellCheckingInspection
-    spending_rows.clear()
     for spending_item in latest_spending:
         spending_rows.append(generate_one_spending_row(spending_item))
     Page.update()
@@ -185,8 +187,14 @@ def go_to_settings(_):
 
 
 # Placeholder functions for the button actions
-def log_out(_):
-    print('Logged out')
+def log_user_out(_):
+    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
+        DefaultComponents.DEFAULT_MENU_SELECTION.value
+    )
+    View.reset_views()
+    reset_calendar()
+    reset_finances()
+    Page.update()
 
 
 # A container for user data. It displays the user's full name and username.
@@ -332,7 +340,7 @@ cont_last_buttons = ft.Container(
             # An elevated button for the logout action.
             ft.ElevatedButton(
                 text='Wyloguj się',
-                on_click=log_out,
+                on_click=log_user_out,
                 width=200,
                 bgcolor=ft.colors.GREY_200,
                 color=ft.colors.BLACK,
