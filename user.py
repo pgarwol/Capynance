@@ -34,7 +34,6 @@ class User:
             DBFields.PROFILE: self.profile,
             DBFields.CALENDAR: self.calendar,
             DBFields.FINANCES: self.finances,
-            DBFields.SOCIAL: self.social,
             DBFields.SETTINGS: self.settings,
             DBFields.STATS: self.stats,
         }

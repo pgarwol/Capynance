@@ -67,9 +67,12 @@ def add_spending_manual(e: flet_core.control_event.ControlEvent) -> None:
     Returns:
         None
     """
-    e.page.dialog = manual_spending_dialog
-    manual_spending_dialog.open = True
-    e.page.update()
+    try:
+        e.page.dialog = manual_spending_dialog
+        manual_spending_dialog.open = True
+        e.page.update()
+    except Exception as e:
+        print(f'An error occurred: {e}')
 
 
 def discard_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -211,7 +214,7 @@ def retrieve_dto_calendar(dto: user.User) -> None:
     aims_dict = view_data['savings_rows']
 
     # Iterate over the entries to find the closest deadline
-    today = datetime.datetime.today()
+    today = datetime.datetime.now()
     closest_entry = None
     min_diff = float('inf')
     for key, value in aims_dict.items():
