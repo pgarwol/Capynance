@@ -340,6 +340,8 @@ def create_life_currency_display(life_hearts, capycoins):
 def init_stats() -> None:
     stats_var = Session.get_logged_user().stats
 
+    (DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls).clear()
+
     DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
         create_equipped_images(
             stats_var["hat_equiped"],

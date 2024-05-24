@@ -1,4 +1,4 @@
-from views.home import home
+from views.home import home, init_home
 from views.view import View
 from utils.enums import Colors, FletNames, String
 from utils.styles import Style
@@ -89,6 +89,7 @@ def log_user_in(email: str | None, password: str | None):
         init_finances()
         init_stats()
         init_scan()
+        init_home()
         Page.go(home.route)
 
 

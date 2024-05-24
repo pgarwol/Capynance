@@ -32,6 +32,7 @@ class App:
         4: {FletNames.VIEW: finances, FletNames.ROUTE: finances.route},
         5: {FletNames.VIEW: login, FletNames.ROUTE: login.route},
         6: {FletNames.VIEW: register, FletNames.ROUTE: register.route},
+        7: {FletNames.VIEW: settings, FletNames.ROUTE: settings.route},
     }
 
     def main(self, page: ft.Page) -> None:
