@@ -111,12 +111,65 @@ manual_spending_dialog = ft.AlertDialog(
 
 
 def retrieve_dto_data(dto) -> None:
+    retrieve_dto_spending(dto)
+    retrieve_dto_calendar(dto)
+
+
+def retrieve_dto_spending(dto) -> None:
     global spending_dict
     view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
     if 'spending' not in view_data:
         return
     spending_dict = view_data['spending']
     read_latest_spending(spending_dict)
+
+
+def retrieve_dto_calendar(dto) -> None:
+    view_data = services.get_view_data(view_name='calendar', user_id=dto.id)
+    if 'savings_rows' not in view_data:
+        return
+    aims_dict = view_data['savings_rows']
+
+    # Iterate over the entries to find the closest deadline
+    today = datetime.datetime.today()
+    closest_entry = None
+    min_diff = float('inf')
+    for key, value in aims_dict.items():
+        deadline = datetime.datetime.strptime(value["savings_deadline"], "%d-%m-%Y")
+
+        diff = (deadline - today).days
+        print(f'For date {deadline} the difference is {diff}')
+        if 0 < diff < min_diff:
+            min_diff = diff
+            closest_entry = value
+
+    cont_aim_controls.clear()
+    # noinspection SpellCheckingInspection
+    cont_aim_controls.append(
+        ft.Image(
+            src='https://lh3.googleusercontent.com/pw'
+                '/AP1GczM7EACZEZZFYqXj4fxQg4Ywi8cMId_Y7WQqGgFyoglA1knlUff4ARnsnItRMClxxI5Xea'
+                'DRJsqqYWowsS1zi_vhxpkgqXDfGy7ZIXMtpLRxxow_MR1ycO-gGkc8TTjb6IdfYKVyU19VJLhzmpJQjSQ'
+                '=w96-h96-s-no?authuser=0', width=50, height=50
+        )
+    )
+    cont_aim_controls.append(
+        ft.Text('{:.2f} {}'.format(
+            float(closest_entry['savings_amount']),
+            closest_entry['savings_currency']
+        ),
+            size=18,
+            weight=ft.FontWeight.W_300
+        )
+    )
+    cont_aim_controls.append(
+        ft.Text(
+            value=closest_entry['savings_goal'],
+            size=18,
+            weight=ft.FontWeight.W_300,
+            text_align=ft.TextAlign.CENTER,
+        )
+    )
 
 
 def init_home() -> None:
@@ -128,6 +181,7 @@ def init_home() -> None:
     'manual-spending' of the logged-in user.
     """
     spending_rows.clear()
+    cont_aim_controls.clear()
     retrieve_dto_data(dto=Session.get_logged_user())
 
 
@@ -135,11 +189,8 @@ def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
     sorted_dates = sorted(spending.keys(), reverse=True)
     latest_three = sorted_dates[:3]
     latest_spending = [(spending[date][0], spending[date][1]) for date in latest_three]
-    generate_spending_rows(latest_spending)
-
-
-def generate_spending_rows(latest_spending: list[tuple[str, float]]) -> None:
-    # noinspection SpellCheckingInspection
+    # Generate spending rows for the latest spending items
+    spending_rows.clear()
     for spending_item in latest_spending:
         spending_rows.append(generate_one_spending_row(spending_item))
     Page.update()
@@ -303,19 +354,7 @@ cont_aim = ft.Container(
             # amount, and a text for the goal description.
             ft.Container(
                 ft.Column(
-                    [
-                        # This is an image element for the goal.
-                        ft.Image(
-                            src='https://lh3.googleusercontent.com/pw'
-                                '/AP1GczM7EACZEZZFYqXj4fxQg4Ywi8cMId_Y7WQqGgFyoglA1knlUff4ARnsnItRMClxxI5Xea'
-                                'DRJsqqYWowsS1zi_vhxpkgqXDfGy7ZIXMtpLRxxow_MR1ycO-gGkc8TTjb6IdfYKVyU19VJLhzmpJQjSQ'
-                                '=w96-h96-s-no?authuser=0', width=50, height=50
-                        ),
-                        # This is a text for the goal amount.
-                        ft.Text('4,28 zł', size=18, weight=ft.FontWeight.W_300),
-                        # This is a text for the goal description.
-                        ft.Text('Piwo po zdanej obronie', size=18, weight=ft.FontWeight.W_300),
-                    ],
+                    cont_aim_controls := [],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     spacing=5,
                 ),
