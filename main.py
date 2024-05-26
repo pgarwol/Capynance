@@ -42,6 +42,7 @@ class App:
             "Kanit": "https://raw.githubusercontent.com/google/fonts/master/ofl/kanit/Kanit-Bold.ttf",
             "RubikMonoOne": "https://github.com/M4agicBean/Capynance-fonts/blob/main/RubikMonoOne-Regular.ttf?raw=true",
         }
+        page.theme_mode = ft.ThemeMode.LIGHT
         Page.set_page(page=page)
         # page.vertical_alignment = ft.MainAxisAlignment.CENTER
         # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
