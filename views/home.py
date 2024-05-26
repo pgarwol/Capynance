@@ -158,7 +158,6 @@ manual_spending_dialog = ft.AlertDialog(
         ),
     ],
     actions_alignment=ft.MainAxisAlignment.END,
-    on_dismiss=lambda e: print("Modal dialog dismissed!"),
 )
 
 

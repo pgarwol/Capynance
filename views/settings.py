@@ -1,11 +1,10 @@
+import flet as ft
 import flet_core
 
+from components.component import Component
 from page import Page
-from views.view import View, ViewsInitialStates
-import utils.services as services
-from components.component import Component, DefaultComponents
 from utils.enums import FletNames, Colors
-import flet as ft
+from views.view import View, ViewsInitialStates
 
 header_size = 27
 text_size = header_size - 10
@@ -38,6 +37,96 @@ def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
         raise ValueError(f"Invalid value: {e.data}. Should be 'true' or 'false'.")
 
 
+def report_bug(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the reporting of bugs in the application.
+
+    It sets the dialog of the page to the 'report_bug_dialog' and opens it.
+    It then updates the page to reflect these changes.
+    If an exception occurs during this process, it prints an error message.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    try:
+        e.page.dialog = report_bug_dialog
+        report_bug_dialog.open = True
+        e.page.update()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+
+
+def discard_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the discarding of the bug report dialog.
+
+    It closes the dialog of the page and updates the page to reflect this change.
+    It also resets the value of the bug description to its initial state.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    e.page.dialog.open = False
+    e.page.update()
+    bug_desc.value = '\n\n\n'
+
+
+def confirm_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the confirmation of the bug report dialog.
+
+    It closes the dialog of the page and updates the page to reflect this change.
+    It then prints the reported bug description and resets the value of the bug description to its initial state.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    e.page.dialog.open = False
+    e.page.update()
+    print(f'A bug has been reported: "{bug_desc.value}"')
+    bug_desc.value = '\n\n\n'
+
+
+report_bug_dialog = ft.AlertDialog(
+    modal=True,
+    title=ft.Text("Zgłoś błąd"),
+    content=ft.Container(
+        content=ft.Column(
+            controls=[
+                ft.Text('Opis błędu'),
+                bug_desc := ft.TextField(
+                    value='\n\n\n\n',
+                    multiline=True,
+                    height=150,
+                ),
+            ]
+        ),
+        height=200,
+    ),
+    actions=[
+        ft.TextButton(
+            text="Anuluj",
+            on_click=discard_report_bug_dialog,
+            style=ft.ButtonStyle(color=ft.colors.RED)
+        ),
+        ft.TextButton(
+            text="Wyślij",
+            on_click=confirm_report_bug_dialog,
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+        ),
+    ],
+    actions_alignment=ft.MainAxisAlignment.END,
+)
+
 cont_options = ft.Container(
     content=ft.Column(
         controls=[
@@ -47,7 +136,7 @@ cont_options = ft.Container(
                     ft.Row(
                         controls=[
                             ft.Container(
-                                ft.Text('Ciemny motyw', size=text_size),
+                                ft.Text('Tryb ciemny', size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
                             ft.Container(ft.Switch(on_change=toggle_dark_mode)),
@@ -107,6 +196,7 @@ cont_misc = ft.Container(
             ft.Text(value='Inne', size=header_size),
             ft.Row([ft.TextButton(
                 content=ft.Text(value='Zgłoś błąd', color='#22978C', size=text_size),
+                on_click=report_bug,
             )]),
             ft.Row(
                 controls=[
