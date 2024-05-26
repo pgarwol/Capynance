@@ -1,3 +1,4 @@
+from views import init_settings
 from views.home import home, init_home
 from views.view import View
 from utils.enums import Colors, FletNames, String
@@ -78,18 +79,16 @@ def log_user_in(email: str | None, password: str | None):
     if logged_in_successfully:
         Session.set_logged_user(services.read_user_from_db(user_id))
         Session.set_language(Session.get_logged_user().settings["language"])
+        Session.set_views(View.instances)
         login.var["email"].value = String.EMPTY
         login.var["password"].value = String.EMPTY
-        for view in View.instances:
-            view.lang.change_language(Session.get_language())
-            Page.update()
-            if view.refresh_language_contents is not None:
-                view.refresh_language_contents()
+        Session.translate_views_content()
         init_calendar()
         init_finances()
         init_stats()
         init_scan()
         init_home()
+        init_settings()
         Page.go(home.route)
 
 

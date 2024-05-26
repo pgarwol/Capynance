@@ -3,12 +3,32 @@ import flet_core
 
 from components.component import Component
 from page import Page
+from session import Session
 from utils.enums import FletNames, Colors
 from views.view import View, ViewsInitialStates
 
 header_size = 27
 text_size = header_size - 10
 cont_bg_color = '#122EC4B6'
+
+
+def init_settings():
+    """
+    This function initializes the settings of the application based on the current language session.
+
+    It checks the current language of the session. If the language is 'pl', it sets the value of the language
+    dropdown to 'Polski'. If the language is 'en', it sets the value of the language dropdown to 'English'. If the
+    language is neither 'pl' nor 'en', it prints an error message.
+
+    Returns:
+        None
+    """
+    if Session.get_language() == 'pl':
+        dd_lang.value = 'Polski'
+    elif Session.get_language() == 'en':
+        dd_lang.value = 'English'
+    else:
+        print(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
 
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
@@ -96,6 +116,31 @@ def confirm_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
     bug_desc.value = '\n\n\n'
 
 
+def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function changes the language of the application based on the selected dropdown value.
+
+    It checks the value of the dropdown. If the value is 'Polski', it sets the language of the session to 'pl'.
+    If the value is 'English', it sets the language of the session to 'en'.
+    If the value is neither 'Polski' nor 'English', it prints an error message.
+    After setting the language, it translates the content of all views to the current language.
+
+    Args: e (flet_core.control_event.ControlEvent): The event that triggered the function. The value of the dropdown
+    is obtained from the control of the event.
+
+    Returns:
+        None
+    """
+    lang = e.control.value
+    if lang == 'Polski':
+        Session.set_language('pl')
+    elif lang == 'English':
+        Session.set_language('en')
+    else:
+        print(f"Invalid language: {lang}. Should be 'Polski' or 'English'.")
+    Session.translate_views_content()
+
+
 report_bug_dialog = ft.AlertDialog(
     modal=True,
     title=ft.Text("Zgłoś błąd"),
@@ -149,13 +194,14 @@ cont_options = ft.Container(
                                 ft.Text('Język', size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
-                            ft.Dropdown(
+                            dd_lang := ft.Dropdown(
                                 options=[
                                     ft.dropdown.Option('Polski'),
                                     ft.dropdown.Option('English'),
                                 ],
                                 width=150,
                                 height=61,
+                                on_change=change_language_dropdown,
                             )
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
