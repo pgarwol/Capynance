@@ -4,6 +4,7 @@ import flet_core
 from components.component import Component
 from page import Page
 from session import Session
+from utils import services
 from utils.enums import FletNames, Colors
 from views.view import View, ViewsInitialStates
 
@@ -12,16 +13,47 @@ text_size = header_size - 10
 cont_bg_color = '#122EC4B6'
 
 
-def init_settings():
+class UserData:
     """
-    This function initializes the settings of the application based on the current language session.
+    A class used to represent User Data.
+
+    Attributes
+    ----------
+    login : str
+        a string representing the login of the user
+
+    Methods
+    -------
+    __init__(self, login: str)
+        Initializes the UserData object with the provided login.
+    """
+
+    @classmethod
+    def __init__(cls, login: str):
+        """
+        Initializes the UserData object with the provided login.
+
+        Parameters
+        ----------
+        login : str
+            The login of the user.
+        """
+        cls.login = login
+
+
+def init_settings(login: str):
+    """
+    Initializes the settings of the application based on the current language session and the provided login.
 
     It checks the current language of the session. If the language is 'pl', it sets the value of the language
     dropdown to 'Polski'. If the language is 'en', it sets the value of the language dropdown to 'English'. If the
-    language is neither 'pl' nor 'en', it prints an error message.
+    language is neither 'pl' nor 'en', it prints an error message. It then initializes a UserData object with the
+    provided login.
 
-    Returns:
-        None
+    Parameters
+    ----------
+    login : str
+        The login of the user.
     """
     if Session.get_language() == 'pl':
         dd_lang.value = 'Polski'
@@ -29,6 +61,7 @@ def init_settings():
         dd_lang.value = 'English'
     else:
         print(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
+    UserData(login)
 
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
@@ -141,8 +174,126 @@ def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
     Session.translate_views_content()
 
 
+def change_password(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the process of changing the password.
+
+    It sets the dialog of the page to the 'change_password_dialog' and opens it.
+    It then updates the page to reflect these changes.
+    If an exception occurs during this process, it prints an error message.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    try:
+        e.page.dialog = change_password_dialog
+        change_password_dialog.open = True
+        e.page.update()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+
+
+def discard_change_password_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the discarding of the change password dialog.
+
+    It closes the dialog of the page and updates the page to reflect this change.
+    It also resets the values of the password fields to their initial state.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    e.page.dialog.open = False
+    e.page.update()
+    clear_change_password_dialog()
+
+
+def confirm_change_password_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the confirmation of the change password dialog.
+
+    It checks if the old password is valid and if the new passwords match.
+    If the checks pass, it changes the password, closes the dialog, and shows a success message.
+    If the checks fail, it shows an error message.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    check_result = services.is_login_valid(UserData.login, tf_old_password.value)
+    if check_result[0]:
+        remove_password_error()
+        if tf_new_password.value == tf_confirm_password.value and tf_new_password.value != '':
+            services.change_password(UserData.login, tf_old_password.value, tf_new_password.value)
+            e.page.dialog.open = False
+            Page.page.snack_bar = ft.SnackBar(ft.Text('Hasło zostało zmienione pomyślnie'))
+            Page.page.snack_bar.open = True
+            clear_change_password_dialog()  # Includes page update
+        else:
+            throw_password_error(e, error_message='Nowe hasła nie są takie same')
+    else:
+        throw_password_error(e, error_message='Niepoprawne hasło')
+
+
+def throw_password_error(e: flet_core.control_event.ControlEvent, error_message: str) -> None:
+    """
+    This function handles the display of password errors.
+
+    It adds an error message to the dialog content if it's not already displayed and updates the page.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+        error_message (str): The error message to be displayed.
+
+    Returns:
+        None
+    """
+    if len(change_password_dialog_content) == 6:  # Check if the error message is already displayed
+        change_password_dialog_content.append(ft.Text(error_message, color='red'))
+    e.page.update()
+
+
+def clear_change_password_dialog() -> None:
+    """
+    This function resets the values of the password fields to their initial state.
+
+    It clears the values of the old password, new password, and confirm password fields.
+    It also removes the error message if it's displayed.
+
+    Returns:
+        None
+    """
+    tf_old_password.value = ''
+    tf_new_password.value = ''
+    tf_confirm_password.value = ''
+    remove_password_error()
+
+
+def remove_password_error() -> None:
+    """
+    This function removes the password error message.
+
+    It removes the error message from the dialog content if it's displayed and updates the page.
+
+    Returns:
+        None
+    """
+    if len(change_password_dialog_content) == 7:
+        change_password_dialog_content.pop()  # Remove the error message if it's displayed
+    Page.update()
+
+
+# Bug report dialog
 report_bug_dialog = ft.AlertDialog(
-    modal=True,
+    modal=False,
     title=ft.Text("Zgłoś błąd"),
     content=ft.Container(
         content=ft.Column(
@@ -166,6 +317,49 @@ report_bug_dialog = ft.AlertDialog(
         ft.TextButton(
             text="Wyślij",
             on_click=confirm_report_bug_dialog,
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+        ),
+    ],
+    actions_alignment=ft.MainAxisAlignment.END,
+)
+
+# Change password dialog
+change_password_dialog = ft.AlertDialog(
+    modal=True,
+    title=ft.Text("Zmień hasło"),
+    content=ft.Container(
+        content=ft.Column(
+            change_password_dialog_content := [
+                ft.Text('Stare hasło'),
+                tf_old_password := ft.TextField(
+                    password=True,
+                    can_reveal_password=True,
+                ),
+                ft.Text('Nowe hasło'),
+                tf_new_password := ft.TextField(
+                    password=True,
+                    can_reveal_password=True,
+                ),
+                ft.Text('Potwierdź nowe hasło'),
+                tf_confirm_password := ft.TextField(
+                    password=True,
+                    can_reveal_password=True,
+                ),
+            ],
+            expand=True,
+            scroll=ft.ScrollMode.HIDDEN,
+        ),
+        height=320,
+    ),
+    actions=[
+        ft.TextButton(
+            text="Anuluj",
+            on_click=discard_change_password_dialog,
+            style=ft.ButtonStyle(color=ft.colors.RED)
+        ),
+        ft.TextButton(
+            text="Zmień",
+            on_click=confirm_change_password_dialog,
             style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
         ),
     ],
@@ -223,6 +417,7 @@ cont_account = ft.Container(
             ft.Text('Konto', size=header_size),
             ft.Row([ft.TextButton(
                 content=ft.Text('Zmień hasło', color='#22978C', size=text_size),
+                on_click=change_password,
             )]),
             ft.Row([ft.TextButton(
                 content=ft.Text('Usuń konto', color='#22978C', size=text_size),

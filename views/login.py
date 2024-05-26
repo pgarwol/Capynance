@@ -78,7 +78,11 @@ def log_user_in(email: str | None, password: str | None):
     logged_in_successfully, user_id = services.is_login_valid(email, password)
     if logged_in_successfully:
         Session.set_logged_user(services.read_user_from_db(user_id))
-        Session.set_language(Session.get_logged_user().settings["language"])
+        if "language" not in Session.get_logged_user().settings:
+            Session.set_language("pl")
+            print('Language not found in settings. Setting to "polish".')
+        else:
+            Session.set_language(Session.get_logged_user().settings["language"])
         Session.set_views(View.instances)
         login.var["email"].value = String.EMPTY
         login.var["password"].value = String.EMPTY
@@ -88,7 +92,7 @@ def log_user_in(email: str | None, password: str | None):
         init_stats()
         init_scan()
         init_home()
-        init_settings()
+        init_settings(email)
         Page.go(home.route)
 
 

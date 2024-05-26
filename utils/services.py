@@ -17,7 +17,7 @@ from typing import Tuple
 
 def flush_build_log() -> None:
     with open(
-        Path(DBFields.BUILD_LOG_PATH).resolve(), "w", encoding=DBFields.ENCODING
+            Path(DBFields.BUILD_LOG_PATH).resolve(), "w", encoding=DBFields.ENCODING
     ) as file:
         file.write(String.EMPTY)
 
@@ -43,6 +43,32 @@ def is_login_valid(email: str, password: str) -> Tuple[bool, str] | Tuple[bool, 
             return True, user
 
     return False, None
+
+
+def change_password(email: str, old_password: str, new_password: str) -> None:
+    """
+    Changes the password of the user with the provided email.
+
+    Args:
+        email (str): The email of the user to change the password for.
+        old_password (str): The old password of the user.
+        new_password (str): The new password to set for the user.
+
+    Returns:
+        None
+    """
+    data = load_db_data(DBFields.LOGIN_DB)
+
+    for user in data.keys():
+        user_login = data[user][DBFields.EMAIL]
+        user_password = data[user][DBFields.PASSWORD]
+
+        if user_login == email and user_password == old_password:
+            data[user][DBFields.PASSWORD] = new_password
+            dump_data(data, DBFields.LOGIN_DB)
+            return
+
+    raise CapynanceException(Errors.USER_NOT_FOUND)
 
 
 def read_user_from_db(id: str | int) -> User:
@@ -122,9 +148,9 @@ def load_db_data(db_filepath: str) -> dict:
     """
     print("Reading from: ", DBFields.RELATIVE_DB_PATH + db_filepath)
     with open(
-        Path(DBFields.RELATIVE_DB_PATH + db_filepath).resolve(),
-        "r",
-        encoding=DBFields.ENCODING,
+            Path(DBFields.RELATIVE_DB_PATH + db_filepath).resolve(),
+            "r",
+            encoding=DBFields.ENCODING,
     ) as db:
         data = json.load(db)
     return data
@@ -193,6 +219,9 @@ def init_user_db(user_id: str | int, email: str) -> None:
     with open(Path(f"{users_dir}/{FletNames.STATS}.json").resolve(), "w") as db:
         json.dump(default_stats, db, indent=4)
 
+    with open(Path(f"{users_dir}/manual-spending.json").resolve(), "w") as db:
+        json.dump({}, db, indent=4)
+
 
 def dump_data(data: dict, db_filename: str) -> None:
     """
@@ -206,9 +235,9 @@ def dump_data(data: dict, db_filename: str) -> None:
         None
     """
     with open(
-        Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
-        "w",
-        encoding=DBFields.ENCODING,
+            Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
+            "w",
+            encoding=DBFields.ENCODING,
     ) as db:
         json.dump(data, db)
 
