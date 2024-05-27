@@ -31,6 +31,8 @@ class TipsOfTheDay(Enum):
 
 
 spending_dict = {}
+header_size = 26
+header_weight = ft.FontWeight.W_400
 
 
 def generate_daily_tip() -> ft.Container:
@@ -48,7 +50,7 @@ def generate_daily_tip() -> ft.Container:
 
     # Create a text container with the selected tip
     return ft.Container(
-        ft.Text(text, size=15, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER),
+        ft.Text(text, size=18, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER),
         alignment=ft.alignment.center,
         padding=ft.padding.all(5),
     )
@@ -297,7 +299,7 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     """
     This function generates a row for a single spending item.
 
-    It takes the spending data and the row index as input and creates a row with an image, a text container for the
+    It takes the spending data and the row index as input and creates a row with an icon, a text container for the
     name of the spending item, and a text for the price of the spending item.
 
     Args:
@@ -308,14 +310,8 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     """
     return ft.Row(
         [
-            # An image element for the spending item.
-            ft.Image(
-                src='https://lh3.googleusercontent.com/pw/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT'
-                    '-nMzA3A6Pg4Rhy-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                    '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
-                width=25,
-                height=25,
-            ),
+            # An icon element for the spending item.
+            ft.Icon(name=ft.icons.ATTACH_MONEY, color=ft.colors.BLACK),
             # A text container for the name of the spending item.
             ft.Container(
                 ft.Text(spending_item[0], size=18, weight=ft.FontWeight.W_300),
@@ -390,19 +386,16 @@ cont_daily_tip = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the daily tip section.
-            ft.Text('Porada dnia', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Porada dnia', size=header_size, weight=header_weight),
 
             # A function call to generate_daily_tip() which returns a container with the daily tip text.
             generate_daily_tip(),
 
             # A container for an image element.
             ft.Container(
-                ft.Image(
-                    src='https://lh3.googleusercontent.com/pw/AP1GczM0K4wwX7bUbCQFyJY5Q4rqNmI93'
-                        '-nlfYfVpKXI2XpDug5dq_v5nj7XPlK2yDW7KcMQRssnMTpEqcCra12kSV5I8farpkWmBLorTBcRtWdHPiPmm'
-                        '-eIGbFXmDik5m9P0xQ1UwhackEFPguo2pWmUCI=w512-h512-s-no?authuser=0',
-                    width=75,
-                    height=75
+                ft.Icon(
+                    name=ft.icons.SAVINGS_OUTLINED, color=ft.colors.BLACK,
+                    size=60,
                 ),
                 alignment=ft.alignment.center
             )
@@ -417,17 +410,17 @@ cont_achievements = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the achievements section.
-            ft.Text('Osiągnięcia', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Osiągnięcia', size=header_size, weight=header_weight),
 
             # A container for an image element.
             ft.Container(
                 ft.Row(
                     [
                         ft.Image(
-                            src='https://lh3.googleusercontent.com/pw/AP1GczMFKtBRf4tjMcjFzfl'
-                                '-IiaSNuy9cQm1mQTiMtMzvprCNBM14ANYb_BWgGGazk2yMvmJzM'
-                                '-zwjaWks4U3iOjtZT5uWPa_9B_E1gw9svLCPIApesLesfIhyObC1MOzBB1tM13TXgcmHXD6j4-KS6Q_Hg'
-                                '=w53-h50-s-no?authuser=0',
+                            src='https://lh3.googleusercontent.com/pw/AP1GczOOgFmCBvJQh'
+                                '-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I'
+                                '-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no'
+                                '?authuser=0',
                             width=60,
                             height=60,
                         ),
@@ -438,10 +431,11 @@ cont_achievements = ft.Container(
                 border_radius=ft.border_radius.all(20),
                 bgcolor=ft.colors.GREY_100,
                 alignment=ft.alignment.center,
-                margin=10
+                margin=10,
+                width=500,
             )
-        ]
-    )
+        ],
+    ),
 )
 
 # Spending section
@@ -450,7 +444,7 @@ cont_spending = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the spending section.
-            ft.Text('Ostatnie wydatki', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Ostatnie wydatki', size=header_size, weight=header_weight),
 
             # A container for the list of spending items. Each item is represented as a row of elements: an
             # image, a text container for the item name, and a text for the item price.
@@ -468,7 +462,7 @@ cont_aim = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the upcoming goal section.
-            ft.Text('Nadchodzący cel', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Nadchodzący cel', size=header_size, weight=header_weight),
 
             # A container for the goal details. It consists of a column of elements: an image, a text for the goal
             # amount, and a text for the goal description.
