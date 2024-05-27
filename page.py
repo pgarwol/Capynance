@@ -6,6 +6,7 @@ import flet as ft
 
 class Page(ABC):
     page = None
+    observers = []
 
     @classmethod
     def set_page(cls, page: ft.Page):
@@ -24,6 +25,10 @@ class Page(ABC):
             return cls.page.go(route)
 
     @classmethod
+    def set_theme_mode(cls, theme_mode: ft.ThemeMode):
+        cls.theme_mode = theme_mode
+
+    @classmethod
     def toggle_dark_mode(cls, toggle_on: bool) -> None:
         """
         Toggles the dark mode of the application.
@@ -39,8 +44,17 @@ class Page(ABC):
 
         try:
             cls.page.theme_mode = ft.ThemeMode.DARK if toggle_on else ft.ThemeMode.LIGHT
+            cls.set_theme_mode(cls.page.theme_mode)
         except Exception as e:
             mode = "dark" if toggle_on else "light"
             logging.error(f'An error occurred while trying to set the theme mode to {mode}. {e}')
 
         cls.update()
+
+    @classmethod
+    def add_observer(cls, observer):
+        cls.observers.append(observer)
+
+    def notify(self, message: str):
+        for observer in self.observers:
+            observer.update(message)
