@@ -1,4 +1,5 @@
 import time
+import logging
 
 import flet as ft
 import flet_core
@@ -31,14 +32,15 @@ class UserData:
     """
 
     @classmethod
-    def __init__(cls, login: str):
+    def set_login(cls, login: str):
         """
-        Initializes the UserData object with the provided login.
+        Class method to set the login attribute of the UserData class.
 
-        Parameters
-        ----------
-        login : str
-            The login of the user.
+        Args:
+            login (str): The login of the user.
+
+        Returns:
+            None
         """
         cls.login = login
 
@@ -52,18 +54,19 @@ def init_settings(login: str):
     language is neither 'pl' nor 'en', it prints an error message. It then initializes a UserData object with the
     provided login.
 
-    Parameters
-    ----------
-    login : str
-        The login of the user.
+    Args:
+        login (str): The login of the user.
+
+    Returns:
+        None
     """
     if Session.get_language() == 'pl':
         dd_lang.value = 'Polski'
     elif Session.get_language() == 'en':
         dd_lang.value = 'English'
     else:
-        print(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
-    UserData(login)
+        logging.error(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
+    UserData.set_login(login)
 
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
@@ -111,7 +114,7 @@ def report_bug(e: flet_core.control_event.ControlEvent) -> None:
         report_bug_dialog.open = True
         e.page.update()
     except Exception as e:
-        print(f'An error occurred: {e}')
+        logging.error(f'An error occurred: {e}')
 
 
 def discard_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -172,7 +175,7 @@ def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
     elif lang == 'English':
         Session.set_language('en')
     else:
-        print(f"Invalid language: {lang}. Should be 'Polski' or 'English'.")
+        logging.error(f"Invalid language: {lang}. Should be 'Polski' or 'English'.")
     Session.translate_views_content()
 
 
@@ -195,7 +198,7 @@ def change_password(e: flet_core.control_event.ControlEvent) -> None:
         change_password_dialog.open = True
         e.page.update()
     except Exception as e:
-        print(f'An error occurred: {e}')
+        logging.error(f'An error occurred: {e}')
 
 
 def discard_change_password_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -331,7 +334,7 @@ def delete_account(e: flet_core.control_event.ControlEvent) -> None:
         delete_account_dialog.open = True
         e.page.update()
     except Exception as e:
-        print(f'An error occurred: {e}')
+        logging.error(f'An error occurred: {e}')
 
 
 def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -513,7 +516,6 @@ delete_account_dialog = ft.AlertDialog(
     ],
     actions_alignment=ft.MainAxisAlignment.END,
 )
-
 
 cont_options = ft.Container(
     content=ft.Column(
