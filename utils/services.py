@@ -1,3 +1,5 @@
+import shutil
+
 from user import User
 from views.view import View
 from utils.enums import DBFields, String, FletNames
@@ -175,6 +177,41 @@ def create_account(email: str, password: str) -> None:
         DBFields.EMAIL: email,
         DBFields.PASSWORD: password,
     }
+    dump_data(login_data, DBFields.LOGIN_DB)
+
+
+def delete_account(email: str, password: str) -> None:
+    """
+    Deletes the user account with the provided email and password.
+
+    Args:
+        email (str): The email of the user for the account.
+        password (str): The password for the user account.
+
+    Returns:
+        None
+    """
+    login_data = load_db_data(DBFields.LOGIN_DB)
+    user_id = None
+    for user in login_data.keys():
+        user_login = login_data[user][DBFields.EMAIL]
+        user_password = login_data[user][DBFields.PASSWORD]
+
+        if user_login == email and user_password == password:
+            user_id = user
+            break
+
+    if user_id is None:
+        # It should not be possible to reach this point
+        # as user credentials should be checked before calling this function.
+        raise CapynanceException(Errors.USER_NOT_FOUND)
+
+    # Delete user directory with all user data
+    user_dir = f"{DBFields.RELATIVE_DB_PATH}/users/{user_id}"
+    shutil.rmtree(user_dir)
+
+    # Delete user from login database
+    del login_data[user_id]
     dump_data(login_data, DBFields.LOGIN_DB)
 
 

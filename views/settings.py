@@ -1,7 +1,9 @@
+import time
+
 import flet as ft
 import flet_core
 
-from components.component import Component
+from components.component import Component, DefaultComponents
 from page import Page
 from session import Session
 from utils import services
@@ -229,8 +231,8 @@ def confirm_change_password_dialog(e: flet_core.control_event.ControlEvent) -> N
         None
     """
     check_result = services.is_login_valid(UserData.login, tf_old_password.value)
+    remove_password_error(change_password_dialog_content, content_limit_with_error=7)
     if check_result[0]:
-        remove_password_error()
         if tf_new_password.value == tf_confirm_password.value and tf_new_password.value != '':
             services.change_password(UserData.login, tf_old_password.value, tf_new_password.value)
             e.page.dialog.open = False
@@ -238,12 +240,23 @@ def confirm_change_password_dialog(e: flet_core.control_event.ControlEvent) -> N
             Page.page.snack_bar.open = True
             clear_change_password_dialog()  # Includes page update
         else:
-            throw_password_error(e, error_message='Nowe hasła nie są takie same')
+            throw_password_error(
+                e,
+                error_message='Nowe hasła nie są takie same',
+                content=change_password_dialog_content,
+                content_limit=6,
+            )
     else:
-        throw_password_error(e, error_message='Niepoprawne hasło')
+        throw_password_error(
+            e,
+            error_message='Niepoprawne hasło',
+            content=change_password_dialog_content,
+            content_limit=6,
+        )
 
 
-def throw_password_error(e: flet_core.control_event.ControlEvent, error_message: str) -> None:
+def throw_password_error(e: flet_core.control_event.ControlEvent, error_message: str, content: list[flet_core],
+                         content_limit: int) -> None:
     """
     This function handles the display of password errors.
 
@@ -252,12 +265,15 @@ def throw_password_error(e: flet_core.control_event.ControlEvent, error_message:
     Args:
         e (flet_core.control_event.ControlEvent): The event that triggered the function.
         error_message (str): The error message to be displayed.
+        content (list[flet_core]): The content of the dialog.
+        content_limit (int): The limit of the content list. It helps to check if the error message is already displayed.
+    It should indicate the length of the content list before the error message is added.
 
     Returns:
         None
     """
-    if len(change_password_dialog_content) == 6:  # Check if the error message is already displayed
-        change_password_dialog_content.append(ft.Text(error_message, color='red'))
+    if len(content) == content_limit:  # Check if the error message is already displayed
+        content.append(ft.Text(error_message, color='red'))
     e.page.update()
 
 
@@ -274,26 +290,124 @@ def clear_change_password_dialog() -> None:
     tf_old_password.value = ''
     tf_new_password.value = ''
     tf_confirm_password.value = ''
-    remove_password_error()
+    remove_password_error(change_password_dialog_content, content_limit_with_error=7)
 
 
-def remove_password_error() -> None:
+def remove_password_error(content: list[flet_core], content_limit_with_error: int) -> None:
     """
     This function removes the password error message.
 
     It removes the error message from the dialog content if it's displayed and updates the page.
 
+    Args:
+        content (list[flet_core]): The content of the dialog.
+        content_limit_with_error (int): The limit of the content list with the error message. It indicates the length
+    of the content list before the error message is added.
+
     Returns:
         None
     """
-    if len(change_password_dialog_content) == 7:
-        change_password_dialog_content.pop()  # Remove the error message if it's displayed
+    if len(content) == content_limit_with_error:
+        content.pop()  # Remove the error message if it's displayed
     Page.update()
+
+
+def delete_account(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the process of deleting the account.
+
+    It shows a confirmation dialog to the user. If the user confirms the deletion, it deletes the account.
+    If the user cancels the deletion, it closes the dialog and shows a success message.
+    If an exception occurs during this process, it prints an error message.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    try:
+        e.page.dialog = delete_account_dialog
+        delete_account_dialog.open = True
+        e.page.update()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+
+
+def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the confirmation of the account deletion dialog.
+
+    It first clears the last error message, if any. Then, it checks if the password entered by the user is correct.
+    If the password is incorrect, it shows an error message and returns.
+
+    If the password is correct, it logs out the user and redirects them to the login page. It then deletes the account
+    by calling the services.delete_account method and closes the dialog.
+
+    Finally, it shows a success message to the user.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+
+    # Clear last error message and set up variables.
+    remove_password_error(delete_account_dialog_content, content_limit_with_error=4)
+    password = tf_delete_acc_password.value
+    login = UserData.login
+
+    # Check if the password is correct. If not, show an error message and return.
+    if not services.is_login_valid(login, password)[0]:
+        throw_password_error(
+            e,
+            error_message='Niepoprawne hasło',
+            content=delete_account_dialog_content,
+            content_limit=3,
+        )
+        return
+
+    # Log out user and redirect to the login page
+    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
+        DefaultComponents.DEFAULT_MENU_SELECTION.value
+    )
+    View.reset_views()
+    Page.update()
+    time.sleep(1)
+
+    # Delete the account by calling the services.delete_account method.
+    services.delete_account(login, password)
+    e.page.dialog.open = False
+
+    # Show a success message
+    Page.page.snack_bar = ft.SnackBar(ft.Text('Konto zostało usunięte pomyślnie'))
+    Page.page.snack_bar.open = True
+    Page.update()
+
+
+def discard_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function handles the discarding of the account deletion dialog.
+
+    It closes the dialog of the page and updates the page to reflect this change.
+    It also resets the value of the delete account password field to its initial state.
+
+    Args:
+        e (flet_core.control_event.ControlEvent): The event that triggered the function.
+
+    Returns:
+        None
+    """
+    e.page.dialog.open = False
+    e.page.update()
+    tf_delete_acc_password.value = ''
+    remove_password_error(delete_account_dialog_content, content_limit_with_error=4)
 
 
 # Bug report dialog
 report_bug_dialog = ft.AlertDialog(
-    modal=False,
+    modal=True,
     title=ft.Text("Zgłoś błąd"),
     content=ft.Container(
         content=ft.Column(
@@ -366,6 +480,41 @@ change_password_dialog = ft.AlertDialog(
     actions_alignment=ft.MainAxisAlignment.END,
 )
 
+# Delete account dialog
+delete_account_dialog = ft.AlertDialog(
+    modal=True,
+    title=ft.Text("Usuń konto"),
+    content=ft.Container(
+        content=ft.Column(
+            delete_account_dialog_content := [
+                ft.Text('Uwaga! Ta akcja jest nieodwracalna.', color='red'),
+                ft.Text('W celu usunięcia, podaj hasło:'),
+                tf_delete_acc_password := ft.TextField(
+                    password=True,
+                    can_reveal_password=True,
+                ),
+            ],
+            expand=True,
+            scroll=ft.ScrollMode.HIDDEN,
+        ),
+        height=160,
+    ),
+    actions=[
+        ft.TextButton(
+            text="Usuń konto",
+            on_click=confirm_delete_account_dialog,
+            style=ft.ButtonStyle(color=ft.colors.RED)
+        ),
+        ft.TextButton(
+            text="Anuluj",
+            on_click=discard_delete_account_dialog,
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+        ),
+    ],
+    actions_alignment=ft.MainAxisAlignment.END,
+)
+
+
 cont_options = ft.Container(
     content=ft.Column(
         controls=[
@@ -421,6 +570,7 @@ cont_account = ft.Container(
             )]),
             ft.Row([ft.TextButton(
                 content=ft.Text('Usuń konto', color='#22978C', size=text_size),
+                on_click=delete_account,
             )]),
         ],
         spacing=0,
