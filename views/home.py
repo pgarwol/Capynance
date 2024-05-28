@@ -12,8 +12,32 @@ from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from utils.theme_manager import ThemeManager
 from views import reset_calendar, reset_finances
 from views.view import View, ViewsInitialStates
+
+# Global variables
+spending_dict = {}
+header_size = 26
+header_weight = ft.FontWeight.W_400
+
+# Elements depending on the theme mode. Their colors are controlled by the LocalThemeManager class.
+theme_dependent_elements = [
+    icon_attach_money := ft.Icon(
+        name=ft.icons.ATTACH_MONEY,
+        color=ft.colors.BLACK
+    ),
+    icon_savings_outlined := ft.Icon(
+        name=ft.icons.SAVINGS_OUTLINED,
+        color=ft.colors.BLACK,
+        size=60
+    ),
+    icon_flag_circle_outlined := ft.Icon(
+        name=ft.icons.FLAG_CIRCLE_OUTLINED,
+        color=ft.colors.BLACK,
+        size=60
+    ),
+]
 
 
 class TipsOfTheDay(Enum):
@@ -30,9 +54,32 @@ class TipsOfTheDay(Enum):
     TIP_10 = 'Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże'
 
 
-spending_dict = {}
-header_size = 26
-header_weight = ft.FontWeight.W_400
+class LocalThemeManager:
+    """
+    The LocalThemeManager class is responsible for managing the theme of the application at a home view level.
+    It updates the color of the icons based on the current theme mode.
+    """
+
+    def __init__(self, theme: ft.ThemeMode):
+        """
+        Initializes a new instance of the LocalThemeManager class.
+
+        Args:
+            theme (ft.ThemeMode): The initial theme mode of the application.
+        """
+        self.theme_mode = theme
+
+    def on_change_theme(self, theme: ft.ThemeMode):
+        """
+        Changes the theme of the application and updates the color of the icons.
+
+        Args:
+            theme (ft.ThemeMode): The new theme mode of the application.
+        """
+        self.theme_mode = theme
+        # Update the icon color based on the theme mode
+        for icon in theme_dependent_elements:
+            icon.color = ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
 
 
 def generate_daily_tip() -> ft.Container:
@@ -227,14 +274,7 @@ def retrieve_dto_calendar(dto: user.User) -> None:
 
     cont_aim_controls.clear()
     # noinspection SpellCheckingInspection
-    cont_aim_controls.append(
-        ft.Image(
-            src='https://lh3.googleusercontent.com/pw'
-                '/AP1GczM7EACZEZZFYqXj4fxQg4Ywi8cMId_Y7WQqGgFyoglA1knlUff4ARnsnItRMClxxI5Xea'
-                'DRJsqqYWowsS1zi_vhxpkgqXDfGy7ZIXMtpLRxxow_MR1ycO-gGkc8TTjb6IdfYKVyU19VJLhzmpJQjSQ'
-                '=w96-h96-s-no?authuser=0', width=50, height=50
-        )
-    )
+    cont_aim_controls.append(icon_flag_circle_outlined)
     cont_aim_controls.append(
         ft.Text('{:.2f} {}'.format(
             float(closest_entry['savings_amount']),
@@ -256,17 +296,28 @@ def retrieve_dto_calendar(dto: user.User) -> None:
 
 def init_home() -> None:
     """
-    This function initializes the home page.
+    This function initializes the home page of the application.
 
-    It clears the spending rows and the upcoming goal section.
-    After that, it retrieves the data for the logged-in user.
+    It clears the spending rows and the aim controls, retrieves the data of the logged-in user, and sets up the theme.
+
+    The theme setup involves creating a LocalThemeManager instance with the current theme mode and adding it as an
+    observer to the ThemeManager.
 
     Returns:
         None
     """
+    # Clear the spending rows and the aim controls
     spending_rows.clear()
     cont_aim_controls.clear()
+
+    # Retrieve the data of the logged-in user
     retrieve_dto_data(dto=Session.get_logged_user())
+
+    # Set up the theme
+    # Create a LocalThemeManager instance with the current theme mode
+    theme_info = LocalThemeManager(ThemeManager.theme_mode)
+    # Add the LocalThemeManager instance as an observer to the ThemeManager
+    ThemeManager.add_observer(theme_info)
 
 
 def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
@@ -311,7 +362,7 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     return ft.Row(
         [
             # An icon element for the spending item.
-            ft.Icon(name=ft.icons.ATTACH_MONEY, color=ft.colors.BLACK),
+            icon_attach_money,
             # A text container for the name of the spending item.
             ft.Container(
                 ft.Text(spending_item[0], size=18, weight=ft.FontWeight.W_300),
@@ -393,10 +444,7 @@ cont_daily_tip = ft.Container(
 
             # A container for an image element.
             ft.Container(
-                ft.Icon(
-                    name=ft.icons.SAVINGS_OUTLINED, color=ft.colors.BLACK,
-                    size=60,
-                ),
+                icon_savings_outlined,
                 alignment=ft.alignment.center
             )
         ],
@@ -427,9 +475,11 @@ cont_achievements = ft.Container(
                     ]
                 ),
                 padding=ft.padding.all(13),
-                border=ft.border.all(2, ft.colors.GREY_300),
+                border=ft.border.all(width=2,
+                                     color='#33A9A9A9'
+                                     ),
                 border_radius=ft.border_radius.all(20),
-                bgcolor=ft.colors.GREY_100,
+                bgcolor='#33bab8b8',
                 alignment=ft.alignment.center,
                 margin=10,
                 width=500,

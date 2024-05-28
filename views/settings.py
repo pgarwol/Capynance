@@ -9,6 +9,7 @@ from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from utils.theme_manager import ThemeManager
 from views.view import View, ViewsInitialStates
 
 header_size = 27
@@ -88,9 +89,9 @@ def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
         None
     """
     if e.data == 'true':
-        Page.toggle_dark_mode(True)
+        ThemeManager.toggle_dark_mode(True)
     elif e.data == 'false':
-        Page.toggle_dark_mode(False)
+        ThemeManager.toggle_dark_mode(False)
     else:
         raise ValueError(f"Invalid value: {e.data}. Should be 'true' or 'false'.")
 
