@@ -14,6 +14,10 @@ class Session(ABC):
         return cls.logged_user
 
     @classmethod
+    def set_dark_mode(cls, dark_mode):
+        cls.dark_mode = dark_mode
+
+    @classmethod
     def set_language(cls, language):
         cls.language = language
 

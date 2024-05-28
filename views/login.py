@@ -1,5 +1,6 @@
 import logging
 
+from utils.theme_manager import ThemeManager
 from views import init_settings
 from views.home import home, init_home
 from views.view import View
@@ -56,6 +57,34 @@ login.var = {
 }
 
 
+class LocalThemeManager:
+    """
+    A class used to represent a Local Theme Manager. It helps to manage the theme of the application.
+    """
+
+    def __init__(self, theme: ft.ThemeMode):
+        """
+        Initializes the LocalThemeManager with the provided theme.
+
+        Args:
+            theme (ft.ThemeMode): The theme to be remembered.
+
+        Returns:
+            None
+        """
+        self.theme_mode = theme
+
+    def on_change_theme(self, theme: ft.ThemeMode) -> None:
+        """
+        Sets the session dark mode value when the theme changes. It is set to True if the theme is DARK,
+        False otherwise.
+        :param theme: The current theme of the application.
+        :return: None
+        """
+        self.theme_mode = theme
+        Session.set_dark_mode(True if theme == ft.ThemeMode.DARK else False)
+
+
 def log_user_in(email: str | None, password: str | None):
     """
     Log a user into the system.
@@ -80,15 +109,31 @@ def log_user_in(email: str | None, password: str | None):
     logged_in_successfully, user_id = services.is_login_valid(email, password)
     if logged_in_successfully:
         Session.set_logged_user(services.read_user_from_db(user_id))
+
+        # Set language based on user settings.
         if "language" not in Session.get_logged_user().settings:
             Session.set_language("pl")
             logging.warning('Language not found in settings. Setting to "polish".')
         else:
             Session.set_language(Session.get_logged_user().settings["language"])
+
         Session.set_views(View.instances)
         login.var["email"].value = String.EMPTY
         login.var["password"].value = String.EMPTY
-        Session.translate_views_content()
+        Session.translate_views_content()  # Session controls the language of the app.
+
+        # Set theme based on user settings.
+        if "dark_mode" not in Session.get_logged_user().settings:
+            Session.set_dark_mode(False)
+            logging.warning('Theme preference not found in settings. Setting to default "light".')
+        else:
+            Session.set_dark_mode(Session.get_logged_user().settings["dark_mode"])
+        ThemeManager.toggle_dark_mode(Session.dark_mode)  # ThemeManager controls the theme of the app.
+        # Create a LocalThemeManager instance with the current theme mode
+        theme_info = LocalThemeManager(ThemeManager.theme_mode)
+        # Add the LocalThemeManager instance as an observer to the ThemeManager
+        ThemeManager.add_observer(theme_info)
+
         init_calendar()
         init_finances()
         init_stats()
@@ -108,6 +153,5 @@ def refresh_labels() -> None:
 refresh_labels()
 
 login.refresh_language_contents = refresh_labels
-
 
 login.log()

@@ -20,16 +20,6 @@ cont_bg_color = '#122EC4B6'
 class UserData:
     """
     A class used to represent User Data.
-
-    Attributes
-    ----------
-    login : str
-        a string representing the login of the user
-
-    Methods
-    -------
-    __init__(self, login: str)
-        Initializes the UserData object with the provided login.
     """
 
     @classmethod
@@ -69,6 +59,11 @@ def init_settings(login: str):
         logging.error(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
     UserData.set_login(login)
 
+    # Create a LocalThemeManager instance with the current theme mode
+    theme_info = LocalThemeManager(ThemeManager.theme_mode)
+    # Add the LocalThemeManager instance as an observer to the ThemeManager
+    ThemeManager.add_observer(theme_info)
+
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
     """
@@ -94,6 +89,43 @@ def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
         ThemeManager.toggle_dark_mode(False)
     else:
         raise ValueError(f"Invalid value: {e.data}. Should be 'true' or 'false'.")
+
+
+theme_mode_switch = ft.Switch(on_change=toggle_dark_mode)
+
+
+class LocalThemeManager:
+    """
+    A class used to represent a Local Theme Manager. It helps to manage the theme of the application.
+    """
+
+    def __init__(self, theme: ft.ThemeMode):
+        """
+        Initializes the LocalThemeManager with the provided theme.
+
+        Args:
+            theme (ft.ThemeMode): The theme to be remembered.
+
+        Returns:
+            None
+        """
+        self.theme_mode = theme
+
+    def on_change_theme(self, theme: ft.ThemeMode) -> None:
+        """
+        This method changes the switch position based on the theme mode.
+        :param theme: The theme mode to be set.
+        :return: None
+        """
+        self.theme_mode = theme
+        if theme == ft.ThemeMode.DARK:
+            theme_mode_switch.value = True
+        elif theme == ft.ThemeMode.LIGHT:
+            theme_mode_switch.value = False
+        else:
+            theme_mode_switch.value = False
+            logging.error(f"Invalid theme mode: {theme}. Should be DARK or LIGHT. Setting switch to default off "
+                          f"position.")
 
 
 def report_bug(e: flet_core.control_event.ControlEvent) -> None:
@@ -530,7 +562,9 @@ cont_options = ft.Container(
                                 ft.Text('Tryb ciemny', size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
-                            ft.Container(ft.Switch(on_change=toggle_dark_mode)),
+                            ft.Container(
+                                theme_mode_switch
+                            ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
