@@ -36,7 +36,7 @@ class UserData:
         cls.login = login
 
 
-def init_settings(login: str, dark_mode_on: bool):
+def init_settings(login: str, dark_mode_on: bool) -> None:
     """
     Initializes the settings for the user session.
 
