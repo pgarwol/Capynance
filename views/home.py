@@ -21,6 +21,46 @@ spending_dict = {}
 header_size = 26
 header_weight = ft.FontWeight.W_400
 
+
+def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function navigates to the settings page.
+
+    It uses the Page.go method to navigate to the settings page. The route to the settings page is defined by the
+    FletNames.SETTINGS constant.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
+    Page.go(f"/{FletNames.SETTINGS}")
+
+
+def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function logs the user out of the application.
+
+    It resets the selected index of the navigation bar to the default menu selection.
+    It then resets the views, the calendar, and the finances.
+    Finally, it updates the page to reflect these changes.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
+    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
+        DefaultComponents.DEFAULT_MENU_SELECTION.value
+    )
+    View.reset_views()
+    reset_calendar()
+    reset_finances()
+    Page.update()
+
+
 # Elements depending on the theme mode. Their colors are controlled by the LocalThemeManager class.
 theme_dependent_elements = [
     icon_attach_money := ft.Icon(
@@ -36,6 +76,20 @@ theme_dependent_elements = [
         name=ft.icons.FLAG_CIRCLE_OUTLINED,
         color=ft.colors.BLACK,
         size=60
+    ),
+    btn_settings := ft.ElevatedButton(
+        text='Ustawienia aplikacji',
+        on_click=go_to_settings,
+        width=200,
+        bgcolor=ft.colors.GREY_200,
+        color=ft.colors.BLACK,
+    ),
+    btn_log_out := ft.ElevatedButton(
+        text='Wyloguj się',
+        on_click=log_user_out,
+        width=200,
+        bgcolor=ft.colors.GREY_200,
+        color=ft.colors.BLACK,
     ),
 ]
 
@@ -77,9 +131,14 @@ class LocalThemeManager:
             theme (ft.ThemeMode): The new theme mode of the application.
         """
         self.theme_mode = theme
+
         # Update the icon color based on the theme mode
-        for icon in theme_dependent_elements:
-            icon.color = ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
+        for element in theme_dependent_elements:
+            element.color = ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
+
+        # Additional theme-dependent settings
+        btn_settings.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
+        btn_log_out.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
 
 
 def generate_daily_tip() -> ft.Container:
@@ -375,46 +434,6 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     )
 
 
-# Placeholder functions for the button actions
-def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
-    """
-    This function navigates to the settings page.
-
-    It uses the Page.go method to navigate to the settings page. The route to the settings page is defined by the
-    FletNames.SETTINGS constant.
-
-    Args:
-        _ : This argument is not used in the function.
-
-    Returns:
-        None
-    """
-    Page.go(f"/{FletNames.SETTINGS}")
-
-
-def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
-    """
-    This function logs the user out of the application.
-
-    It resets the selected index of the navigation bar to the default menu selection.
-    It then resets the views, the calendar, and the finances.
-    Finally, it updates the page to reflect these changes.
-
-    Args:
-        _ : This argument is not used in the function.
-
-    Returns:
-        None
-    """
-    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
-        DefaultComponents.DEFAULT_MENU_SELECTION.value
-    )
-    View.reset_views()
-    reset_calendar()
-    reset_finances()
-    Page.update()
-
-
 # A container for user data. It displays the user's full name and username.
 cont_usr_data = ft.Container(
     # A column is used to arrange the text vertically.
@@ -533,21 +552,9 @@ cont_last_buttons = ft.Container(
     ft.Column(
         [
             # An elevated button for the application settings.
-            ft.ElevatedButton(
-                text='Ustawienia aplikacji',
-                on_click=go_to_settings,
-                width=200,
-                bgcolor=ft.colors.GREY_200,
-                color=ft.colors.BLACK,
-            ),
+            btn_settings,
             # An elevated button for the logout action.
-            ft.ElevatedButton(
-                text='Wyloguj się',
-                on_click=log_user_out,
-                width=200,
-                bgcolor=ft.colors.GREY_200,
-                color=ft.colors.BLACK,
-            ),
+            btn_log_out,
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     ),
