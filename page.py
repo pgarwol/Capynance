@@ -1,3 +1,4 @@
+import logging
 from abc import ABC
 from utils.enums import FletNames
 import flet as ft
@@ -5,6 +6,7 @@ import flet as ft
 
 class Page(ABC):
     page = None
+    observers = []
 
     @classmethod
     def set_page(cls, page: ft.Page):
@@ -25,26 +27,22 @@ class Page(ABC):
     @classmethod
     def toggle_dark_mode(cls, toggle_on: bool) -> None:
         """
-        This class method toggles the dark mode of the application.
+        Toggles the dark mode of the application.
+        It should be called only from the ThemeManager class.
 
-        It checks the value of the 'toggle_on' parameter. If it's True, it tries to set the theme mode of the page to
-        DARK. If it's False, it tries to set the theme mode of the page to LIGHT. If an exception occurs while trying
-        to set the theme mode, it prints an error message. After trying to set the theme mode, it updates the page.
-
-        Args: toggle_on (bool): A boolean value indicating whether to turn on the dark mode. If True, the dark mode
-        is turned on. If False, the dark mode is turned off.
+        Args:
+            toggle_on (bool): If True, sets the theme mode to DARK. Otherwise, sets it to LIGHT.
 
         Returns:
             None
         """
-        if toggle_on:
-            try:
-                cls.page.theme_mode = ft.ThemeMode.DARK
-            except Exception as e:
-                print('An error occurred while trying to set the theme mode to dark:', e)
-        else:
-            try:
-                cls.page.theme_mode = ft.ThemeMode.LIGHT
-            except Exception as e:
-                print('An error occurred while trying to set the theme mode to light:', e)
-        Page.update()
+        if cls.page is None:
+            return
+
+        try:
+            cls.page.theme_mode = ft.ThemeMode.DARK if toggle_on else ft.ThemeMode.LIGHT
+        except Exception as e:
+            mode = "dark" if toggle_on else "light"
+            logging.error(f'An error occurred while trying to set the theme mode to {mode}. {e}')
+
+        cls.update()

@@ -12,8 +12,86 @@ from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from utils.theme_manager import ThemeManager
 from views import reset_calendar, reset_finances
 from views.view import View, ViewsInitialStates
+
+# Global variables
+spending_dict = {}
+header_size = 26
+header_weight = ft.FontWeight.W_400
+
+
+def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function navigates to the settings page.
+
+    It uses the Page.go method to navigate to the settings page. The route to the settings page is defined by the
+    FletNames.SETTINGS constant.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
+    Page.go(f"/{FletNames.SETTINGS}")
+
+
+def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
+    """
+    This function logs the user out of the application.
+
+    It resets the selected index of the navigation bar to the default menu selection.
+    It then resets the views, the calendar, and the finances.
+    Finally, it updates the page to reflect these changes.
+
+    Args:
+        _ : This argument is not used in the function.
+
+    Returns:
+        None
+    """
+    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
+        DefaultComponents.DEFAULT_MENU_SELECTION.value
+    )
+    View.reset_views()
+    reset_calendar()
+    reset_finances()
+    Page.update()
+
+
+# Elements depending on the theme mode. Their colors are controlled by the LocalThemeManager class.
+theme_dependent_elements = [
+    icon_attach_money := ft.Icon(
+        name=ft.icons.ATTACH_MONEY,
+        color=ft.colors.BLACK
+    ),
+    icon_savings_outlined := ft.Icon(
+        name=ft.icons.SAVINGS_OUTLINED,
+        color=ft.colors.BLACK,
+        size=60
+    ),
+    icon_flag_circle_outlined := ft.Icon(
+        name=ft.icons.FLAG_CIRCLE_OUTLINED,
+        color=ft.colors.BLACK,
+        size=60
+    ),
+    btn_settings := ft.ElevatedButton(
+        text='Ustawienia aplikacji',
+        on_click=go_to_settings,
+        width=200,
+        bgcolor=ft.colors.GREY_200,
+        color=ft.colors.BLACK,
+    ),
+    btn_log_out := ft.ElevatedButton(
+        text='Wyloguj się',
+        on_click=log_user_out,
+        width=200,
+        bgcolor=ft.colors.GREY_200,
+        color=ft.colors.BLACK,
+    ),
+]
 
 
 class TipsOfTheDay(Enum):
@@ -30,7 +108,37 @@ class TipsOfTheDay(Enum):
     TIP_10 = 'Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże'
 
 
-spending_dict = {}
+class LocalThemeManager:
+    """
+    The LocalThemeManager class is responsible for managing the theme of the application at a home view level.
+    It updates the color of the icons based on the current theme mode.
+    """
+
+    def __init__(self, theme: ft.ThemeMode):
+        """
+        Initializes a new instance of the LocalThemeManager class.
+
+        Args:
+            theme (ft.ThemeMode): The initial theme mode of the application.
+        """
+        self.theme_mode = theme
+
+    def on_change_theme(self, theme: ft.ThemeMode):
+        """
+        Changes the theme of the application and updates the color of the icons.
+
+        Args:
+            theme (ft.ThemeMode): The new theme mode of the application.
+        """
+        self.theme_mode = theme
+
+        # Update the icon color based on the theme mode
+        for element in theme_dependent_elements:
+            element.color = ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
+
+        # Additional theme-dependent settings
+        btn_settings.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
+        btn_log_out.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
 
 
 def generate_daily_tip() -> ft.Container:
@@ -48,7 +156,7 @@ def generate_daily_tip() -> ft.Container:
 
     # Create a text container with the selected tip
     return ft.Container(
-        ft.Text(text, size=15, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER),
+        ft.Text(text, size=18, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER),
         alignment=ft.alignment.center,
         padding=ft.padding.all(5),
     )
@@ -225,14 +333,7 @@ def retrieve_dto_calendar(dto: user.User) -> None:
 
     cont_aim_controls.clear()
     # noinspection SpellCheckingInspection
-    cont_aim_controls.append(
-        ft.Image(
-            src='https://lh3.googleusercontent.com/pw'
-                '/AP1GczM7EACZEZZFYqXj4fxQg4Ywi8cMId_Y7WQqGgFyoglA1knlUff4ARnsnItRMClxxI5Xea'
-                'DRJsqqYWowsS1zi_vhxpkgqXDfGy7ZIXMtpLRxxow_MR1ycO-gGkc8TTjb6IdfYKVyU19VJLhzmpJQjSQ'
-                '=w96-h96-s-no?authuser=0', width=50, height=50
-        )
-    )
+    cont_aim_controls.append(icon_flag_circle_outlined)
     cont_aim_controls.append(
         ft.Text('{:.2f} {}'.format(
             float(closest_entry['savings_amount']),
@@ -254,17 +355,28 @@ def retrieve_dto_calendar(dto: user.User) -> None:
 
 def init_home() -> None:
     """
-    This function initializes the home page.
+    This function initializes the home page of the application.
 
-    It clears the spending rows and the upcoming goal section.
-    After that, it retrieves the data for the logged-in user.
+    It clears the spending rows and the aim controls, retrieves the data of the logged-in user, and sets up the theme.
+
+    The theme setup involves creating a LocalThemeManager instance with the current theme mode and adding it as an
+    observer to the ThemeManager.
 
     Returns:
         None
     """
+    # Clear the spending rows and the aim controls
     spending_rows.clear()
     cont_aim_controls.clear()
+
+    # Retrieve the data of the logged-in user
     retrieve_dto_data(dto=Session.get_logged_user())
+
+    # Set up the theme
+    # Create a LocalThemeManager instance with the current theme mode
+    theme_info = LocalThemeManager(ThemeManager.theme_mode)
+    # Add the LocalThemeManager instance as an observer to the ThemeManager
+    ThemeManager.add_observer(theme_info)
 
 
 def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
@@ -297,7 +409,7 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     """
     This function generates a row for a single spending item.
 
-    It takes the spending data and the row index as input and creates a row with an image, a text container for the
+    It takes the spending data and the row index as input and creates a row with an icon, a text container for the
     name of the spending item, and a text for the price of the spending item.
 
     Args:
@@ -308,14 +420,8 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
     """
     return ft.Row(
         [
-            # An image element for the spending item.
-            ft.Image(
-                src='https://lh3.googleusercontent.com/pw/AP1GczPpl6AesgZTckABVSRVT92dOr6IxMqJc1BsJbKCzslMsT'
-                    '-nMzA3A6Pg4Rhy-DtHnbm5m1XXTAvOLY77sEon5vP5c6sPsM6fKubxz8zKwpr'
-                    '-du54fqApnv254ENnVldmCHumzpa2DD1xsxfSFJi3-iY=w96-h96-s-no?authuser=0',
-                width=25,
-                height=25,
-            ),
+            # An icon element for the spending item.
+            icon_attach_money,
             # A text container for the name of the spending item.
             ft.Container(
                 ft.Text(spending_item[0], size=18, weight=ft.FontWeight.W_300),
@@ -326,46 +432,6 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
         ],
         spacing=10,
     )
-
-
-# Placeholder functions for the button actions
-def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
-    """
-    This function navigates to the settings page.
-
-    It uses the Page.go method to navigate to the settings page. The route to the settings page is defined by the
-    FletNames.SETTINGS constant.
-
-    Args:
-        _ : This argument is not used in the function.
-
-    Returns:
-        None
-    """
-    Page.go(f"/{FletNames.SETTINGS}")
-
-
-def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
-    """
-    This function logs the user out of the application.
-
-    It resets the selected index of the navigation bar to the default menu selection.
-    It then resets the views, the calendar, and the finances.
-    Finally, it updates the page to reflect these changes.
-
-    Args:
-        _ : This argument is not used in the function.
-
-    Returns:
-        None
-    """
-    DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
-        DefaultComponents.DEFAULT_MENU_SELECTION.value
-    )
-    View.reset_views()
-    reset_calendar()
-    reset_finances()
-    Page.update()
 
 
 # A container for user data. It displays the user's full name and username.
@@ -390,20 +456,14 @@ cont_daily_tip = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the daily tip section.
-            ft.Text('Porada dnia', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Porada dnia', size=header_size, weight=header_weight),
 
             # A function call to generate_daily_tip() which returns a container with the daily tip text.
             generate_daily_tip(),
 
             # A container for an image element.
             ft.Container(
-                ft.Image(
-                    src='https://lh3.googleusercontent.com/pw/AP1GczM0K4wwX7bUbCQFyJY5Q4rqNmI93'
-                        '-nlfYfVpKXI2XpDug5dq_v5nj7XPlK2yDW7KcMQRssnMTpEqcCra12kSV5I8farpkWmBLorTBcRtWdHPiPmm'
-                        '-eIGbFXmDik5m9P0xQ1UwhackEFPguo2pWmUCI=w512-h512-s-no?authuser=0',
-                    width=75,
-                    height=75
-                ),
+                icon_savings_outlined,
                 alignment=ft.alignment.center
             )
         ],
@@ -417,31 +477,34 @@ cont_achievements = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the achievements section.
-            ft.Text('Osiągnięcia', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Osiągnięcia', size=header_size, weight=header_weight),
 
             # A container for an image element.
             ft.Container(
                 ft.Row(
                     [
                         ft.Image(
-                            src='https://lh3.googleusercontent.com/pw/AP1GczMFKtBRf4tjMcjFzfl'
-                                '-IiaSNuy9cQm1mQTiMtMzvprCNBM14ANYb_BWgGGazk2yMvmJzM'
-                                '-zwjaWks4U3iOjtZT5uWPa_9B_E1gw9svLCPIApesLesfIhyObC1MOzBB1tM13TXgcmHXD6j4-KS6Q_Hg'
-                                '=w53-h50-s-no?authuser=0',
+                            src='https://lh3.googleusercontent.com/pw/AP1GczOOgFmCBvJQh'
+                                '-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I'
+                                '-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no'
+                                '?authuser=0',
                             width=60,
                             height=60,
                         ),
                     ]
                 ),
                 padding=ft.padding.all(13),
-                border=ft.border.all(2, ft.colors.GREY_300),
+                border=ft.border.all(width=2,
+                                     color='#33A9A9A9'
+                                     ),
                 border_radius=ft.border_radius.all(20),
-                bgcolor=ft.colors.GREY_100,
+                bgcolor='#33bab8b8',
                 alignment=ft.alignment.center,
-                margin=10
+                margin=10,
+                width=500,
             )
-        ]
-    )
+        ],
+    ),
 )
 
 # Spending section
@@ -450,7 +513,7 @@ cont_spending = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the spending section.
-            ft.Text('Ostatnie wydatki', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Ostatnie wydatki', size=header_size, weight=header_weight),
 
             # A container for the list of spending items. Each item is represented as a row of elements: an
             # image, a text container for the item name, and a text for the item price.
@@ -468,7 +531,7 @@ cont_aim = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the upcoming goal section.
-            ft.Text('Nadchodzący cel', size=25, weight=ft.FontWeight.W_200),
+            ft.Text('Nadchodzący cel', size=header_size, weight=header_weight),
 
             # A container for the goal details. It consists of a column of elements: an image, a text for the goal
             # amount, and a text for the goal description.
@@ -489,21 +552,9 @@ cont_last_buttons = ft.Container(
     ft.Column(
         [
             # An elevated button for the application settings.
-            ft.ElevatedButton(
-                text='Ustawienia aplikacji',
-                on_click=go_to_settings,
-                width=200,
-                bgcolor=ft.colors.GREY_200,
-                color=ft.colors.BLACK,
-            ),
+            btn_settings,
             # An elevated button for the logout action.
-            ft.ElevatedButton(
-                text='Wyloguj się',
-                on_click=log_user_out,
-                width=200,
-                bgcolor=ft.colors.GREY_200,
-                color=ft.colors.BLACK,
-            ),
+            btn_log_out,
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     ),

@@ -1,3 +1,5 @@
+import logging
+
 from views import init_settings
 from views.home import home, init_home
 from views.view import View
@@ -80,7 +82,7 @@ def log_user_in(email: str | None, password: str | None):
         Session.set_logged_user(services.read_user_from_db(user_id))
         if "language" not in Session.get_logged_user().settings:
             Session.set_language("pl")
-            print('Language not found in settings. Setting to "polish".')
+            logging.warning('Language not found in settings. Setting to "polish".')
         else:
             Session.set_language(Session.get_logged_user().settings["language"])
         Session.set_views(View.instances)

@@ -70,7 +70,7 @@ def change_password(email: str, old_password: str, new_password: str) -> None:
             dump_data(data, DBFields.LOGIN_DB)
             return
 
-    raise CapynanceException(Errors.USER_NOT_FOUND)
+    raise CapynanceException(f"{Errors.USER_NOT_FOUND}: User with email {email} not found")
 
 
 def read_user_from_db(id: str | int) -> User:

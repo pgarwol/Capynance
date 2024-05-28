@@ -1,6 +1,7 @@
 import utils.services as services
 
 from session import Session
+from utils.theme_manager import ThemeManager
 from views.shop import shop
 from views.home import home
 from views.scan import scan
@@ -42,7 +43,6 @@ class App:
             "Kanit": "https://raw.githubusercontent.com/google/fonts/master/ofl/kanit/Kanit-Bold.ttf",
             "RubikMonoOne": "https://github.com/M4agicBean/Capynance-fonts/blob/main/RubikMonoOne-Regular.ttf?raw=true",
         }
-        page.theme_mode = ft.ThemeMode.LIGHT
         Page.set_page(page=page)
         # page.vertical_alignment = ft.MainAxisAlignment.CENTER
         # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -97,6 +97,7 @@ class App:
         page.on_route_change = route_change
         page.on_view_pop = view_pop
         Page.go(page.route)
+        ThemeManager.toggle_dark_mode(toggle_on=False)
 
 
 def save_and_flush() -> None:
