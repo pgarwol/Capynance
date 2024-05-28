@@ -1,4 +1,5 @@
 import datetime
+import logging
 import random
 from enum import Enum
 
@@ -52,6 +53,7 @@ def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
     Returns:
         None
     """
+    services.save_all_data(Session.get_logged_user())
     DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
         DefaultComponents.DEFAULT_MENU_SELECTION.value
     )
@@ -269,7 +271,31 @@ manual_spending_dialog = ft.AlertDialog(
 )
 
 
+def retrieve_dto_profile(dto: user.User) -> None:
+    """
+    This function retrieves the profile data for a given user and updates the user data section with name, surname and
+    email.
+
+    :param dto: User data transfer object.
+    :return: None
+    """
+    view_data = services.get_view_data(view_name='profile', user_id=dto.id)
+    if 'first_name' not in view_data or 'last_name' not in view_data:
+        logging.error('First name or last name not found in view data. User data will not be filled at home page.')
+        return
+    cont_usr_data.content.controls[0].value = view_data['first_name'] + ' ' + view_data['last_name']
+    cont_usr_data.content.controls[1].value = view_data['email']
+
+
 def retrieve_dto_data(dto: user.User) -> None:
+    """
+    This function retrieves the data for a given user.
+    It calls three other functions to retrieve the profile, spending, and calendar data for the user.
+
+    :param dto: User data transfer object.
+    :return: None
+    """
+    retrieve_dto_profile(dto)
     retrieve_dto_spending(dto)
     retrieve_dto_calendar(dto)
 

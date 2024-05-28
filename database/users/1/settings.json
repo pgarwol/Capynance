@@ -1,1 +1,4 @@
-{ "language": "en" }
+{
+  "language": "en",
+  "dark_mode": true
+}

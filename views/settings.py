@@ -20,16 +20,6 @@ cont_bg_color = '#122EC4B6'
 class UserData:
     """
     A class used to represent User Data.
-
-    Attributes
-    ----------
-    login : str
-        a string representing the login of the user
-
-    Methods
-    -------
-    __init__(self, login: str)
-        Initializes the UserData object with the provided login.
     """
 
     @classmethod
@@ -46,28 +36,39 @@ class UserData:
         cls.login = login
 
 
-def init_settings(login: str):
+def init_settings(login: str, dark_mode_on: bool) -> None:
     """
-    Initializes the settings of the application based on the current language session and the provided login.
+    Initializes the settings for the user session.
 
-    It checks the current language of the session. If the language is 'pl', it sets the value of the language
-    dropdown to 'Polski'. If the language is 'en', it sets the value of the language dropdown to 'English'. If the
-    language is neither 'pl' nor 'en', it prints an error message. It then initializes a UserData object with the
-    provided login.
+    This function sets the language and theme mode for the session based on the provided arguments. It also creates a
+    LocalThemeManager instance with the current theme mode and adds it as an observer to the ThemeManager.
 
     Args:
         login (str): The login of the user.
+        dark_mode_on (bool): A boolean indicating whether the dark mode is on.
 
     Returns:
         None
     """
+    # Set the language for the session based on the current language setting
     if Session.get_language() == 'pl':
         dd_lang.value = 'Polski'
     elif Session.get_language() == 'en':
         dd_lang.value = 'English'
     else:
         logging.error(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
+
+    # Set the login for the user data
     UserData.set_login(login)
+
+    # Set the value of the theme mode switch based on the dark_mode_on argument
+    theme_mode_switch.value = dark_mode_on
+
+    # Create a LocalThemeManager instance with the current theme mode
+    theme_info = LocalThemeManager(ThemeManager.theme_mode)
+    # Add the LocalThemeManager instance as an observer to the ThemeManager
+    ThemeManager.remove_observer(theme_info)
+    ThemeManager.add_observer(theme_info)
 
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
@@ -94,6 +95,43 @@ def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
         ThemeManager.toggle_dark_mode(False)
     else:
         raise ValueError(f"Invalid value: {e.data}. Should be 'true' or 'false'.")
+
+
+theme_mode_switch = ft.Switch(on_change=toggle_dark_mode)
+
+
+class LocalThemeManager:
+    """
+    A class used to represent a Local Theme Manager. It helps to manage the theme of the application.
+    """
+
+    def __init__(self, theme: ft.ThemeMode):
+        """
+        Initializes the LocalThemeManager with the provided theme.
+
+        Args:
+            theme (ft.ThemeMode): The theme to be remembered.
+
+        Returns:
+            None
+        """
+        self.theme_mode = theme
+
+    def on_change_theme(self, theme: ft.ThemeMode) -> None:
+        """
+        This method changes the switch position based on the theme mode.
+        :param theme: The theme mode to be set.
+        :return: None
+        """
+        self.theme_mode = theme
+        if theme == ft.ThemeMode.DARK:
+            theme_mode_switch.value = True
+        elif theme == ft.ThemeMode.LIGHT:
+            theme_mode_switch.value = False
+        else:
+            theme_mode_switch.value = False
+            logging.error(f"Invalid theme mode: {theme}. Should be DARK or LIGHT. Setting switch to default off "
+                          f"position.")
 
 
 def report_bug(e: flet_core.control_event.ControlEvent) -> None:
@@ -530,7 +568,9 @@ cont_options = ft.Container(
                                 ft.Text('Tryb ciemny', size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
-                            ft.Container(ft.Switch(on_change=toggle_dark_mode)),
+                            ft.Container(
+                                theme_mode_switch
+                            ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),

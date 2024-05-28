@@ -134,7 +134,7 @@ def add_savings_row(
         currency=currency,
     )
     if not Session.get_logged_user().does_savings_goal_exist(goal):
-        services.save_user_data(Session.get_logged_user())
+        services.save_all_data(Session.get_logged_user())
 
     Page.update()
 
@@ -160,6 +160,7 @@ def insert_dto_data_to_datarows(data: dict):
 
 
 def init_calendar() -> None:
+    reset_calendar()
     retrieve_dto_data(dto=Session.get_logged_user())
 
 

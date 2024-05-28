@@ -259,6 +259,7 @@ def reset_finances() -> None:
 
 
 def init_finances() -> None:
+    reset_finances()
     retrieve_dto_data(dto=Session.get_logged_user())
     for source in finances.var["sources"]:
         append_income_source(
