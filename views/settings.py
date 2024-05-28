@@ -67,6 +67,7 @@ def init_settings(login: str, dark_mode_on: bool):
     # Create a LocalThemeManager instance with the current theme mode
     theme_info = LocalThemeManager(ThemeManager.theme_mode)
     # Add the LocalThemeManager instance as an observer to the ThemeManager
+    ThemeManager.remove_observer(theme_info)
     ThemeManager.add_observer(theme_info)
 
 

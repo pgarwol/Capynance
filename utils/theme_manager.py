@@ -29,6 +29,17 @@ class ThemeManager:
         cls.observers.append(observer)
 
     @classmethod
+    def remove_observer(cls, observer):
+        """
+        Removes an observer from the list of observers.
+
+        Args:
+            observer (object): The observer to be removed.
+        """
+        if observer in cls.observers:
+            cls.observers.remove(observer)
+
+    @classmethod
     def __notify(cls, current_theme: ft.ThemeMode):
         """
         Notifies all observers about the theme change by calling their 'on_change_theme' method.

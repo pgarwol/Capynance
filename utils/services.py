@@ -123,7 +123,7 @@ def merge_user_db_path(user_id: str, filename: str) -> str:
     return f"users/{user_id}/{filename}.json"
 
 
-def save_user_data(user: User) -> None:
+def save_all_data(user: User) -> None:
     """
     Saves the user data to the database by calling serialize() on the user object and dump_data() in services.py.
     :param user: User object to save. It should be current user.
@@ -132,6 +132,21 @@ def save_user_data(user: User) -> None:
     user_data = user.serialize()
     for key in user_data:
         dump_data(user_data[key], merge_user_db_path(user_id=user.id, filename=key))
+
+
+def save_file_data(filename: str, user: User) -> None:
+    """
+    Saves the provided data for a specific view associated with a user.
+
+    Args:
+        filename (str): The name of the file to save the data to.
+        user (User): The user to save the data for.
+
+    Returns:
+        None
+    """
+    data = user.serialize()[filename]
+    dump_data(data, merge_user_db_path(user_id=user.id, filename=filename))
 
 
 def load_db_data(db_filepath: str) -> dict:

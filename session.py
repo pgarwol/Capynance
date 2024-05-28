@@ -4,6 +4,7 @@ from page import Page
 
 
 class Session(ABC):
+    logged_user = None
 
     @classmethod
     def set_logged_user(cls, logged_user):
