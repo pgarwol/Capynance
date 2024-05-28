@@ -36,28 +36,33 @@ class UserData:
         cls.login = login
 
 
-def init_settings(login: str):
+def init_settings(login: str, dark_mode_on: bool):
     """
-    Initializes the settings of the application based on the current language session and the provided login.
+    Initializes the settings for the user session.
 
-    It checks the current language of the session. If the language is 'pl', it sets the value of the language
-    dropdown to 'Polski'. If the language is 'en', it sets the value of the language dropdown to 'English'. If the
-    language is neither 'pl' nor 'en', it prints an error message. It then initializes a UserData object with the
-    provided login.
+    This function sets the language and theme mode for the session based on the provided arguments. It also creates a
+    LocalThemeManager instance with the current theme mode and adds it as an observer to the ThemeManager.
 
     Args:
         login (str): The login of the user.
+        dark_mode_on (bool): A boolean indicating whether the dark mode is on.
 
     Returns:
         None
     """
+    # Set the language for the session based on the current language setting
     if Session.get_language() == 'pl':
         dd_lang.value = 'Polski'
     elif Session.get_language() == 'en':
         dd_lang.value = 'English'
     else:
         logging.error(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
+
+    # Set the login for the user data
     UserData.set_login(login)
+
+    # Set the value of the theme mode switch based on the dark_mode_on argument
+    theme_mode_switch.value = dark_mode_on
 
     # Create a LocalThemeManager instance with the current theme mode
     theme_info = LocalThemeManager(ThemeManager.theme_mode)

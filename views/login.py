@@ -82,7 +82,7 @@ class LocalThemeManager:
         :return: None
         """
         self.theme_mode = theme
-        Session.set_dark_mode(True if theme == ft.ThemeMode.DARK else False)
+        Session.get_logged_user().settings["dark_mode"] = True if theme == ft.ThemeMode.DARK else False
 
 
 def log_user_in(email: str | None, password: str | None):
@@ -111,24 +111,25 @@ def log_user_in(email: str | None, password: str | None):
         Session.set_logged_user(services.read_user_from_db(user_id))
 
         # Set language based on user settings.
-        if "language" not in Session.get_logged_user().settings:
+        current_user_settings = Session.get_logged_user().settings
+        if "language" not in current_user_settings:
             Session.set_language("pl")
             logging.warning('Language not found in settings. Setting to "polish".')
         else:
-            Session.set_language(Session.get_logged_user().settings["language"])
+            Session.set_language(current_user_settings["language"])
 
         Session.set_views(View.instances)
         login.var["email"].value = String.EMPTY
         login.var["password"].value = String.EMPTY
-        Session.translate_views_content()  # Session controls the language of the app.
+        # Session controls the language of the app.
+        Session.translate_views_content()
 
         # Set theme based on user settings.
-        if "dark_mode" not in Session.get_logged_user().settings:
-            Session.set_dark_mode(False)
+        if "dark_mode" not in current_user_settings:
+            current_user_settings["dark_mode"] = False
             logging.warning('Theme preference not found in settings. Setting to default "light".')
-        else:
-            Session.set_dark_mode(Session.get_logged_user().settings["dark_mode"])
-        ThemeManager.toggle_dark_mode(Session.dark_mode)  # ThemeManager controls the theme of the app.
+        # ThemeManager controls the theme of the app.
+        ThemeManager.toggle_dark_mode(current_user_settings['dark_mode'])
         # Create a LocalThemeManager instance with the current theme mode
         theme_info = LocalThemeManager(ThemeManager.theme_mode)
         # Add the LocalThemeManager instance as an observer to the ThemeManager
@@ -139,7 +140,7 @@ def log_user_in(email: str | None, password: str | None):
         init_stats()
         init_scan()
         init_home()
-        init_settings(email)
+        init_settings(email, current_user_settings['dark_mode'])
         Page.go(home.route)
 
 

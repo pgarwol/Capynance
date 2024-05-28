@@ -125,17 +125,13 @@ def merge_user_db_path(user_id: str, filename: str) -> str:
 
 def save_user_data(user: User) -> None:
     """
-    Saves user data to the database.
-
-    Args:
-        user (User): The user dto to save.
-
-    Returns:
-        None
+    Saves the user data to the database by calling serialize() on the user object and dump_data() in services.py.
+    :param user: User object to save. It should be current user.
+    :return: None
     """
-    data = load_db_data(DBFields.USER_DB)
-    data[user.id] = user.serialize()
-    dump_data(data, DBFields.USER_DB)
+    user_data = user.serialize()
+    for key in user_data:
+        dump_data(user_data[key], merge_user_db_path(user_id=user.id, filename=key))
 
 
 def load_db_data(db_filepath: str) -> dict:
@@ -276,7 +272,7 @@ def dump_data(data: dict, db_filename: str) -> None:
             "w",
             encoding=DBFields.ENCODING,
     ) as db:
-        json.dump(data, db)
+        json.dump(data, db, indent=2)
 
 
 def get_view_data(view_name: str, user_id: str | int) -> dict:

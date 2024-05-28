@@ -4,14 +4,14 @@ import datetime
 
 class User:
     def __init__(
-        self,
-        id: str,
-        profile: dict,
-        calendar: dict,
-        finances: dict,
-        settings: dict,
-        stats: dict,
-        manual_spending: dict,
+            self,
+            id: str,
+            profile: dict,
+            calendar: dict,
+            finances: dict,
+            settings: dict,
+            stats: dict,
+            manual_spending: dict,
     ):
         self.id = id
         self.profile = profile
@@ -31,16 +31,17 @@ class User:
             dict: The serialized user data.
         """
         return {
-            DBFields.PROFILE: self.profile,
-            DBFields.CALENDAR: self.calendar,
-            DBFields.FINANCES: self.finances,
-            DBFields.SETTINGS: self.settings,
-            DBFields.STATS: self.stats,
+            DBFields.PROFILE.value: self.profile,
+            #DBFields.CALENDAR.value: self.calendar,
+            DBFields.FINANCES.value: self.finances,
+            DBFields.SETTINGS.value: self.settings,
+            DBFields.STATS.value: self.stats,
+            DBFields.MANUAL_SPENDING.value: self.manual_spending,
         }
 
     # Calendar view
     def from_savings_datarow(
-        self, date: datetime.datetime, goal: str, amount: str, currency: str
+            self, date: datetime.datetime, goal: str, amount: str, currency: str
     ) -> None:
         keys = [int(key) for key in self.calendar["savings_rows"].keys()]
         next_key = max(keys) + 1
