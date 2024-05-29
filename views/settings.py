@@ -9,6 +9,7 @@ from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
 from views.view import View, ViewsInitialStates
 
@@ -209,12 +210,16 @@ def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
         None
     """
     lang = e.control.value
+    logged_user = Session.get_logged_user()
     if lang == 'Polski':
         Session.set_language('pl')
+        logged_user.settings['language'] = 'pl'
     elif lang == 'English':
         Session.set_language('en')
+        logged_user.settings['language'] = 'en'
     else:
         logging.error(f"Invalid language: {lang}. Should be 'Polski' or 'English'.")
+    SyncManager.sync_settings()
     Session.translate_views_content()
 
 
