@@ -448,6 +448,7 @@ def init_home() -> None:
     theme_info = LocalThemeManager(ThemeManager.theme_mode)
     # Add the LocalThemeManager instance as an observer to the ThemeManager
     ThemeManager.add_observer(theme_info)
+    theme_info.on_change_theme(theme_info.theme_mode)
 
 
 def read_latest_spending(spending: dict[str, dict[list[str, float]]]) -> None:
