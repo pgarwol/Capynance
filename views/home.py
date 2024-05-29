@@ -236,8 +236,44 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
     global spending_dict
     e.page.dialog.open = False
     e.page.update()
+
+    # Parse float from spending value
+    value = tf_spending_value.value
+    if ',' in value:
+        value = value.replace(',', '.')
+    if value.count('.') > 1:
+        value = value.replace('.', '', value.count('.') - 1)
+    if value.isspace():
+        logging.error('Spending value is empty. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+    if value.isalpha():
+        logging.error('Spending value is not a number. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+    if not value:
+        logging.error('Spending value is empty. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+    try:
+        value = float(value)
+    except ValueError:
+        logging.error('Spending value is not a number. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+
+    description = tf_spending_desc.value
+    if description.isspace():
+        logging.error('Spending description is empty. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+    if not description:
+        logging.error('Spending description is empty. Skipping adding spending.')
+        clear_manual_spending_dialog()
+        return
+
     spending_dict['spending'][datetime.datetime.now().strftime('%Y-%m-%d, %H:%M:%S')] = \
-        [tf_spending_desc.value, float(tf_spending_value.value)]
+        [description, value]
 
     # Update spending dict in user DTO
     Session.get_logged_user().manual_spending = spending_dict
