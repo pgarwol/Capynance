@@ -13,6 +13,7 @@ from page import Page
 from session import Session
 from utils import services
 from utils.enums import FletNames, Colors
+from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
 from views import reset_calendar, reset_finances
 from views.view import View, ViewsInitialStates
@@ -235,9 +236,13 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
     global spending_dict
     e.page.dialog.open = False
     e.page.update()
-    spending_dict[datetime.datetime.now().strftime('%Y-%m-%d')] = \
+    spending_dict['spending'][datetime.datetime.now().strftime('%Y-%m-%d')] = \
         [tf_spending_desc.value, float(tf_spending_value.value)]
-    read_latest_spending(spending_dict)
+
+    # Update spending dict in user DTO
+    Session.get_logged_user().manual_spending = spending_dict
+    SyncManager.sync_manual_spending()  # Sync data with database
+
     clear_manual_spending_dialog()
 
 
@@ -320,8 +325,12 @@ def retrieve_dto_spending(dto) -> None:
     global spending_dict
     view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
     if 'spending' not in view_data:
+        logging.warning('Spending data not found in view data. Spending data will not be filled at home page.')
+        view_data['spending'] = {}
+        logging.warning('Initializing empty spending data in user DTO.')
+        spending_dict = view_data
         return
-    spending_dict = view_data['spending']
+    spending_dict = view_data
     read_latest_spending(spending_dict)
 
 
@@ -405,7 +414,7 @@ def init_home() -> None:
     ThemeManager.add_observer(theme_info)
 
 
-def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
+def read_latest_spending(spending: dict[str, dict[list[str, float]]]) -> None:
     """
     This function reads the latest spending data and updates the spending rows.
 
@@ -420,6 +429,7 @@ def read_latest_spending(spending: dict[str, list[str, float]]) -> None:
     Returns:
         None
     """
+    spending = spending['spending']
     sorted_dates = sorted(spending.keys(), reverse=True)
     latest_three = sorted_dates[:3]
     latest_spending = [(spending[date][0], spending[date][1]) for date in latest_three]
