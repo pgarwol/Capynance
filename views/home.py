@@ -236,7 +236,7 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
     global spending_dict
     e.page.dialog.open = False
     e.page.update()
-    spending_dict['spending'][datetime.datetime.now().strftime('%Y-%m-%d')] = \
+    spending_dict['spending'][datetime.datetime.now().strftime('%Y-%m-%d, %H:%M:%S')] = \
         [tf_spending_desc.value, float(tf_spending_value.value)]
 
     # Update spending dict in user DTO
