@@ -1,24 +1,23 @@
-import utils.services as services
-
-from session import Session
-from utils.theme_manager import ThemeManager
-from views.shop import shop
-from views.home import home
-from views.scan import scan
-from views.login import login
-from utils.enums import DBFields, FletNames
-from views.register import register
-from views.calendar import calendar
-from views.finances import finances, reset_finances
-from views.settings import settings
-from views.calendar import calendar, change_date, reset_calendar
-from components.component import DefaultComponents
-from utils.lang import Lang
-from views.view import View
-from page import Page
 import signal
 import sys
+
 import flet as ft
+from flet_core import theme
+
+import utils.services as services
+from components.component import DefaultComponents
+from page import Page
+from utils.enums import FletNames, Colors
+from utils.theme_manager import ThemeManager
+from views.calendar import calendar, reset_calendar
+from views.finances import finances, reset_finances
+from views.home import home
+from views.login import login
+from views.register import register
+from views.scan import scan
+from views.settings import settings
+from views.shop import shop
+from views.view import View
 
 
 class App:
@@ -97,6 +96,9 @@ class App:
         page.on_route_change = route_change
         page.on_view_pop = view_pop
         Page.go(page.route)
+
+        # Theming
+        page.theme = theme.Theme(color_scheme_seed=Colors.PRIMARY_DARKER)
         ThemeManager.toggle_dark_mode(toggle_on=False)
 
 
