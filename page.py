@@ -2,6 +2,7 @@ import logging
 from abc import ABC
 from utils.enums import FletNames
 import flet as ft
+from typing import Any
 
 
 class Page(ABC):
@@ -43,6 +44,12 @@ class Page(ABC):
             cls.page.theme_mode = ft.ThemeMode.DARK if toggle_on else ft.ThemeMode.LIGHT
         except Exception as e:
             mode = "dark" if toggle_on else "light"
-            logging.error(f'An error occurred while trying to set the theme mode to {mode}. {e}')
+            logging.error(
+                f"An error occurred while trying to set the theme mode to {mode}. {e}"
+            )
 
         cls.update()
+
+    @classmethod
+    def show_snack_bar(cls, _: Any):
+        return cls.page.show_snack_bar(_)

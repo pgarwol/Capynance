@@ -1,5 +1,6 @@
 from page import Page
 from session import Session
+from utils.enums import DBFields
 from utils import services
 
 
@@ -20,8 +21,14 @@ class SyncManager:
         services.save_file_data(filename, user)
 
     @classmethod
-    def set_init_functions(cls, init_calendar: callable, init_finances: callable,
-                           init_stats: callable, init_scan: callable, init_home: callable) -> None:
+    def set_init_functions(
+        cls,
+        init_calendar: callable,
+        init_finances: callable,
+        init_stats: callable,
+        init_scan: callable,
+        init_home: callable,
+    ) -> None:
         """
         Sets the initialization functions for the views. They will be used to synchronize the data with the database.
 
@@ -39,16 +46,6 @@ class SyncManager:
         cls.init_home = init_home
 
     @classmethod
-    def set_db_fields(cls, db_fields) -> None:
-        """
-        Sets the database fields for the user data.
-
-        :param db_fields: The database fields for the user data.
-        :return: None
-        """
-        cls.db_fields = db_fields
-
-    @classmethod
     def sync_calendar(cls) -> None:
         """
         Synchronizes the calendar data with the database
@@ -56,7 +53,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.CALENDAR)
+        cls.save_data(DBFields.CALENDAR)
         cls.init_calendar()
         Page.update()
 
@@ -68,7 +65,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.FINANCES)
+        cls.save_data(DBFields.FINANCES)
         cls.init_finances()
         Page.update()
 
@@ -80,7 +77,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.STATS)
+        cls.save_data(DBFields.STATS)
         cls.init_stats()
         Page.update()
 
@@ -92,7 +89,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.MANUAL_SPENDING)
+        cls.save_data(DBFields.MANUAL_SPENDING)
         cls.init_scan()
         Page.update()
 
@@ -104,7 +101,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.SETTINGS)
+        cls.save_data(DBFields.SETTINGS)
         Page.update()
 
     @classmethod
@@ -115,7 +112,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.SHOP)
+        cls.save_data(DBFields.SHOP)
         Page.update()
 
     @classmethod
@@ -126,7 +123,7 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.PROFILE)
+        cls.save_data(DBFields.PROFILE)
         Page.update()
 
     @classmethod
@@ -137,6 +134,6 @@ class SyncManager:
         :param: None
         :return:
         """
-        cls.save_data(cls.db_fields.MANUAL_SPENDING)
+        cls.save_data(DBFields.MANUAL_SPENDING)
         cls.init_home()
         Page.update()

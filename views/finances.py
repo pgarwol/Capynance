@@ -1,24 +1,28 @@
 from views.view import View, ViewsInitialStates
+from entities.spending_type import SpendingType
+from utils.helpers import shuffle_dict, sort_dict_by_values_desc
+from entities.income_source import IncomeSource
+from itertools import islice
 import utils.services as services
 import pandas as pd
 from session import Session
 from enum import StrEnum
-from utils.enums import FletNames, Colors
+from utils.enums import (
+    FletNames,
+    Colors,
+    String,
+    DateFormat,
+    Currencies,
+    get_logo_src,
+    get_theme_color,
+)
 from utils.styles import Style
 from components.component import Component, DefaultComponents
-from typing import Literal
+from typing import Literal, Optional, Sequence
 from page import Page
+import random
 import numpy as np
 import flet as ft
-
-
-class SourcePhotos(StrEnum):
-    APPLE_PAY = "https://lh3.googleusercontent.com/pw/AP1GczOCyddBGnewDifbL7irCXF1IUkAYWjpJNRNOKwQ_WFJiOmthp-h4IeiCT-MfzJ2cg9G-n51jAbkf6X-ptkeHc5TNNM8K6EgghtN8WGcW9MCC6bIvGfYJuk8jaYKz8wLjOxLFp6JoX1f7cx2y59yc2Q=w150-h150-s-no-gm"
-    MBANK = "https://lh3.googleusercontent.com/pw/AP1GczMGmclVSSzuCUoWlVTmhjYvo42j1mI9LZ6hQDH3uwuD2na9Extl4EEnntFDn1a4DaWahK9trRvVKJqb2HFC9zq3lxQWiuumXufGH2NBO-7gwTpFXWwYqQofoYyBAdxKm1le5FOWXSInDhYa47dYjvY=w160-h160-s-no-gm"
-    REVOLUT = "https://lh3.googleusercontent.com/pw/AP1GczO3xHEolUpxRVqhfpa3Aw2xFjG5s0ILBc3ui7kaWydz53nwpnipkJNjKMXFnSocEitxIVi5YhPUyxk5P2fawavPz-gX4HeVuO9Z9NwxfqBja8OhjkQktqCeO7YMRgFty76IDofVMriFXzyvptcIQQk=w160-h160-s-no-gm"
-    SANTANDER = "https://lh3.googleusercontent.com/pw/AP1GczMgTKDgaFIH_9R5tCXLvM-8Jqg3tAbhymE0fL1K0s2AOhvceaLmdL7f-OuckyAr2y7eDUbhrmc5b1CWyO_ztxfOjwqYNY8K6VjXjpGb7CihezWKr8C3-WgJ33MHuFaP7YgOKwR_NFPQroev0WvKSSA=w160-h160-s-no-gm"
-    PAYPAL = "https://lh3.googleusercontent.com/pw/AP1GczNOzTr0GdXO-W3k_TRwokN8MHnlPrf0VJkOEZAVhfqPOVCODIzHZ8irFHlrWstom5gqt2Ueu483ZR2lCgf0U_tm3u-4xXez8U5uE1wK77naoeFiE-owfCWR_SQ1OvZiEio5On6rx7t8FzhCXvE6rOc=w160-h160-s-no-gm"
-    ING = "https://lh3.googleusercontent.com/pw/AP1GczOPgwLTS1Z4qBKqZ9MWSZZtDa6wV1XFZPp2mp1NwDTp4WYj4e0ejARbQfXLSTYresfgdhFGaIXLzvsz4ZjAwtK1UalZn4f_jByZKrFVZxfjujK5POfWqMG5llLlR5pjgPwZMDxnEGKRKrJEwJd8spc=w160-h160-s-no-gm"
 
 
 finances = View(name=FletNames.FINANCES, route=f"/{FletNames.FINANCES}")
@@ -41,8 +45,6 @@ finances.add_component(
 finances.add_component(DefaultComponents.NAVIGATION_BAR.value)
 finances.var = {"sources": []}
 
-finances.log()
-
 
 def generate_income_source_tile(
     name: str,
@@ -53,6 +55,22 @@ def generate_income_source_tile(
     saldo: float,
     period: str,
 ) -> ft.Row:
+    """
+    Generate an income source tile with specified details and styling.
+
+    Args:
+        name (str): The name of the income source.
+        logo_src (str): The source URL for the logo of the income source.
+        theme_color (Colors): The theme color for the tile.
+        money_in (float): The amount of money coming in.
+        money_out (float): The amount of money going out.
+        saldo (float): The balance amount.
+        period (str): The period for the income source.
+
+    Returns:
+        ft.Row: A Row object representing the generated income source tile.
+    """
+    _HEADER_SIZE = 32
     return ft.Row(
         controls=[
             ft.Image(width=120, height=120, src=logo_src),
@@ -61,16 +79,16 @@ def generate_income_source_tile(
                     ft.Text(
                         f"{name.capitalize()}",
                         weight=ft.FontWeight.BOLD,
-                        size=32,
+                        size=_HEADER_SIZE,
                         text_align=ft.TextAlign.CENTER,
                         **Style.Text.value,
                     ),
                     ft.Row(
                         [
                             ft.Text(
-                                f"{money_out:.2f} ZŁ",
+                                f"{money_out:.2f} {Currencies.POLISH_ZLOTY}",
                                 weight=ft.FontWeight.BOLD,
-                                size=16,
+                                size=_HEADER_SIZE // 2,
                                 color=Colors.NEGATIVE,
                                 **Style.Text.value,
                             ),
@@ -80,87 +98,39 @@ def generate_income_source_tile(
                                 size=30,
                             ),
                             ft.Text(
-                                f"{money_in:.2f} ZŁ",
+                                f"{money_in:.2f} {Currencies.POLISH_ZLOTY}",
                                 weight=ft.FontWeight.BOLD,
-                                size=16,
+                                size=_HEADER_SIZE // 2,
                                 color=Colors.POSITIVE,
                                 **Style.Text.value,
                             ),
                         ]
                     ),
                     ft.Text(
-                        f"Saldo: {saldo:.2f} ZŁ",
+                        f"Saldo: {saldo:.2f} {Currencies.POLISH_ZLOTY}",
                         weight=ft.FontWeight.BOLD,
                         size=16,
                         text_align=ft.TextAlign.CENTER,
                         **Style.Text.value,
                     ),
                 ],
-                width=400,
+                width=220,
                 height=120,
-                alignment=theme_color,
             ),
         ],
     )
 
 
-def append_income_source(row: ft.Row) -> None:
+def append_item_to_finances(row: ft.Row) -> None:
     income_sources.controls.append(row)
-
-
-class IncomeSource:
-    def __init__(
-        self, name: str, logo_src: str, data: pd.DataFrame, theme_color: Colors
-    ):
-        self.name = name
-        self.logo_src = logo_src
-        self.data = data
-        self.theme_color = data
-
-
-def get_logo_src(source_name: str):
-    match source_name.lower():
-        case "mbank":
-            return SourcePhotos.MBANK
-        case "ing":
-            return SourcePhotos.ING
-        case "revolut":
-            return SourcePhotos.REVOLUT
-        case "paypal":
-            return SourcePhotos.PAYPAL
-        case "santander":
-            return SourcePhotos.SANTANDER
-        case "applePay":
-            return SourcePhotos.APPLE_PAY
-        case _:
-            print("Invalid input")
-
-
-def get_theme_color(source_name: str):
-    match source_name.lower():
-        case "mbank":
-            return Colors.MBANK
-        case "ing":
-            return Colors.ING
-        case "revolut":
-            return Colors.REVOLUT
-        case "paypal":
-            return Colors.PAYPAL
-        case "santander":
-            return Colors.SANTANDER
-        case "applePay":
-            return Colors.APPLE_PAY
-        case _:
-            print("Invalid input")
 
 
 def get_finance_data(data: dict) -> pd.DataFrame:
     df = pd.DataFrame(data).transpose().reset_index()
     df.columns = ["date", "in", "out"]
-    df["date"] = pd.to_datetime(df["date"], format="%d-%m-%Y")
+    df["date"] = pd.to_datetime(df["date"], format=str(DateFormat.dmY))
     df["in"] = df["in"].astype(float)
     df["out"] = df["out"].astype(float)
-    # Set 'date' column as the index
     df.set_index("date", inplace=True)
     df["net"] = df["in"].astype(int) - df["out"].astype(int)
     df["day"] = df.index.day
@@ -170,9 +140,7 @@ def get_finance_data(data: dict) -> pd.DataFrame:
 
 def retrieve_dto_data(dto) -> None:
     view_data = services.get_view_data(view_name=finances.name, user_id=dto.id)
-
     for source in view_data["sources"]:
-
         finances.var["sources"].append(
             IncomeSource(
                 name=source,
@@ -183,23 +151,36 @@ def retrieve_dto_data(dto) -> None:
         )
 
 
-def draw_chart(data: pd.DataFrame) -> ft.LineChart:
+def draw_money_flow_chart(
+    data: pd.DataFrame, line_color: Optional[str] = Colors.PRIMARY_DARKER
+) -> ft.LineChart:
+    """
+    Draws a line chart based on the provided data with customizable line color.
+
+    Args:
+        data (pd.DataFrame): The data to be visualized in the line chart.
+        line_color (Optional[str], optional): The color of the line in the chart. Defaults to Colors.PRIMARY_DARKER.
+
+    Returns:
+        ft.LineChart: A LineChart object representing the drawn line chart.
+    """
+
     def format_y_label(value: float) -> str:
         if value == 0:
             return "0"
-        elif value > 1000.00:
-            return "{value / 1000}K"
+        elif value >= 100.00:
+            return f"{value / 1000}K"
         else:
             f"{value:.2f}"
 
-    data_1 = [
+    money_flow_data = [
         ft.LineChartData(
             data_points=[
                 ft.LineChartDataPoint(x, float(y))
                 for x, y in zip(data["day"].values, data["net"].values)
             ],
             stroke_width=5,
-            color=ft.colors.CYAN,
+            color=line_color,
             curved=True,
             stroke_cap_round=True,
         )
@@ -208,11 +189,13 @@ def draw_chart(data: pd.DataFrame) -> ft.LineChart:
         ft.ChartAxisLabel(
             value=day,
             label=ft.Container(
-                ft.Text(f"{day}", size=12, weight=ft.FontWeight.BOLD, **Style.Text.value),
+                ft.Text(
+                    f"{day}", size=12, weight=ft.FontWeight.BOLD, **Style.Text.value
+                ),
                 expand=True,
             ),
         )
-        for day in np.linspace(1, 30, 6, dtype=int)
+        for day in [1] + list(range(5, 31, 5))
     ]
 
     y_labels = [
@@ -230,30 +213,78 @@ def draw_chart(data: pd.DataFrame) -> ft.LineChart:
                 expand=True,
             ),
         )
-        for y_val in list(range(0, data["net"].values.max(), 250))
+        for y_val in [0, 500, 1000]
     ]
-    print(y_labels)
+
     min_x = data["day"].values.min()
     max_x = data["day"].values.max()
     min_y = 0.0 if data["net"].values.min() > 0.0 else data["net"].values.min() - 100
     max_y = data["net"].values.max()
     chart = ft.LineChart(
-        data_series=data_1,
+        data_series=money_flow_data,
         left_axis=ft.ChartAxis(labels=y_labels, labels_size=24, show_labels=True),
         bottom_axis=ft.ChartAxis(labels=x_labels, labels_size=24, show_labels=True),
-        tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.BLUE_GREY),
+        tooltip_bgcolor=ft.colors.with_opacity(0.8, Colors.BLACK),
         min_x=min_x,
         max_x=max_x,
         min_y=min_y,
         max_y=max_y,
         vertical_grid_lines=ft.ChartGridLines(interval=1, color=ft.colors.GREY_900),
-        # animate=5000,
         expand=False,
     )
     return chart
 
 
+def calculate_total_outcome(dataframes: Sequence[pd.DataFrame]) -> float:
+    """
+    Calculate the total sum of outcomes from a sequence of Pandas DataFrames.
+
+    Args:
+        dataframes (Sequence[pd.DataFrame]): A sequence of Pandas DataFrames containing outcome data.
+
+    Returns:
+        float: The total sum of outcomes calculated from the input DataFrames.
+    """
+
+    money_pool = 0.0
+    for df in dataframes:
+        money_pool += df["out"].sum()
+    return money_pool
+
+
+def randomize_outcome(
+    money_pool: float, upper_threshold: Optional[float] = 0.2
+) -> float:
+    """
+    Generate a random outcome within a specified range based on a money pool.
+
+    Args:
+        money_pool (float): The total amount of money available for the outcome.
+        upper_threshold (Optional[float], optional): The upper limit threshold for the outcome. Defaults to 0.2.
+
+    Returns:
+        float: The randomized outcome rounded to 2 decimal places.
+    """
+    outcome = random.uniform(0.0, upper_threshold * money_pool)
+    return np.round(outcome, 2)
+
+
+def analyze_user_spendings(spending_types: Sequence[str], money_pool: float) -> dict:
+    """Obviously this is fake method, all it does it distributes money to different categories"""
+
+    categorized_outcome = {}
+    for s_type in spending_types:
+        randomized_outcome = randomize_outcome(money_pool)
+        categorized_outcome[s_type] = randomized_outcome
+        money_pool -= randomized_outcome
+
+    return categorized_outcome
+
+
 def reset_finances() -> None:
+    """
+    Reset the finances by clearing the income sources controls and financial sources variables.
+    """
     income_sources.controls.clear()
     finances.var["sources"].clear()
 
@@ -262,7 +293,7 @@ def init_finances() -> None:
     reset_finances()
     retrieve_dto_data(dto=Session.get_logged_user())
     for source in finances.var["sources"]:
-        append_income_source(
+        append_item_to_finances(
             generate_income_source_tile(
                 name=source.name,
                 logo_src=source.logo_src,
@@ -273,8 +304,60 @@ def init_finances() -> None:
                 period=f"{source.data.index.month[0]}.{source.data.index.year[0]}",
             )
         )
-        append_income_source(
-            ft.Container(draw_chart(source.data), height=200, width=460, padding=8)
+
+        append_item_to_finances(
+            ft.Container(
+                draw_money_flow_chart(source.data, source.theme_color),
+                height=200,
+                width=460,
+                padding=8,
+            )
+        )
+
+    append_item_to_finances(
+        top_spendings_categories := ft.DataTable(
+            sort_ascending=True,
+            columns=[ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(3)],
+            rows=[],
+        )
+    )
+
+    spending_types = SpendingType.get_instances()
+    processed_spendings = analyze_user_spendings(
+        spending_types=list(shuffle_dict(spending_types).keys()),
+        money_pool=calculate_total_outcome(
+            [
+                finances.var["sources"][i].data
+                for i, _ in enumerate(finances.var["sources"])
+            ]
+        ),
+    )
+
+    spendings_rows_to_generate = 5
+    for spending_type in islice(
+        sort_dict_by_values_desc(processed_spendings), spendings_rows_to_generate
+    ):
+        top_spendings_categories.rows.append(
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(spending_types[spending_type]["icon"]),
+                    ft.DataCell(
+                        ft.Text(
+                            spending_types[spending_type]["full_name"],
+                            **Style.Text.value,
+                        )
+                    ),
+                    ft.DataCell(
+                        ft.Text(
+                            f"{processed_spendings[spending_type]:.2f} {Currencies.POLISH_ZLOTY}",
+                            **Style.Text.value,
+                        )
+                    ),
+                ],
+            )
         )
 
     Page.update()
+
+
+finances.log()

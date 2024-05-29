@@ -2,7 +2,7 @@ from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
 from pathlib import Path
-from utils.enums import FletNames, String, DBFields, Colors
+from utils.enums import FletNames, String, DBFields, Colors, Currencies
 from utils.styles import Style
 import pandas as pd
 from page import Page
@@ -37,7 +37,13 @@ scan.add_component(
                         on_click=lambda _: scan_receipt(),
                         bgcolor=Colors.ACCENT,
                     ),
-                    receipt_col := ft.Column(),
+                    receipt := ft.DataTable(
+                        sort_ascending=True,
+                        columns=[
+                            ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(2)
+                        ],
+                        rows=[],
+                    ),
                 ],
             )
         ],
@@ -72,30 +78,50 @@ def get_random_product(products: pd.DataFrame) -> Tuple[str, float]:
     return product_name, product_price
 
 
-def generate_n_receipt_rows(n: int) -> List[ft.Row]:
-    rows = []
+def clear_receipt() -> None:
+    receipt.rows.clear()
+
+
+def generate_n_receipt_rows(n: int) -> None:
+    clear_receipt()
     total_price = 0
+
     for _ in range(n):
         product, price = get_random_product(products)
         total_price += price
-        rows.append(
-            ft.Text(f"{product:}{price:.2f} ZŁ", **Style.Text.value, key=str(_))
+
+        receipt.rows.append(
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(product, **Style.Text.value)),
+                    ft.DataCell(
+                        ft.Text(
+                            f"{total_price:.2f} {Currencies.POLISH_ZLOTY}",
+                            **Style.Text.value,
+                            key=str(_),
+                        )
+                    ),
+                ]
+            )
         )
 
-    rows.extend(
-        (
-            ft.Text(f"{(LINE_LENGTH+8)*'-'}", **Style.Text.value),
-            ft.Text(
-                f"{(LINE_LENGTH+8)*String.SPACE}{total_price:.2f} ZŁ",
-                **Style.Text.value,
-            ),
+    receipt.rows.append(
+        ft.DataRow(
+            cells=[
+                ft.DataCell(ft.Text("Total: ", **Style.Text.value)),
+                ft.DataCell(
+                    ft.Text(
+                        f"{total_price:.2f} {Currencies.POLISH_ZLOTY}",
+                        **Style.Text.value,
+                    )
+                ),
+            ]
         )
     )
-    return rows
 
 
 def scan_receipt() -> None:
-    receipt_col.controls = generate_n_receipt_rows(n=random.randint(1, 15))
+    generate_n_receipt_rows(n=random.randint(1, 15))
     Page.update()
     scroll_to_receipt()
 

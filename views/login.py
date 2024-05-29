@@ -83,7 +83,9 @@ class LocalThemeManager:
         :return: None
         """
         self.theme_mode = theme
-        Session.get_logged_user().settings["dark_mode"] = True if theme == ft.ThemeMode.DARK else False
+        Session.get_logged_user().settings["dark_mode"] = (
+            True if theme == ft.ThemeMode.DARK else False
+        )
         SyncManager.sync_settings()
 
 
@@ -129,9 +131,11 @@ def log_user_in(email: str | None, password: str | None):
         # Set theme based on user settings.
         if "dark_mode" not in current_user_settings:
             current_user_settings["dark_mode"] = False
-            logging.warning('Theme preference not found in settings. Setting to default "light".')
+            logging.warning(
+                'Theme preference not found in settings. Setting to default "light".'
+            )
         # ThemeManager controls the theme of the app.
-        ThemeManager.toggle_dark_mode(current_user_settings['dark_mode'])
+        ThemeManager.toggle_dark_mode(current_user_settings["dark_mode"])
         # Create a LocalThemeManager instance with the current theme mode
         theme_info = LocalThemeManager(ThemeManager.theme_mode)
         # Add the LocalThemeManager instance as an observer to the ThemeManager
@@ -142,10 +146,14 @@ def log_user_in(email: str | None, password: str | None):
         init_stats()
         init_scan()
         init_home()
-        init_settings(email, current_user_settings['dark_mode'])
-        SyncManager.set_init_functions(init_calendar=init_calendar, init_finances=init_finances, init_stats=init_stats,
-                                       init_scan=init_scan, init_home=init_home)
-        SyncManager.set_db_fields(DBFields)
+        init_settings(email, current_user_settings["dark_mode"])
+        SyncManager.set_init_functions(
+            init_calendar=init_calendar,
+            init_finances=init_finances,
+            init_stats=init_stats,
+            init_scan=init_scan,
+            init_home=init_home,
+        )
         Page.go(home.route)
 
 

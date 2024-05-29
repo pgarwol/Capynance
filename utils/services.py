@@ -18,8 +18,17 @@ from typing import Tuple
 
 
 def flush_build_log() -> None:
+    """
+    Flushes the build log by opening the file at the specified path and overwriting its contents with an empty string.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     with open(
-            Path(DBFields.BUILD_LOG_PATH).resolve(), "w", encoding=DBFields.ENCODING
+        Path(DBFields.BUILD_LOG_PATH).resolve(), "w", encoding=DBFields.ENCODING
     ) as file:
         file.write(String.EMPTY)
 
@@ -70,7 +79,9 @@ def change_password(email: str, old_password: str, new_password: str) -> None:
             dump_data(data, DBFields.LOGIN_DB)
             return
 
-    raise CapynanceException(f"{Errors.USER_NOT_FOUND}: User with email {email} not found")
+    raise CapynanceException(
+        f"{Errors.USER_NOT_FOUND}: User with email {email} not found"
+    )
 
 
 def read_user_from_db(id: str | int) -> User:
@@ -102,7 +113,9 @@ def read_user_from_db(id: str | int) -> User:
                 db_filepath=merge_user_db_path(user_id=id, filename=DBFields.STATS)
             ),
             manual_spending=load_db_data(
-                db_filepath=merge_user_db_path(user_id=id, filename=DBFields.MANUAL_SPENDING)
+                db_filepath=merge_user_db_path(
+                    user_id=id, filename=DBFields.MANUAL_SPENDING
+                )
             ),
         )
     except Exception as e:
@@ -161,9 +174,9 @@ def load_db_data(db_filepath: str) -> dict:
     """
     print("Reading from: ", DBFields.RELATIVE_DB_PATH + db_filepath)
     with open(
-            Path(DBFields.RELATIVE_DB_PATH + db_filepath).resolve(),
-            "r",
-            encoding=DBFields.ENCODING,
+        Path(DBFields.RELATIVE_DB_PATH + db_filepath).resolve(),
+        "r",
+        encoding=DBFields.ENCODING,
     ) as db:
         data = json.load(db)
     return data
@@ -283,9 +296,9 @@ def dump_data(data: dict, db_filename: str) -> None:
         None
     """
     with open(
-            Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
-            "w",
-            encoding=DBFields.ENCODING,
+        Path(DBFields.RELATIVE_DB_PATH + db_filename).resolve(),
+        "w",
+        encoding=DBFields.ENCODING,
     ) as db:
         json.dump(data, db, indent=2)
 

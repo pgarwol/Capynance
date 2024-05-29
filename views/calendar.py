@@ -39,6 +39,7 @@ calendar.add_component(
                             ft.dropdown.Option(currency.value)
                             for currency in Currencies
                         ],
+                        width=100,
                         **Style.Dropdown.value,
                     ),
                 ]
