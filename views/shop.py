@@ -1,4 +1,4 @@
-from views.view import View
+from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
 from utils.enums import FletNames, Colors
@@ -349,4 +349,5 @@ shop.var = {
 }
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
 shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
+ViewsInitialStates.set_shop_copy(shop)
 shop.log()

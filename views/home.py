@@ -16,7 +16,7 @@ from utils.enums import FletNames, Colors
 from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
 from views import reset_calendar, reset_finances
-from views.view import View
+from views.view import View, ViewsInitialStates
 
 # Global variables
 spending_dict = {}
@@ -675,4 +675,5 @@ home.add_component(
     )
 )
 home.add_component(DefaultComponents.NAVIGATION_BAR.value)
+ViewsInitialStates.set_home_copy(home)
 home.log()

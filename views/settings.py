@@ -11,7 +11,7 @@ from utils import services
 from utils.enums import FletNames, Colors
 from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
-from views.view import View
+from views.view import View, ViewsInitialStates
 
 header_size = 27
 text_size = header_size - 10
@@ -712,4 +712,5 @@ settings.add_component(
         description="Settings page content.",
     )
 )
+ViewsInitialStates.set_settings_copy(settings)
 settings.log()

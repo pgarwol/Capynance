@@ -1,6 +1,6 @@
 import utils.services as services
 from session import Session
-from views.view import View
+from views.view import View, ViewsInitialStates
 from utils.styles import Style
 from utils.enums import Currencies, FletNames
 from components.component import Component, DefaultComponents
@@ -183,4 +183,5 @@ def refresh_labels() -> None:
 refresh_labels()
 
 calendar.refresh_language_contents = refresh_labels
+ViewsInitialStates.set_calendar_copy(calendar)
 calendar.log()
