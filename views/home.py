@@ -58,6 +58,7 @@ def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
     DefaultComponents.NAVIGATION_BAR.value.content[0].selected_index = (
         DefaultComponents.DEFAULT_MENU_SELECTION.value
     )
+    Page.go("/")
     reset_calendar()
     reset_finances()
     Page.update()
