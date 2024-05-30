@@ -258,16 +258,15 @@ def init_user_db(user_id: str | int, email: str) -> None:
         DBFields.EMAIL: email,
     }
     default_stats = {
-        "hats_owned": "",
-        "hat_equiped": "",
-        "capy_colors_owned": "",
-        "capy_color_equiped": "",
-        "shirts_owned": "",
-        "shirt_equiped": "",
-        "life_hearts": "1",
-        "capycoins": "20000",
-        "level": "",
-        "exp": "",
+        "life_hearts": "3",
+        "capycoins": "1000",
+        "level": "0",
+        "exp": "0",
+        "inventory": {
+            "hats": [{"id": 0, "isEquipped": "True"}],
+            "colors": [{"id": 0, "isEquipped": "True"}],
+            "shirts": [{"id": 0, "isEquipped": "True"}],
+        },
     }
     for view in View.get_instances():
         with open(Path(f"{users_dir}/{view.name}.json").resolve(), "w") as db:

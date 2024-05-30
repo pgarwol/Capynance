@@ -1,18 +1,18 @@
 from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
-from utils.enums import FletNames, Colors
+from utils.enums import FletNames, Colors, DBFields
 import flet as ft
 from product import read_product_from_db
+from session import Session
 
 image_width = 250
 image_height = 295.3
 buttons_size = 20
-coin_img = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
 
 
 def update_image(container, images, current_index):
-    container.content.src = images[current_index]
+    container.content.src = images[str(current_index)]["url"]
     container.update()
 
 
@@ -25,7 +25,6 @@ def move_img_left(e, images, current_index_ref, container):
 def move_img_right(e, images, current_index_ref, container):
     if current_index_ref.current < len(images) - 1:
         current_index_ref.current += 1
-
         update_image(container, images, current_index_ref.current)
 
 
@@ -42,26 +41,122 @@ colors_index_ref.current = colors_current_index
 shirts_index_ref = ft.Ref[int]()
 shirts_index_ref.current = shirts_current_index
 
+shop = View(name=FletNames.SHOP, route=f"/{FletNames.SHOP}")
 
-# Buy button
-async def dismiss_dialog(e):
+# Basic buying/equiping functions
+shop.var = {"inventory": {}}
+
+
+def is_item_bought(group_name, item_id, inventory):
+    for item in inventory.get(group_name, []):
+        if item["id"] == item_id:
+            return True
+    return False
+
+
+def equip_item(item_group, item_id):
+    for item in shop.var["inventory"].get(item_group, []):
+        if item["id"] == item_id:
+            item["isEquipped"] = True
+        else:
+            item["isEquipped"] = False
+    update_dto_inventory()
+
+
+def insert_dto_data_to_inventory(item_group, item_ref_index):
+    shop.var["inventory"][item_group].append(
+        {"id": item_ref_index.current, "isEquipped": "False"}
+    )
+    update_dto_inventory()
+
+
+def update_dto_inventory():
+    dto = Session.get_logged_user()
+    dto.stats["inventory"] = shop.var["inventory"]
+    services.save_file_data("stats", dto)
+
+
+# Buy/Equip button functions for each item group
+async def dismiss_dialog_hats(e):
+    if is_item_bought("hats", hats_index_ref.current, shop.var["inventory"]):
+        equip_item("hats", hats_index_ref.current)
+    else:
+        if e.control.text == "Buy":
+            insert_dto_data_to_inventory("hats", hats_index_ref)
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
 
 
-cupertino_alert_dialog = ft.CupertinoAlertDialog(
-    title=ft.Text("Do you want to buy this"),
-    actions=[
-        ft.CupertinoDialogAction(
-            "Buy", is_destructive_action=True, on_click=dismiss_dialog
-        ),
-        ft.CupertinoDialogAction(text="Cancel", on_click=dismiss_dialog),
-    ],
-)
+async def dismiss_dialog_colors(e):
+    if is_item_bought("colors", colors_index_ref.current, shop.var["inventory"]):
+        equip_item("colors", colors_index_ref.current)
+    else:
+        if e.control.text == "Buy":
+            insert_dto_data_to_inventory("colors", colors_index_ref)
+    cupertino_alert_dialog.open = False
+    await e.control.page.update_async()
 
 
-def open_dlg(e):
+async def dismiss_dialog_shirts(e):
+    if is_item_bought("shirts", shirts_index_ref.current, shop.var["inventory"]):
+        equip_item("shirts", shirts_index_ref.current)
+    else:
+        if e.control.text == "Buy":
+            insert_dto_data_to_inventory("shirts", shirts_index_ref)
+    cupertino_alert_dialog.open = False
+    await e.control.page.update_async()
+
+
+cupertino_alert_dialog = ft.CupertinoAlertDialog()
+
+
+def open_dlg_hats(e):
+    dto = Session.get_logged_user()
+    if is_item_bought("hats", hats_index_ref.current, shop.var["inventory"]):
+        button_text = "Equip"
+    else:
+        button_text = "Buy"
     e.control.page.dialog = cupertino_alert_dialog
+    cupertino_alert_dialog.actions = [
+        ft.CupertinoDialogAction(
+            button_text, is_destructive_action=True, on_click=dismiss_dialog_hats
+        ),
+        ft.CupertinoDialogAction(text="Cancel", on_click=dismiss_dialog_hats),
+    ]
+    cupertino_alert_dialog.open = True
+    e.control.page.update()
+
+
+def open_dlg_colors(e):
+    dto = Session.get_logged_user()
+    if is_item_bought("colors", colors_index_ref.current, shop.var["inventory"]):
+        button_text = "Equip"
+    else:
+        button_text = "Buy"
+    e.control.page.dialog = cupertino_alert_dialog
+    cupertino_alert_dialog.actions = [
+        ft.CupertinoDialogAction(
+            button_text, is_destructive_action=True, on_click=dismiss_dialog_colors
+        ),
+        ft.CupertinoDialogAction(text="Cancel", on_click=dismiss_dialog_colors),
+    ]
+    cupertino_alert_dialog.open = True
+    e.control.page.update()
+
+
+def open_dlg_shirts(e):
+    dto = Session.get_logged_user()
+    if is_item_bought("shirts", shirts_index_ref.current, shop.var["inventory"]):
+        button_text = "Equip"
+    else:
+        button_text = "Buy"
+    e.control.page.dialog = cupertino_alert_dialog
+    cupertino_alert_dialog.actions = [
+        ft.CupertinoDialogAction(
+            button_text, is_destructive_action=True, on_click=dismiss_dialog_shirts
+        ),
+        ft.CupertinoDialogAction(text="Cancel", on_click=dismiss_dialog_shirts),
+    ]
     cupertino_alert_dialog.open = True
     e.control.page.update()
 
@@ -77,7 +172,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
 
     hat_container = ft.Container(
         content=ft.Image(
-            src=hat_images[hats_index_ref.current],
+            src=hat_images[str(hats_index_ref.current)]["url"],
             fit=ft.ImageFit.CONTAIN,
             width=image_width,
             height=image_height,
@@ -88,7 +183,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
 
     color_container = ft.Container(
         content=ft.Image(
-            src=color_images[colors_index_ref.current],
+            src=color_images[str(colors_index_ref.current)]["url"],
             fit=ft.ImageFit.CONTAIN,
             width=image_width,
             height=image_height,
@@ -99,7 +194,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
 
     shirt_container = ft.Container(
         content=ft.Image(
-            src=shirt_images[shirts_index_ref.current],
+            src=shirt_images[str(shirts_index_ref.current)]["url"],
             fit=ft.ImageFit.CONTAIN,
             width=image_width,
             height=image_height,
@@ -213,7 +308,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                             ft.Row(
                                                 controls=[
                                                     ft.Image(
-                                                        src=coin_img,
+                                                        src=DBFields.CAPYCOIN,
                                                         width=18,
                                                         height=18,
                                                     ),
@@ -230,7 +325,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                         alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                     ),
-                                    on_click=open_dlg,
+                                    on_click=open_dlg_hats,
                                     color=Colors.BLACK.value,
                                     bgcolor=Colors.ACCENT.value,
                                     width=105,
@@ -252,7 +347,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                             ft.Row(
                                                 controls=[
                                                     ft.Image(
-                                                        src=coin_img,
+                                                        src=DBFields.CAPYCOIN,
                                                         width=18,
                                                         height=18,
                                                     ),
@@ -269,7 +364,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                         alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                     ),
-                                    on_click=open_dlg,
+                                    on_click=open_dlg_shirts,
                                     color=Colors.BLACK.value,
                                     bgcolor=Colors.ACCENT.value,
                                     width=105,
@@ -291,7 +386,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                             ft.Row(
                                                 controls=[
                                                     ft.Image(
-                                                        src=coin_img,
+                                                        src=DBFields.CAPYCOIN,
                                                         width=18,
                                                         height=18,
                                                     ),
@@ -308,7 +403,7 @@ def create_shop_item(hats_id, colors_id, shirts_id):
                                         alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                     ),
-                                    on_click=open_dlg,
+                                    on_click=open_dlg_colors,
                                     color=Colors.BLACK.value,
                                     bgcolor=Colors.ACCENT.value,
                                     width=105,
@@ -327,8 +422,6 @@ def create_shop_item(hats_id, colors_id, shirts_id):
     )
 
 
-shop = View(name=FletNames.SHOP, route=f"/{FletNames.SHOP}")
-
 shop.add_component(
     Component(
         [
@@ -344,9 +437,16 @@ shop.add_component(
         "Row with purchasable items",
     )
 )
-shop.var = {
-    "selected_hat": None,
-}
+
+
+def init_shop():
+    dto = Session.get_logged_user()
+    view_data = services.get_view_data(view_name=shop.name, user_id=dto.id)
+    stats_var = dto.stats
+    shop.var["inventory"] = stats_var.get("inventory", {})
+    print(shop.var["inventory"])
+
+
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
 shop.add_component(DefaultComponents.NAVIGATION_BAR.value)
 ViewsInitialStates.set_shop_copy(shop)

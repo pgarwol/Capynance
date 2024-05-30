@@ -4,6 +4,7 @@ from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
 from views import init_settings
 from views.home import home, init_home
+from views.shop import shop, init_shop
 from views.view import View
 from utils.enums import Colors, FletNames, String, DBFields
 from utils.styles import Style
@@ -146,6 +147,7 @@ def log_user_in(email: str | None, password: str | None):
         init_stats()
         init_scan()
         init_home()
+        init_shop()
         init_settings(email, current_user_settings["dark_mode"])
         SyncManager.set_init_functions(
             init_calendar=init_calendar,

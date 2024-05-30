@@ -10,6 +10,7 @@ import utils.services as services
 from session import Session
 import copy
 from page import Page
+from utils.enums import FletNames, DBFields
 
 
 class Component(AbstractComponent):
@@ -204,7 +205,7 @@ def create_equipped_images(hat_img, color_img, shirt_img):
     if not controls:
         controls.append(
             ft.Image(
-                src=default_equipped,
+                src=DBFields.DEFAULT_SKIN,
                 fit=ft.ImageFit.CONTAIN,
                 width=image_width,
                 height=image_height,
@@ -312,7 +313,7 @@ def create_currency_display(capycoins):
         content=ft.Row(
             controls=[
                 ft.Image(
-                    src=coin_img,
+                    src=DBFields.CAPYCOIN,
                     width=24,
                     height=24,
                 ),
@@ -344,9 +345,12 @@ def init_stats() -> None:
 
     DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
         create_equipped_images(
-            stats_var["hat_equiped"],
-            stats_var["capy_color_equiped"],
-            stats_var["shirt_equiped"],
+            # stats_var["hat_equiped"],
+            # stats_var["capy_color_equiped"],
+            # stats_var["shirt_equiped"],
+            "",
+            "",
+            "",
         )
     )
 

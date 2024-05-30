@@ -24,6 +24,8 @@ class DBFields(StrEnum):
     SETTINGS = "settings"
     STATS = "stats"
     MANUAL_SPENDING = "manual-spending"
+    DEFAULT_SKIN = "https://lh3.googleusercontent.com/pw/AP1GczP22h9zKEFj7hcIiX-9gfwtRm-W8KPJSP-oYdHEt-0pvgZPy0QOduH8KnGHpC9UFQHT2O_m3jTDisvzGqPEDiWxlC6AFGXdoeFzUYenecjZtIn38Xy-7MbRwAD7tN-iH_OM2iw13cy_YdzpixrzK0E=w725-h857-s-no-gm?authuser=0"
+    CAPYCOIN = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
 
 
 class FletNames(StrEnum):
