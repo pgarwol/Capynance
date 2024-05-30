@@ -16,7 +16,7 @@ from utils.enums import FletNames, Colors
 from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
 from views import reset_calendar, reset_finances
-from views.view import View, ViewsInitialStates
+from views.view import View
 
 # Global variables
 spending_dict = {}
@@ -66,29 +66,22 @@ def log_user_out(_: flet_core.control_event.ControlEvent) -> None:
 
 # Elements depending on the theme mode. Their colors are controlled by the LocalThemeManager class.
 theme_dependent_elements = [
-    icon_attach_money := ft.Icon(
-        name=ft.icons.ATTACH_MONEY,
-        color=ft.colors.BLACK
-    ),
+    icon_attach_money := ft.Icon(name=ft.icons.ATTACH_MONEY, color=ft.colors.BLACK),
     icon_savings_outlined := ft.Icon(
-        name=ft.icons.SAVINGS_OUTLINED,
-        color=ft.colors.BLACK,
-        size=60
+        name=ft.icons.SAVINGS_OUTLINED, color=ft.colors.BLACK, size=60
     ),
     icon_flag_circle_outlined := ft.Icon(
-        name=ft.icons.FLAG_CIRCLE_OUTLINED,
-        color=ft.colors.BLACK,
-        size=60
+        name=ft.icons.FLAG_CIRCLE_OUTLINED, color=ft.colors.BLACK, size=60
     ),
     btn_settings := ft.ElevatedButton(
-        text='Ustawienia aplikacji',
+        text="Ustawienia aplikacji",
         on_click=go_to_settings,
         width=200,
         bgcolor=ft.colors.GREY_200,
         color=ft.colors.BLACK,
     ),
     btn_log_out := ft.ElevatedButton(
-        text='Wyloguj się',
+        text="Wyloguj się",
         on_click=log_user_out,
         width=200,
         bgcolor=ft.colors.GREY_200,
@@ -99,16 +92,19 @@ theme_dependent_elements = [
 
 class TipsOfTheDay(Enum):
     """Enumeration for daily tips."""
-    TIP_1 = 'Codziennie odkładając choćby niewielką kwotę, budujesz swoją finansową przyszłość'
-    TIP_2 = 'Planuj wydatki z wyprzedzeniem, aby uniknąć niepotrzebnych zakupów'
-    TIP_3 = 'Korzystaj z promocji, ale tylko wtedy, gdy faktycznie potrzebujesz produktu'
-    TIP_4 = 'Unikaj impulsywnych zakupów – zrób listę przed wyjściem do sklepu'
-    TIP_5 = 'Ustal miesięczny budżet i trzymaj się go'
-    TIP_6 = 'Przygotowuj posiłki w domu zamiast jeść na mieście'
-    TIP_7 = 'Oszczędzaj energię – wyłączaj światła i urządzenia, gdy ich nie używasz'
-    TIP_8 = 'Regularnie przeglądaj swoje subskrypcje i rezygnuj z nieużywanych'
-    TIP_9 = 'Zainwestuj w jakość – lepsze produkty często służą dłużej'
-    TIP_10 = 'Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże'
+
+    TIP_1 = "Codziennie odkładając choćby niewielką kwotę, budujesz swoją finansową przyszłość"
+    TIP_2 = "Planuj wydatki z wyprzedzeniem, aby uniknąć niepotrzebnych zakupów"
+    TIP_3 = (
+        "Korzystaj z promocji, ale tylko wtedy, gdy faktycznie potrzebujesz produktu"
+    )
+    TIP_4 = "Unikaj impulsywnych zakupów – zrób listę przed wyjściem do sklepu"
+    TIP_5 = "Ustal miesięczny budżet i trzymaj się go"
+    TIP_6 = "Przygotowuj posiłki w domu zamiast jeść na mieście"
+    TIP_7 = "Oszczędzaj energię – wyłączaj światła i urządzenia, gdy ich nie używasz"
+    TIP_8 = "Regularnie przeglądaj swoje subskrypcje i rezygnuj z nieużywanych"
+    TIP_9 = "Zainwestuj w jakość – lepsze produkty często służą dłużej"
+    TIP_10 = "Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże"
 
 
 class LocalThemeManager:
@@ -137,11 +133,17 @@ class LocalThemeManager:
 
         # Update the icon color based on the theme mode
         for element in theme_dependent_elements:
-            element.color = ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
+            element.color = (
+                ft.colors.BLACK if theme == ft.ThemeMode.LIGHT else ft.colors.WHITE
+            )
 
         # Additional theme-dependent settings
-        btn_settings.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
-        btn_log_out.bgcolor = ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
+        btn_settings.bgcolor = (
+            ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
+        )
+        btn_log_out.bgcolor = (
+            ft.colors.GREY_200 if theme == ft.ThemeMode.LIGHT else ft.colors.GREY_800
+        )
 
 
 def generate_daily_tip() -> ft.Container:
@@ -159,7 +161,9 @@ def generate_daily_tip() -> ft.Container:
 
     # Create a text container with the selected tip
     return ft.Container(
-        ft.Text(text, size=18, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER),
+        ft.Text(
+            text, size=18, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER
+        ),
         alignment=ft.alignment.center,
         padding=ft.padding.all(5),
     )
@@ -183,7 +187,7 @@ def add_spending_manual(e: flet_core.control_event.ControlEvent) -> None:
         manual_spending_dialog.open = True
         e.page.update()
     except Exception as e:
-        print(f'An error occurred: {e}')
+        print(f"An error occurred: {e}")
 
 
 def discard_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -214,8 +218,8 @@ def clear_manual_spending_dialog() -> None:
     Returns:
         None
     """
-    tf_spending_desc.value = ''
-    tf_spending_value.value = ''
+    tf_spending_desc.value = ""
+    tf_spending_value.value = ""
 
 
 def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -239,41 +243,42 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
 
     # Parse float from spending value
     value = tf_spending_value.value
-    if ',' in value:
-        value = value.replace(',', '.')
-    if value.count('.') > 1:
-        value = value.replace('.', '', value.count('.') - 1)
+    if "," in value:
+        value = value.replace(",", ".")
+    if value.count(".") > 1:
+        value = value.replace(".", "", value.count(".") - 1)
     if value.isspace():
-        logging.error('Spending value is empty. Skipping adding spending.')
+        logging.error("Spending value is empty. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
     if value.isalpha():
-        logging.error('Spending value is not a number. Skipping adding spending.')
+        logging.error("Spending value is not a number. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
     if not value:
-        logging.error('Spending value is empty. Skipping adding spending.')
+        logging.error("Spending value is empty. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
     try:
         value = float(value)
     except ValueError:
-        logging.error('Spending value is not a number. Skipping adding spending.')
+        logging.error("Spending value is not a number. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
 
     description = tf_spending_desc.value
     if description.isspace():
-        logging.error('Spending description is empty. Skipping adding spending.')
+        logging.error("Spending description is empty. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
     if not description:
-        logging.error('Spending description is empty. Skipping adding spending.')
+        logging.error("Spending description is empty. Skipping adding spending.")
         clear_manual_spending_dialog()
         return
 
-    spending_dict['spending'][datetime.datetime.now().strftime('%Y-%m-%d, %H:%M:%S')] = \
-        [description, value]
+    spending_dict["spending"][
+        datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
+    ] = [description, value]
 
     # Update spending dict in user DTO
     Session.get_logged_user().manual_spending = spending_dict
@@ -288,9 +293,9 @@ manual_spending_dialog = ft.AlertDialog(
     content=ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text('Opis wydatku'),
+                ft.Text("Opis wydatku"),
                 tf_spending_desc := ft.TextField(),
-                ft.Text('Kwota'),
+                ft.Text("Kwota"),
                 tf_spending_value := ft.TextField(keyboard_type=KeyboardType.NUMBER),
             ]
         ),
@@ -300,12 +305,12 @@ manual_spending_dialog = ft.AlertDialog(
         ft.TextButton(
             text="Anuluj",
             on_click=discard_manual_spending_dialog,
-            style=ft.ButtonStyle(color=ft.colors.RED)
+            style=ft.ButtonStyle(color=ft.colors.RED),
         ),
         ft.TextButton(
             text="Zatwierdź",
             on_click=confirm_manual_spending_dialog,
-            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
         ),
     ],
     actions_alignment=ft.MainAxisAlignment.END,
@@ -320,12 +325,16 @@ def retrieve_dto_profile(dto: user.User) -> None:
     :param dto: User data transfer object.
     :return: None
     """
-    view_data = services.get_view_data(view_name='profile', user_id=dto.id)
-    if 'first_name' not in view_data or 'last_name' not in view_data:
-        logging.error('First name or last name not found in view data. User data will not be filled at home page.')
+    view_data = services.get_view_data(view_name="profile", user_id=dto.id)
+    if "first_name" not in view_data or "last_name" not in view_data:
+        logging.error(
+            "First name or last name not found in view data. User data will not be filled at home page."
+        )
         return
-    cont_usr_data.content.controls[0].value = view_data['first_name'] + ' ' + view_data['last_name']
-    cont_usr_data.content.controls[1].value = view_data['email']
+    cont_usr_data.content.controls[0].value = (
+        view_data["first_name"] + " " + view_data["last_name"]
+    )
+    cont_usr_data.content.controls[1].value = view_data["email"]
 
 
 def retrieve_dto_data(dto: user.User) -> None:
@@ -359,11 +368,13 @@ def retrieve_dto_spending(dto) -> None:
         None
     """
     global spending_dict
-    view_data = services.get_view_data(view_name='manual-spending', user_id=dto.id)
-    if 'spending' not in view_data:
-        logging.warning('Spending data not found in view data. Spending data will not be filled at home page.')
-        view_data['spending'] = {}
-        logging.warning('Initializing empty spending data in user DTO.')
+    view_data = services.get_view_data(view_name="manual-spending", user_id=dto.id)
+    if "spending" not in view_data:
+        logging.warning(
+            "Spending data not found in view data. Spending data will not be filled at home page."
+        )
+        view_data["spending"] = {}
+        logging.warning("Initializing empty spending data in user DTO.")
         spending_dict = view_data
         return
     spending_dict = view_data
@@ -386,15 +397,15 @@ def retrieve_dto_calendar(dto: user.User) -> None:
     Returns:
         None
     """
-    view_data = services.get_view_data(view_name='calendar', user_id=dto.id)
-    if 'savings_rows' not in view_data:
+    view_data = services.get_view_data(view_name="calendar", user_id=dto.id)
+    if "savings_rows" not in view_data:
         return
-    aims_dict = view_data['savings_rows']
+    aims_dict = view_data["savings_rows"]
 
     # Iterate over the entries to find the closest deadline
     today = datetime.datetime.now()
     closest_entry = None
-    min_diff = float('inf')
+    min_diff = float("inf")
     for key, value in aims_dict.items():
         deadline = datetime.datetime.strptime(value["savings_deadline"], "%d-%m-%Y")
         diff = (deadline - today).days
@@ -406,17 +417,18 @@ def retrieve_dto_calendar(dto: user.User) -> None:
     # noinspection SpellCheckingInspection
     cont_aim_controls.append(icon_flag_circle_outlined)
     cont_aim_controls.append(
-        ft.Text('{:.2f} {}'.format(
-            float(closest_entry['savings_amount']),
-            closest_entry['savings_currency']
-        ),
+        ft.Text(
+            "{:.2f} {}".format(
+                float(closest_entry["savings_amount"]),
+                closest_entry["savings_currency"],
+            ),
             size=18,
-            weight=ft.FontWeight.W_300
+            weight=ft.FontWeight.W_300,
         )
     )
     cont_aim_controls.append(
         ft.Text(
-            value=closest_entry['savings_goal'],
+            value=closest_entry["savings_goal"],
             size=18,
             weight=ft.FontWeight.W_300,
             text_align=ft.TextAlign.CENTER,
@@ -466,7 +478,7 @@ def read_latest_spending(spending: dict[str, dict[list[str, float]]]) -> None:
     Returns:
         None
     """
-    spending = spending['spending']
+    spending = spending["spending"]
     sorted_dates = sorted(spending.keys(), reverse=True)
     latest_three = sorted_dates[:3]
     latest_spending = [(spending[date][0], spending[date][1]) for date in latest_three]
@@ -501,7 +513,11 @@ def generate_one_spending_row(spending_item: tuple[str, float]) -> ft.Row:
                 width=200,
             ),
             # A text for the price of the first spending item.
-            ft.Text('{:.2f} zł'.format(spending_item[1]), size=18, weight=ft.FontWeight.W_300),
+            ft.Text(
+                "{:.2f} zł".format(spending_item[1]),
+                size=18,
+                weight=ft.FontWeight.W_300,
+            ),
         ],
         spacing=10,
     )
@@ -513,12 +529,12 @@ cont_usr_data = ft.Container(
     ft.Column(
         [
             # The user's full name
-            ft.Text('Imię i nazwisko', size=35, weight=ft.FontWeight.W_300),
+            ft.Text("Imię i nazwisko", size=35, weight=ft.FontWeight.W_300),
             # The user's username
-            ft.Text('Nick1234', size=18, weight=ft.FontWeight.W_400),
+            ft.Text("Nick1234", size=18, weight=ft.FontWeight.W_400),
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=5
+        spacing=5,
     ),
     alignment=ft.alignment.center,
 )
@@ -529,18 +545,13 @@ cont_daily_tip = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the daily tip section.
-            ft.Text('Porada dnia', size=header_size, weight=header_weight),
-
+            ft.Text("Porada dnia", size=header_size, weight=header_weight),
             # A function call to generate_daily_tip() which returns a container with the daily tip text.
             generate_daily_tip(),
-
             # A container for an image element.
-            ft.Container(
-                icon_savings_outlined,
-                alignment=ft.alignment.center
-            )
+            ft.Container(icon_savings_outlined, alignment=ft.alignment.center),
         ],
-        alignment=ft.MainAxisAlignment.START
+        alignment=ft.MainAxisAlignment.START,
     )
 )
 
@@ -550,32 +561,29 @@ cont_achievements = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the achievements section.
-            ft.Text('Osiągnięcia', size=header_size, weight=header_weight),
-
+            ft.Text("Osiągnięcia", size=header_size, weight=header_weight),
             # A container for an image element.
             ft.Container(
                 ft.Row(
                     [
                         ft.Image(
-                            src='https://lh3.googleusercontent.com/pw/AP1GczOOgFmCBvJQh'
-                                '-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I'
-                                '-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no'
-                                '?authuser=0',
+                            src="https://lh3.googleusercontent.com/pw/AP1GczOOgFmCBvJQh"
+                            "-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I"
+                            "-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no"
+                            "?authuser=0",
                             width=60,
                             height=60,
                         ),
                     ]
                 ),
                 padding=ft.padding.all(13),
-                border=ft.border.all(width=2,
-                                     color='#33A9A9A9'
-                                     ),
+                border=ft.border.all(width=2, color="#33A9A9A9"),
                 border_radius=ft.border_radius.all(20),
-                bgcolor='#33bab8b8',
+                bgcolor="#33bab8b8",
                 alignment=ft.alignment.center,
                 margin=10,
                 width=500,
-            )
+            ),
         ],
     ),
 )
@@ -586,8 +594,7 @@ cont_spending = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the spending section.
-            ft.Text('Ostatnie wydatki', size=header_size, weight=header_weight),
-
+            ft.Text("Ostatnie wydatki", size=header_size, weight=header_weight),
             # A container for the list of spending items. Each item is represented as a row of elements: an
             # image, a text container for the item name, and a text for the item price.
             ft.Container(
@@ -604,8 +611,7 @@ cont_aim = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the upcoming goal section.
-            ft.Text('Nadchodzący cel', size=header_size, weight=header_weight),
-
+            ft.Text("Nadchodzący cel", size=header_size, weight=header_weight),
             # A container for the goal details. It consists of a column of elements: an image, a text for the goal
             # amount, and a text for the goal description.
             ft.Container(
@@ -615,7 +621,7 @@ cont_aim = ft.Container(
                     spacing=5,
                 ),
                 alignment=ft.alignment.center,
-            )
+            ),
         ],
     )
 )
@@ -662,12 +668,12 @@ home.add_component(
                     cont_last_buttons,
                 ],
                 scroll=ft.ScrollMode.HIDDEN,
-                expand=True
+                expand=True,
             ),
             btn_add_spending_manual,
-        ], "Home page"
+        ],
+        "Home page",
     )
 )
 home.add_component(DefaultComponents.NAVIGATION_BAR.value)
-ViewsInitialStates.set_home_copy(home)
 home.log()

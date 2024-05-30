@@ -105,7 +105,5 @@ def refresh_labels() -> None:
 
 
 refresh_labels()
-
 register.refresh_language_labels = refresh_labels
-
 register.log()

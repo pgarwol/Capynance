@@ -1,4 +1,4 @@
-from views.view import View, ViewsInitialStates
+from views.view import View
 import utils.services as services
 from components.component import Component, DefaultComponents
 from pathlib import Path
@@ -10,6 +10,7 @@ import flet as ft
 from typing import List, Tuple, Optional
 import random
 
+products = pd.read_csv(Path(DBFields.RELATIVE_DB_PATH + "products.csv").resolve())
 
 scan = View(name=FletNames.SCAN, route=f"/{FletNames.SCAN}")
 scan.add_component(DefaultComponents.STATISTICS_BAR.value)
@@ -28,7 +29,7 @@ scan.add_component(
                         reverse=False,
                         animate=True,
                     ),
-                    ft.Container(bgcolor=Colors.BLACK, width=320, height=420),
+                    ft.Container(bgcolor=Colors.BLACK, width=320, height=350),
                     ft.IconButton(
                         icon=ft.icons.CAMERA_ALT_ROUNDED,
                         icon_color=Colors.WHITE,
@@ -56,21 +57,6 @@ def scroll_to_receipt():
     page_column.scroll_to(key="0", duration=1000)
 
 
-LINE_LENGTH = 45
-
-
-def fill_str_with_spaces(
-    product_name: str, symbol: Optional[str] = String.SPACE
-) -> str:
-    length = LINE_LENGTH
-    spaces_to_fill = length - len(product_name)
-    return f"{product_name}{spaces_to_fill*symbol}"
-
-
-products = pd.read_csv(Path(DBFields.RELATIVE_DB_PATH + "products.csv").resolve())
-products["Product"] = products["Product"].apply(fill_str_with_spaces)
-
-
 def get_random_product(products: pd.DataFrame) -> Tuple[str, float]:
     random_row = products.sample(n=1).iloc[0]
     product_name = random_row["Product"]
@@ -84,7 +70,7 @@ def clear_receipt() -> None:
 
 def generate_n_receipt_rows(n: int) -> None:
     clear_receipt()
-    total_price = 0
+    total_price = 0.0
 
     for _ in range(n):
         product, price = get_random_product(products)
@@ -96,7 +82,7 @@ def generate_n_receipt_rows(n: int) -> None:
                     ft.DataCell(ft.Text(product, **Style.Text.value)),
                     ft.DataCell(
                         ft.Text(
-                            f"{total_price:.2f} {Currencies.POLISH_ZLOTY}",
+                            f"{price:.2f} {Currencies.POLISH_ZLOTY}",
                             **Style.Text.value,
                             key=str(_),
                         )
@@ -108,10 +94,14 @@ def generate_n_receipt_rows(n: int) -> None:
     receipt.rows.append(
         ft.DataRow(
             cells=[
-                ft.DataCell(ft.Text("Total: ", **Style.Text.value)),
+                ft.DataCell(
+                    ft.Text("Total: ", color=Colors.ACCENT, **Style.Text.value)
+                ),
                 ft.DataCell(
                     ft.Text(
                         f"{total_price:.2f} {Currencies.POLISH_ZLOTY}",
+                        color=Colors.ACCENT,
+                        weight=ft.FontWeight.BOLD,
                         **Style.Text.value,
                     )
                 ),
@@ -121,14 +111,23 @@ def generate_n_receipt_rows(n: int) -> None:
 
 
 def scan_receipt() -> None:
+    """
+    Generates the receipt. It is mockup of real world receipt scanning.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
+
     generate_n_receipt_rows(n=random.randint(1, 15))
     Page.update()
     scroll_to_receipt()
 
 
-def init_scan() -> None: ...  # receipt_col.controls = generate_n_receipt_rows(n=5)
+def init_scan() -> None: ...
 
 
 scan.add_component(DefaultComponents.NAVIGATION_BAR.value)
-ViewsInitialStates.set_scan_copy(scan)
 scan.log()

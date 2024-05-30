@@ -11,11 +11,11 @@ from utils import services
 from utils.enums import FletNames, Colors
 from utils.sync_manager import SyncManager
 from utils.theme_manager import ThemeManager
-from views.view import View, ViewsInitialStates
+from views.view import View
 
 header_size = 27
 text_size = header_size - 10
-cont_bg_color = '#122EC4B6'
+cont_bg_color = "#122EC4B6"
 
 
 class UserData:
@@ -52,12 +52,14 @@ def init_settings(login: str, dark_mode_on: bool) -> None:
         None
     """
     # Set the language for the session based on the current language setting
-    if Session.get_language() == 'pl':
-        dd_lang.value = 'Polski'
-    elif Session.get_language() == 'en':
-        dd_lang.value = 'English'
+    if Session.get_language() == "pl":
+        dd_lang.value = "Polski"
+    elif Session.get_language() == "en":
+        dd_lang.value = "English"
     else:
-        logging.error(f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'.")
+        logging.error(
+            f"Invalid language: {Session.get_language()}. Should be 'pl' or 'en'."
+        )
 
     # Set the login for the user data
     UserData.set_login(login)
@@ -90,9 +92,9 @@ def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
     Returns:
         None
     """
-    if e.data == 'true':
+    if e.data == "true":
         ThemeManager.toggle_dark_mode(True)
-    elif e.data == 'false':
+    elif e.data == "false":
         ThemeManager.toggle_dark_mode(False)
     else:
         raise ValueError(f"Invalid value: {e.data}. Should be 'true' or 'false'.")
@@ -131,8 +133,10 @@ class LocalThemeManager:
             theme_mode_switch.value = False
         else:
             theme_mode_switch.value = False
-            logging.error(f"Invalid theme mode: {theme}. Should be DARK or LIGHT. Setting switch to default off "
-                          f"position.")
+            logging.error(
+                f"Invalid theme mode: {theme}. Should be DARK or LIGHT. Setting switch to default off "
+                f"position."
+            )
 
 
 def report_bug(e: flet_core.control_event.ControlEvent) -> None:
@@ -154,7 +158,7 @@ def report_bug(e: flet_core.control_event.ControlEvent) -> None:
         report_bug_dialog.open = True
         e.page.update()
     except Exception as e:
-        logging.error(f'An error occurred: {e}')
+        logging.error(f"An error occurred: {e}")
 
 
 def discard_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -172,7 +176,7 @@ def discard_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
     """
     e.page.dialog.open = False
     e.page.update()
-    bug_desc.value = '\n\n\n'
+    bug_desc.value = "\n\n\n"
 
 
 def confirm_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -191,7 +195,7 @@ def confirm_report_bug_dialog(e: flet_core.control_event.ControlEvent) -> None:
     e.page.dialog.open = False
     e.page.update()
     print(f'A bug has been reported: "{bug_desc.value}"')
-    bug_desc.value = '\n\n\n'
+    bug_desc.value = "\n\n\n"
 
 
 def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
@@ -211,12 +215,12 @@ def change_language_dropdown(e: flet_core.control_event.ControlEvent) -> None:
     """
     lang = e.control.value
     logged_user = Session.get_logged_user()
-    if lang == 'Polski':
-        Session.set_language('pl')
-        logged_user.settings['language'] = 'pl'
-    elif lang == 'English':
-        Session.set_language('en')
-        logged_user.settings['language'] = 'en'
+    if lang == "Polski":
+        Session.set_language("pl")
+        logged_user.settings["language"] = "pl"
+    elif lang == "English":
+        Session.set_language("en")
+        logged_user.settings["language"] = "en"
     else:
         logging.error(f"Invalid language: {lang}. Should be 'Polski' or 'English'.")
     SyncManager.sync_settings()
@@ -242,7 +246,7 @@ def change_password(e: flet_core.control_event.ControlEvent) -> None:
         change_password_dialog.open = True
         e.page.update()
     except Exception as e:
-        logging.error(f'An error occurred: {e}')
+        logging.error(f"An error occurred: {e}")
 
 
 def discard_change_password_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -280,30 +284,41 @@ def confirm_change_password_dialog(e: flet_core.control_event.ControlEvent) -> N
     check_result = services.is_login_valid(UserData.login, tf_old_password.value)
     remove_password_error(change_password_dialog_content, content_limit_with_error=7)
     if check_result[0]:
-        if tf_new_password.value == tf_confirm_password.value and tf_new_password.value != '':
-            services.change_password(UserData.login, tf_old_password.value, tf_new_password.value)
+        if (
+            tf_new_password.value == tf_confirm_password.value
+            and tf_new_password.value != ""
+        ):
+            services.change_password(
+                UserData.login, tf_old_password.value, tf_new_password.value
+            )
             e.page.dialog.open = False
-            Page.page.snack_bar = ft.SnackBar(ft.Text('Hasło zostało zmienione pomyślnie'))
+            Page.page.snack_bar = ft.SnackBar(
+                ft.Text("Hasło zostało zmienione pomyślnie")
+            )
             Page.page.snack_bar.open = True
             clear_change_password_dialog()  # Includes page update
         else:
             throw_password_error(
                 e,
-                error_message='Nowe hasła nie są takie same',
+                error_message="Nowe hasła nie są takie same",
                 content=change_password_dialog_content,
                 content_limit=6,
             )
     else:
         throw_password_error(
             e,
-            error_message='Niepoprawne hasło',
+            error_message="Niepoprawne hasło",
             content=change_password_dialog_content,
             content_limit=6,
         )
 
 
-def throw_password_error(e: flet_core.control_event.ControlEvent, error_message: str, content: list[flet_core],
-                         content_limit: int) -> None:
+def throw_password_error(
+    e: flet_core.control_event.ControlEvent,
+    error_message: str,
+    content: list[flet_core],
+    content_limit: int,
+) -> None:
     """
     This function handles the display of password errors.
 
@@ -320,7 +335,7 @@ def throw_password_error(e: flet_core.control_event.ControlEvent, error_message:
         None
     """
     if len(content) == content_limit:  # Check if the error message is already displayed
-        content.append(ft.Text(error_message, color='red'))
+        content.append(ft.Text(error_message, color="red"))
     e.page.update()
 
 
@@ -334,13 +349,15 @@ def clear_change_password_dialog() -> None:
     Returns:
         None
     """
-    tf_old_password.value = ''
-    tf_new_password.value = ''
-    tf_confirm_password.value = ''
+    tf_old_password.value = ""
+    tf_new_password.value = ""
+    tf_confirm_password.value = ""
     remove_password_error(change_password_dialog_content, content_limit_with_error=7)
 
 
-def remove_password_error(content: list[flet_core], content_limit_with_error: int) -> None:
+def remove_password_error(
+    content: list[flet_core], content_limit_with_error: int
+) -> None:
     """
     This function removes the password error message.
 
@@ -378,7 +395,7 @@ def delete_account(e: flet_core.control_event.ControlEvent) -> None:
         delete_account_dialog.open = True
         e.page.update()
     except Exception as e:
-        logging.error(f'An error occurred: {e}')
+        logging.error(f"An error occurred: {e}")
 
 
 def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> None:
@@ -409,7 +426,7 @@ def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
     if not services.is_login_valid(login, password)[0]:
         throw_password_error(
             e,
-            error_message='Niepoprawne hasło',
+            error_message="Niepoprawne hasło",
             content=delete_account_dialog_content,
             content_limit=3,
         )
@@ -428,7 +445,7 @@ def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
     e.page.dialog.open = False
 
     # Show a success message
-    Page.page.snack_bar = ft.SnackBar(ft.Text('Konto zostało usunięte pomyślnie'))
+    Page.page.snack_bar = ft.SnackBar(ft.Text("Konto zostało usunięte pomyślnie"))
     Page.page.snack_bar.open = True
     Page.update()
 
@@ -448,7 +465,7 @@ def discard_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
     """
     e.page.dialog.open = False
     e.page.update()
-    tf_delete_acc_password.value = ''
+    tf_delete_acc_password.value = ""
     remove_password_error(delete_account_dialog_content, content_limit_with_error=4)
 
 
@@ -459,9 +476,9 @@ report_bug_dialog = ft.AlertDialog(
     content=ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text('Opis błędu'),
+                ft.Text("Opis błędu"),
                 bug_desc := ft.TextField(
-                    value='\n\n\n\n',
+                    value="\n\n\n\n",
                     multiline=True,
                     height=150,
                 ),
@@ -473,12 +490,12 @@ report_bug_dialog = ft.AlertDialog(
         ft.TextButton(
             text="Anuluj",
             on_click=discard_report_bug_dialog,
-            style=ft.ButtonStyle(color=ft.colors.RED)
+            style=ft.ButtonStyle(color=ft.colors.RED),
         ),
         ft.TextButton(
             text="Wyślij",
             on_click=confirm_report_bug_dialog,
-            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
         ),
     ],
     actions_alignment=ft.MainAxisAlignment.END,
@@ -491,17 +508,17 @@ change_password_dialog = ft.AlertDialog(
     content=ft.Container(
         content=ft.Column(
             change_password_dialog_content := [
-                ft.Text('Stare hasło'),
+                ft.Text("Stare hasło"),
                 tf_old_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
                 ),
-                ft.Text('Nowe hasło'),
+                ft.Text("Nowe hasło"),
                 tf_new_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
                 ),
-                ft.Text('Potwierdź nowe hasło'),
+                ft.Text("Potwierdź nowe hasło"),
                 tf_confirm_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
@@ -516,12 +533,12 @@ change_password_dialog = ft.AlertDialog(
         ft.TextButton(
             text="Anuluj",
             on_click=discard_change_password_dialog,
-            style=ft.ButtonStyle(color=ft.colors.RED)
+            style=ft.ButtonStyle(color=ft.colors.RED),
         ),
         ft.TextButton(
             text="Zmień",
             on_click=confirm_change_password_dialog,
-            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
         ),
     ],
     actions_alignment=ft.MainAxisAlignment.END,
@@ -534,8 +551,8 @@ delete_account_dialog = ft.AlertDialog(
     content=ft.Container(
         content=ft.Column(
             delete_account_dialog_content := [
-                ft.Text('Uwaga! Ta akcja jest nieodwracalna.', color='red'),
-                ft.Text('W celu usunięcia, podaj hasło:'),
+                ft.Text("Uwaga! Ta akcja jest nieodwracalna.", color="red"),
+                ft.Text("W celu usunięcia, podaj hasło:"),
                 tf_delete_acc_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
@@ -550,12 +567,12 @@ delete_account_dialog = ft.AlertDialog(
         ft.TextButton(
             text="Usuń konto",
             on_click=confirm_delete_account_dialog,
-            style=ft.ButtonStyle(color=ft.colors.RED)
+            style=ft.ButtonStyle(color=ft.colors.RED),
         ),
         ft.TextButton(
             text="Anuluj",
             on_click=discard_delete_account_dialog,
-            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER)
+            style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
         ),
     ],
     actions_alignment=ft.MainAxisAlignment.END,
@@ -564,42 +581,40 @@ delete_account_dialog = ft.AlertDialog(
 cont_options = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text('Opcje', size=header_size),
+            ft.Text("Opcje", size=header_size),
             ft.Column(
                 [
                     ft.Row(
                         controls=[
                             ft.Container(
-                                ft.Text('Tryb ciemny', size=text_size),
+                                ft.Text("Tryb ciemny", size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
-                            ft.Container(
-                                theme_mode_switch
-                            ),
+                            ft.Container(theme_mode_switch),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
                     ft.Row(
                         controls=[
                             ft.Container(
-                                ft.Text('Język', size=text_size),
+                                ft.Text("Język", size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
                             dd_lang := ft.Dropdown(
                                 options=[
-                                    ft.dropdown.Option('Polski'),
-                                    ft.dropdown.Option('English'),
+                                    ft.dropdown.Option("Polski"),
+                                    ft.dropdown.Option("English"),
                                 ],
                                 width=150,
                                 height=61,
                                 on_change=change_language_dropdown,
-                            )
+                            ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                    )
+                    ),
                 ],
                 spacing=0,
-            )
+            ),
         ],
     ),
     bgcolor=cont_bg_color,
@@ -611,15 +626,23 @@ cont_options = ft.Container(
 cont_account = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text('Konto', size=header_size),
-            ft.Row([ft.TextButton(
-                content=ft.Text('Zmień hasło', color='#22978C', size=text_size),
-                on_click=change_password,
-            )]),
-            ft.Row([ft.TextButton(
-                content=ft.Text('Usuń konto', color='#22978C', size=text_size),
-                on_click=delete_account,
-            )]),
+            ft.Text("Konto", size=header_size),
+            ft.Row(
+                [
+                    ft.TextButton(
+                        content=ft.Text("Zmień hasło", color="#22978C", size=text_size),
+                        on_click=change_password,
+                    )
+                ]
+            ),
+            ft.Row(
+                [
+                    ft.TextButton(
+                        content=ft.Text("Usuń konto", color="#22978C", size=text_size),
+                        on_click=delete_account,
+                    )
+                ]
+            ),
         ],
         spacing=0,
     ),
@@ -632,20 +655,26 @@ cont_account = ft.Container(
 cont_misc = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text(value='Inne', size=header_size),
-            ft.Row([ft.TextButton(
-                content=ft.Text(value='Zgłoś błąd', color='#22978C', size=text_size),
-                on_click=report_bug,
-            )]),
+            ft.Text(value="Inne", size=header_size),
+            ft.Row(
+                [
+                    ft.TextButton(
+                        content=ft.Text(
+                            value="Zgłoś błąd", color="#22978C", size=text_size
+                        ),
+                        on_click=report_bug,
+                    )
+                ]
+            ),
             ft.Row(
                 controls=[
                     ft.Container(
-                        ft.Text(value='Wersja aplikacji:', size=text_size),
-                        padding=ft.Padding(top=0, left=10, right=0, bottom=0)
+                        ft.Text(value="Wersja aplikacji:", size=text_size),
+                        padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                     ),
-                    ft.Container(ft.Text(value='1.0.0', size=text_size)),
+                    ft.Container(ft.Text(value="1.0.0", size=text_size)),
                 ],
-                spacing=20
+                spacing=20,
             ),
         ],
         spacing=0,
@@ -661,11 +690,11 @@ settings.add_component(
     Component(
         content=[
             ft.AppBar(
-                title=ft.Text("Ustawienia aplikacji"),
-                bgcolor=Colors.PRIMARY_DARKER
+                title=ft.Text("Ustawienia aplikacji"), bgcolor=Colors.PRIMARY_DARKER
             )
         ],
-        description="App bar showing the title of the page and allowing to navigate back to the home page.")
+        description="App bar showing the title of the page and allowing to navigate back to the home page.",
+    )
 )
 settings.add_component(
     Component(
@@ -680,8 +709,7 @@ settings.add_component(
                 expand=True,
             )
         ],
-        description="Settings page content."
+        description="Settings page content.",
     )
 )
-ViewsInitialStates.set_settings_copy(settings)
 settings.log()

@@ -1,4 +1,4 @@
-from views.view import View, ViewsInitialStates
+from views.view import View
 from entities.spending_type import SpendingType
 from utils.helpers import shuffle_dict, sort_dict_by_values_desc
 from entities.income_source import IncomeSource

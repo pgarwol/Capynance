@@ -52,17 +52,6 @@ class View(AbstractView):
     def lang(self, value):
         self._lang = value
 
-    @classmethod
-    def reset_views(cls):
-        for view in cls.instances:
-            print(id(view), " ?= ", id(ViewsInitialStates.get_calendar_copy()))
-
-            view = ViewsInitialStates.get_calendar_copy()
-            # view = view.copy
-
-        Page.update()
-        Page.go("/")
-
     def get_component(self, index: Optional[int] = 0) -> Component:
         """
         Retrieves a component at the specified index.
@@ -178,53 +167,3 @@ class View(AbstractView):
 
         output = f"{self.name.capitalize()} | route = {self.route}\n\tcomponents:\n{list_all_component_descriptions(self)}\n\n"
         append_build_log(output)
-
-
-class ViewsInitialStates:
-    @classmethod
-    def set_calendar_copy(cls, calendar):
-        cls.calendar = copy.copy(calendar)
-
-    @classmethod
-    def get_calendar_copy(cls):
-        return copy.copy(cls.calendar)
-
-    @classmethod
-    def set_finances_copy(cls, finances):
-        cls.finances = copy.copy(finances)
-
-    @classmethod
-    def get_finances_copy(cls):
-        return cls.finances
-
-    @classmethod
-    def set_home_copy(cls, home):
-        cls.home = copy.copy(home)
-
-    @classmethod
-    def get_home_copy(cls):
-        return cls.home
-
-    @classmethod
-    def set_settings_copy(cls, settings):
-        cls.settings = copy.copy(settings)
-
-    @classmethod
-    def get_settings_copy(cls):
-        return cls.settings
-
-    @classmethod
-    def set_scan_copy(cls, scan):
-        cls.scan = copy.copy(scan)
-
-    @classmethod
-    def get_scan_copy(cls):
-        return cls.scan
-
-    @classmethod
-    def set_shop_copy(cls, shop):
-        cls.shop = copy.copy(shop)
-
-    @classmethod
-    def get_shop_copy(cls):
-        return cls.shop
