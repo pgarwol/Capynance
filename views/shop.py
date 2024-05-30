@@ -5,6 +5,7 @@ from utils.enums import FletNames, Colors, DBFields
 import flet as ft
 from product import read_product_from_db
 from session import Session
+from page import Page
 
 image_width = 250
 image_height = 295.3
@@ -439,12 +440,12 @@ shop.add_component(
 )
 
 
-def init_shop():
+def init_shop() -> None:
     dto = Session.get_logged_user()
     view_data = services.get_view_data(view_name=shop.name, user_id=dto.id)
     stats_var = dto.stats
     shop.var["inventory"] = stats_var.get("inventory", {})
-    print(shop.var["inventory"])
+    # print(shop.var["inventory"])
 
 
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)

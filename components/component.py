@@ -11,6 +11,7 @@ from session import Session
 import copy
 from page import Page
 from utils.enums import FletNames, DBFields
+from product import read_product_from_db
 
 
 class Component(AbstractComponent):
@@ -343,14 +344,36 @@ def init_stats() -> None:
 
     (DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls).clear()
 
+    hat_equipped = None
+    color_equipped = None
+    shirt_equipped = None
+
+    for item in stats_var["inventory"]["hats"]:
+        if item["isEquipped"]:
+            hats_product = read_product_from_db("hats")
+            hat_images = hats_product.images
+            hat_equipped = hat_images[str(item["id"])]["url"]
+            break
+
+    for item in stats_var["inventory"]["colors"]:
+        if item["isEquipped"]:
+            colors_product = read_product_from_db("colors")
+            color_images = colors_product.images
+            color_equipped = color_images[str(item["id"])]["url"]
+            break
+
+    for item in stats_var["inventory"]["shirts"]:
+        if item["isEquipped"]:
+            shirts_product = read_product_from_db("shirts")
+            shirt_images = shirts_product.images
+            shirt_equipped = shirt_images[str(item["id"])]["url"]
+            break
+
     DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
         create_equipped_images(
-            # stats_var["hat_equiped"],
-            # stats_var["capy_color_equiped"],
-            # stats_var["shirt_equiped"],
-            "",
-            "",
-            "",
+            hat_equipped,
+            color_equipped,
+            shirt_equipped,
         )
     )
 
