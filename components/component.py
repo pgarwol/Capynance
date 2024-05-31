@@ -65,22 +65,6 @@ class Component(AbstractComponent):
 
 
 stats_var = {}
-default_equipped = "https://lh3.googleusercontent.com/pw/AP1GczP22h9zKEFj7hcIiX-9gfwtRm-W8KPJSP-oYdHEt-0pvgZPy0QOduH8KnGHpC9UFQHT2O_m3jTDisvzGqPEDiWxlC6AFGXdoeFzUYenecjZtIn38Xy-7MbRwAD7tN-iH_OM2iw13cy_YdzpixrzK0E=w725-h857-s-no-gm?authuser=0"
-exp_img = "https://static.wikia.nocookie.net/minecraft/images/0/0a/ExperienceOrb.gif/revision/latest/smart/width/371/height/332?cb=20190907041203"
-coin_img = "https://lh3.googleusercontent.com/pw/AP1GczNFNx7f733rhrtzgyaB22YjoMxkNio2F4u9eMEW4milxdp3RU82RsAF2p0S5DR-rVfZYhqXtukjwKk0dF7O_MIEsFm0-Wfvdts8FRRj_VTq7oizSUZLhsKmDBv7SLm3yo45gT9rWtRBCMKrPz5z_CI=w857-h857-s-no-gm?authuser=0"
-
-
-# Stats
-life_hearts = None
-
-hat_equipped = None
-color_equipped = None
-shirt_equipped = None
-
-capycoins = None
-lvl = None
-exp = None
-
 
 image_width = 75
 image_height = (71 * image_width) / 60
@@ -339,10 +323,11 @@ def create_life_currency_display(life_hearts, capycoins):
     )
 
 
-def init_stats() -> None:
+def update_statistics_bar(page):
     stats_var = Session.get_logged_user().stats
 
-    (DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls).clear()
+    leading_container = DefaultComponents.STATISTICS_BAR.value.content[0].leading
+    leading_container.content.controls.clear()
 
     hat_equipped = None
     color_equipped = None
@@ -369,7 +354,7 @@ def init_stats() -> None:
             shirt_equipped = shirt_images[str(item["id"])]["url"]
             break
 
-    DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
+    leading_container.content.controls.append(
         create_equipped_images(
             hat_equipped,
             color_equipped,
@@ -377,11 +362,61 @@ def init_stats() -> None:
         )
     )
 
-    DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
+    leading_container.content.controls.append(
         create_exp_lvl_display(stats_var["level"], stats_var["exp"])
     )
 
     DefaultComponents.STATISTICS_BAR.value.content[0].actions[0] = (
         create_life_currency_display(stats_var["life_hearts"], stats_var["capycoins"])
     )
-    Page.update()
+
+    page.update()
+
+
+def init_stats() -> None:
+    update_statistics_bar(Page)
+    # stats_var = Session.get_logged_user().stats
+
+    # (DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls).clear()
+
+    # hat_equipped = None
+    # color_equipped = None
+    # shirt_equipped = None
+
+    # for item in stats_var["inventory"]["hats"]:
+    #     if item["isEquipped"]:
+    #         hats_product = read_product_from_db("hats")
+    #         hat_images = hats_product.images
+    #         hat_equipped = hat_images[str(item["id"])]["url"]
+    #         break
+
+    # for item in stats_var["inventory"]["colors"]:
+    #     if item["isEquipped"]:
+    #         colors_product = read_product_from_db("colors")
+    #         color_images = colors_product.images
+    #         color_equipped = color_images[str(item["id"])]["url"]
+    #         break
+
+    # for item in stats_var["inventory"]["shirts"]:
+    #     if item["isEquipped"]:
+    #         shirts_product = read_product_from_db("shirts")
+    #         shirt_images = shirts_product.images
+    #         shirt_equipped = shirt_images[str(item["id"])]["url"]
+    #         break
+
+    # DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
+    #     create_equipped_images(
+    #         hat_equipped,
+    #         color_equipped,
+    #         shirt_equipped,
+    #     )
+    # )
+
+    # DefaultComponents.STATISTICS_BAR.value.content[0].leading.content.controls.append(
+    #     create_exp_lvl_display(stats_var["level"], stats_var["exp"])
+    # )
+
+    # DefaultComponents.STATISTICS_BAR.value.content[0].actions[0] = (
+    #     create_life_currency_display(stats_var["life_hearts"], stats_var["capycoins"])
+    # )
+    # Page.update()

@@ -7,6 +7,7 @@ from product import read_product_from_db
 from session import Session
 from page import Page
 
+
 image_width = 250
 image_height = 295.3
 buttons_size = 20
@@ -87,6 +88,10 @@ async def dismiss_dialog_hats(e):
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
 
+    from components.component import update_statistics_bar
+
+    update_statistics_bar(e.control.page)
+
 
 async def dismiss_dialog_colors(e):
     if is_item_bought("colors", colors_index_ref.current, shop.var["inventory"]):
@@ -97,6 +102,10 @@ async def dismiss_dialog_colors(e):
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
 
+    from components.component import update_statistics_bar
+
+    update_statistics_bar(e.control.page)
+
 
 async def dismiss_dialog_shirts(e):
     if is_item_bought("shirts", shirts_index_ref.current, shop.var["inventory"]):
@@ -106,6 +115,10 @@ async def dismiss_dialog_shirts(e):
             insert_dto_data_to_inventory("shirts", shirts_index_ref)
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
+
+    from components.component import update_statistics_bar
+
+    update_statistics_bar(e.control.page)
 
 
 cupertino_alert_dialog = ft.CupertinoAlertDialog()
