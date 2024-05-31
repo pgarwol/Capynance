@@ -574,6 +574,11 @@ cont_achievements = ft.Container(
                             width=60,
                             height=60,
                         ),
+                        ft.Image(
+                            src="https://lh3.googleusercontent.com/pw/AP1GczNHLgqYtKf6R6758jqUfcQh6AtfS6oqpEkXFMj2tEgzw9KssDInmp7CG_htmF3yghFzpg7yehkSpyqe2jYKc3aHPCXugJMIrGz7EzPZch_c0uIaM2-QAe3uj56A5IhC81ZaZ4N5cJJzCOsJZYsB7Wg=w894-h894-s-no-gm?authuser=0",
+                            width=60,
+                            height=60,
+                        ),
                     ]
                 ),
                 padding=ft.padding.all(13),

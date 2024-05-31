@@ -1,6 +1,6 @@
 from views.view import View, ViewsInitialStates
 import utils.services as services
-from components.component import Component, DefaultComponents
+from components.component import Component, DefaultComponents, update_statistics_bar
 from utils.enums import FletNames, Colors, DBFields
 import flet as ft
 from product import read_product_from_db
@@ -72,6 +72,13 @@ def insert_dto_data_to_inventory(item_group, item_ref_index):
     update_dto_inventory()
 
 
+def insert_dto_data_to_stats_currency(item_group):
+    item = read_product_from_db(item_group)
+    price = item.price
+    stats_var = Session.get_logged_user().stats
+    stats_var["capycoins"] = str(int(stats_var["capycoins"]) - int(price))
+
+
 def update_dto_inventory():
     dto = Session.get_logged_user()
     dto.stats["inventory"] = shop.var["inventory"]
@@ -85,10 +92,9 @@ async def dismiss_dialog_hats(e):
     else:
         if e.control.text == "Buy":
             insert_dto_data_to_inventory("hats", hats_index_ref)
+            insert_dto_data_to_stats_currency("hats")
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
-
-    from components.component import update_statistics_bar
 
     update_statistics_bar(e.control.page)
 
@@ -99,10 +105,9 @@ async def dismiss_dialog_colors(e):
     else:
         if e.control.text == "Buy":
             insert_dto_data_to_inventory("colors", colors_index_ref)
+            insert_dto_data_to_stats_currency("colors")
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
-
-    from components.component import update_statistics_bar
 
     update_statistics_bar(e.control.page)
 
@@ -113,10 +118,9 @@ async def dismiss_dialog_shirts(e):
     else:
         if e.control.text == "Buy":
             insert_dto_data_to_inventory("shirts", shirts_index_ref)
+            insert_dto_data_to_stats_currency("shirts")
     cupertino_alert_dialog.open = False
     await e.control.page.update_async()
-
-    from components.component import update_statistics_bar
 
     update_statistics_bar(e.control.page)
 
@@ -458,7 +462,6 @@ def init_shop() -> None:
     view_data = services.get_view_data(view_name=shop.name, user_id=dto.id)
     stats_var = dto.stats
     shop.var["inventory"] = stats_var.get("inventory", {})
-    # print(shop.var["inventory"])
 
 
 shop.add_component(DefaultComponents.STATISTICS_BAR.value)
