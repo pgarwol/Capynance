@@ -12,21 +12,29 @@
       {
         "id": 1,
         "isEquipped": false
+      },
+      {
+        "id": 2,
+        "isEquipped": false
       }
     ],
     "colors": [
       {
         "id": 0,
-        "isEquipped": "True"
+        "isEquipped": true
       },
       {
         "id": 1,
-        "isEquipped": "False"
+        "isEquipped": false
       }
     ],
     "shirts": [
       {
         "id": 0,
+        "isEquipped": false
+      },
+      {
+        "id": 1,
         "isEquipped": true
       }
     ]
