@@ -36,7 +36,7 @@ calendar.add_component(
                     ),
                     currency_dropdown := ft.Dropdown(
                         options=[
-                            ft.dropdown.Option(currency.value)
+                            ft.dropdown.Option(currency)
                             for currency in Currencies
                         ],
                         width=100,
@@ -100,7 +100,7 @@ calendar.var = {
 
 
 def add_savings_row(
-    date: datetime.datetime, goal: str, amount: str, currency: str
+    date: datetime.datetime, goal: str, amount: float | str, currency: str
 ) -> None:
     if goal is None or amount is None:
         return
@@ -158,6 +158,7 @@ def insert_dto_data_to_datarows(data: dict):
             amount=float(data[key]["savings_amount"]),
             currency=data[key]["savings_currency"],
         )
+    Page.update()
 
 
 def init_calendar() -> None:

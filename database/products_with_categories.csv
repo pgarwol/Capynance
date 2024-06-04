@@ -1,0 +1,162 @@
+Product,Price (PLN),Category
+Coca-Cola (0.33L),4.50,Beverages
+Pepsi (0.33L),4.00,Beverages
+Milk (1L),3.80,Dairy
+Fresh White Bread (0.5 kg),4.70,Bakery
+Eggs (10 pcs),12.00,Dairy
+Local Cheese (1 kg),35.00,Dairy
+Chicken Fillets (1 kg),24.00,Meat
+Beef Round (1 kg),60.00,Meat
+Apples (1 kg),3.70,Fruits
+Bananas (1 kg),5.70,Fruits
+Oranges (1 kg),6.00,Fruits
+Tomatoes (1 kg),9.50,Vegetables
+Potatoes (1 kg),2.90,Vegetables
+Onions (1 kg),4.20,Vegetables
+Lettuce (1 head),4.70,Vegetables
+Water (1.5L),3.15,Beverages
+Domestic Beer (0.5L),6.00,Beverages
+Imported Beer (0.33L),9.00,Beverages
+Bottle of Wine (mid-range),40.00,Beverages
+Cigarettes (Marlboro 20 pack),20.50,Tobacco
+McDonald's Big Mac,17.00,Fast Food
+McDonald's Large Fries,10.90,Fast Food
+McDonald's McWrap Crispy Classic,25.00,Fast Food
+McDonald's Chicken McNuggets (6 pcs),21.00,Fast Food
+McDonald's Caramel Latte Macchiato (0.4L),17.90,Fast Food
+McDonald's Café Latte,14.40,Fast Food
+McDonald's Cheeseburger,12.00,Fast Food
+McDonald's Hamburger,12.00,Fast Food
+Sausage (1 kg),51.00,Meat
+Chicken Salad Premium,25.00,Fast Food
+Chocolate Bar (100g),4.00,Snacks
+Coffee (1 kg),40.00,Beverages
+Tea (100 bags),20.00,Beverages
+Sugar (1 kg),5.00,Pantry
+Flour (1 kg),4.00,Pantry
+Olive Oil (1L),25.00,Pantry
+Butter (200g),6.00,Dairy
+Yogurt (150g),3.00,Dairy
+Rice (1 kg),8.00,Pantry
+Pasta (1 kg),5.00,Pantry
+Juice (1L),6.00,Beverages
+Ketchup (500g),7.00,Condiments
+Mustard (200g),4.00,Condiments
+Mayonnaise (400g),8.00,Condiments
+Frozen Pizza,15.00,Frozen Foods
+Ice Cream (1L),12.00,Frozen Foods
+Toothpaste (100 ml),10.00,Personal Care
+Shampoo (400 ml),15.00,Personal Care
+Toilet Paper (8 rolls),12.00,Household
+Soap (100g),3.00,Personal Care
+Dishwashing Liquid (1L),6.00,Household
+Laundry Detergent (1.5 kg),20.00,Household
+Garbage Bags (30 pcs),10.00,Household
+Paper Towels (4 rolls),8.00,Household
+Tissues (100 pcs),5.00,Household
+Hand Sanitizer (500 ml),15.00,Personal Care
+Face Mask (disposable 50 pcs),20.00,Personal Care
+Baby Diapers (50 pcs),50.00,Baby
+Dog Food (2 kg),30.00,Pet
+Cat Food (1.5 kg),25.00,Pet
+Pet Shampoo (250 ml),10.00,Pet
+Cooking Oil (1L),8.00,Pantry
+Canned Tomatoes (400g),4.00,Pantry
+Canned Tuna (200g),6.00,Pantry
+Instant Noodles (pack of 5),10.00,Pantry
+Frozen Vegetables (1 kg),10.00,Frozen Foods
+Frozen Fish (1 kg),30.00,Frozen Foods
+Fresh Fish (1 kg),50.00,Meat
+Pork Chops (1 kg),30.00,Meat
+Lamb (1 kg),80.00,Meat
+Ham (1 kg),40.00,Meat
+Salami (1 kg),60.00,Meat
+Bacon (1 kg),35.00,Meat
+Butter Cookies (200g),10.00,Snacks
+Dark Chocolate (100g),5.00,Snacks
+Breakfast Cereal (500g),12.00,Breakfast
+Honey (500g),20.00,Pantry
+Peanut Butter (500g),15.00,Pantry
+Jam (370g),10.00,Pantry
+Pickles (1L),12.00,Pantry
+Soy Sauce (250 ml),8.00,Condiments
+Hot Sauce (150 ml),6.00,Condiments
+Vinegar (1L),5.00,Condiments
+Baking Powder (100g),4.00,Pantry
+Yeast (100g),3.00,Pantry
+Whipping Cream (250 ml),6.00,Dairy
+Sour Cream (200g),4.00,Dairy
+Cottage Cheese (200g),5.00,Dairy
+Parmesan Cheese (200g),20.00,Dairy
+Mozzarella Cheese (200g),10.00,Dairy
+Cheddar Cheese (200g),12.00,Dairy
+Provolone Cheese (200g),15.00,Dairy
+Gouda Cheese (200g),10.00,Dairy
+Cream Cheese (200g),8.00,Dairy
+Greek Yogurt (150g),3.50,Dairy
+Protein Bar (60g),7.00,Snacks
+Granola (500g),15.00,Breakfast
+Oatmeal (1 kg),6.00,Breakfast
+Almond Milk (1L),12.00,Dairy Alternatives
+Coconut Milk (1L),10.00,Dairy Alternatives
+Soy Milk (1L),8.00,Dairy Alternatives
+Rice Milk (1L),9.00,Dairy Alternatives
+Energy Drink (250 ml),5.00,Beverages
+Sports Drink (500 ml),6.00,Beverages
+Mineral Water (1.5L),3.00,Beverages
+Sparkling Water (1.5L),3.00,Beverages
+Fruit Yogurt (150g),3.50,Dairy
+Vegetable Juice (1L),6.00,Beverages
+Smoothie (250 ml),8.00,Beverages
+Herbal Tea (20 bags),10.00,Beverages
+Green Tea (20 bags),12.00,Beverages
+Black Tea (20 bags),8.00,Beverages
+Chamomile Tea (20 bags),10.00,Beverages
+Peppermint Tea (20 bags),10.00,Beverages
+Ginger Tea (20 bags),12.00,Beverages
+Lemon Tea (20 bags),10.00,Beverages
+Pasta Sauce (400g),10.00,Pantry
+Tomato Sauce (400g),8.00,Pantry
+Pizza Sauce (400g),10.00,Pantry
+Barbecue Sauce (400g),12.00,Condiments
+Pesto Sauce (190g),15.00,Condiments
+Alfredo Sauce (400g),12.00,Condiments
+Ranch Dressing (250 ml),8.00,Condiments
+Caesar Dressing (250 ml),10.00,Condiments
+Italian Dressing (250 ml),8.00,Condiments
+French Dressing (250 ml),8.00,Condiments
+Thousand Island Dressing (250 ml),8.00,Condiments
+Blue Cheese Dressing (250 ml),10.00,Condiments
+Balsamic Vinaigrette (250 ml),12.00,Condiments
+Soy Sauce (250 ml),6.00,Condiments
+Worcestershire Sauce (250 ml),8.00,Condiments
+Hot Sauce (150 ml),6.00,Condiments
+Salsa (400g),10.00,Condiments
+Taco Sauce (250 ml),8.00,Condiments
+Buffalo Sauce (250 ml),10.00,Condiments
+Teriyaki Sauce (250 ml),8.00,Condiments
+Marinara Sauce (400g),10.00,Pantry
+Pizza Crust (pack of 2),12.00,Bakery
+Bagels (pack of 4),10.00,Bakery
+English Muffins (pack of 6),8.00,Bakery
+Croissants (pack of 6),12.00,Bakery
+Donuts (pack of 6),10.00,Bakery
+Pita Bread (pack of 6),8.00,Bakery
+Tortilla Wraps (pack of 8),10.00,Bakery
+Burger Buns (pack of 8),8.00,Bakery
+Hot Dog Buns (pack of 8),8.00,Bakery
+Sub Rolls (pack of 4),10.00,Bakery
+Garlic Bread (pack of 2),8.00,Bakery
+French Bread (loaf),6.00,Bakery
+Sourdough Bread (loaf),8.00,Bakery
+Ciabatta Bread (loaf),10.00,Bakery
+Multigrain Bread (loaf),10.00,Bakery
+Rye Bread (loaf),8.00,Bakery
+Pumpernickel Bread (loaf),10.00,Bakery
+Banana Bread (loaf),12.00,Bakery
+Pumpkin Bread (loaf),12.00,Bakery
+Zucchini Bread (loaf),12.00,Bakery
+Cornbread (loaf),8.00,Bakery
+Bran Muffins (pack of 6),10.00,Bakery
+Blueberry Muffins (pack of 6),12.00,Bakery
+Chocolate Chip Muffins (pack of 6),12.00,Bakery

@@ -41,7 +41,7 @@ scan.add_component(
                     receipt := ft.DataTable(
                         sort_ascending=True,
                         columns=[
-                            ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(2)
+                            ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(3)
                         ],
                         rows=[],
                     ),
@@ -79,6 +79,7 @@ def generate_n_receipt_rows(n: int) -> None:
         receipt.rows.append(
             ft.DataRow(
                 cells=[
+                    ft.DataCell(ft.Icon(ft.icons.PRIORITY_HIGH_OUTLINED, color=Colors.ACCENT, tooltip="Możesz to kupić taniej ziomeczku.")),
                     ft.DataCell(ft.Text(product, **Style.Text.value)),
                     ft.DataCell(
                         ft.Text(
@@ -94,6 +95,7 @@ def generate_n_receipt_rows(n: int) -> None:
     receipt.rows.append(
         ft.DataRow(
             cells=[
+                ft.DataCell(ft.Text(String.EMPTY)),
                 ft.DataCell(
                     ft.Text("Total: ", color=Colors.ACCENT, **Style.Text.value)
                 ),
