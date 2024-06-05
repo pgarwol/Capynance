@@ -88,15 +88,15 @@ def generate_alternatives_rows_from_dict(alternatives: dict) -> list[ft.DataRow]
 def get_alternatives_as_popup(product_name: str):
     return ft.AlertDialog(
         modal=True,
-        title=ft.Text(f"Znaleziono {count_cheaper_alternatives(product_name, products)} tańszych alternatyw!"),
+        title=ft.Text(f"Znaleziono {count_cheaper_alternatives(product_name, products)} tańszych alternatyw \n dla {product_name}!", color=Colors.ACCENT, weight=ft.FontWeight.BOLD, **Style.Text),
         content=ft.Container(
             content=ft.Column(
                 controls=[
                     alternatives_datatable := ft.DataTable(
                         sort_ascending=True,
                         columns=[
-                            ft.DataColumn(ft.Text("Produkt")),
-                            ft.DataColumn(ft.Text("Oszczędzisz"))
+                            ft.DataColumn(ft.Text("Produkt", **Style.Text)),
+                            ft.DataColumn(ft.Text("Oszczędzisz", **Style.Text))
                         ],
                         rows=list(
                             generate_alternatives_rows_from_dict(
@@ -116,7 +116,7 @@ def get_alternatives_as_popup(product_name: str):
             ft.TextButton(
                 text="Ok!",
                 on_click=on_confirm,
-                style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
+                style=ft.ButtonStyle(color=Colors.ACCENT),
             ),
         ],
         actions_alignment=ft.MainAxisAlignment.END,
