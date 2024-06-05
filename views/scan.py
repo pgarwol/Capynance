@@ -1,7 +1,9 @@
 from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
+from utils.products import get_cheaper_alternatives, products
 from pathlib import Path
+import flet_core
 from utils.enums import FletNames, String, DBFields, Colors, Currencies
 from utils.styles import Style
 import pandas as pd
@@ -9,8 +11,6 @@ from page import Page
 import flet as ft
 from typing import List, Tuple, Optional
 import random
-
-products = pd.read_csv(Path(DBFields.RELATIVE_DB_PATH + "products.csv").resolve())
 
 scan = View(name=FletNames.SCAN, route=f"/{FletNames.SCAN}")
 scan.add_component(DefaultComponents.STATISTICS_BAR.value)
@@ -68,6 +68,75 @@ def clear_receipt() -> None:
     receipt.rows.clear()
 
 
+def on_confirm(e: flet_core.control_event.ControlEvent) -> None:
+    e.page.dialog.open = False
+    e.page.update()
+
+
+def generate_alternatives_rows_from_dict(alternatives: dict) -> list[ft.DataRow]:
+    return [
+        ft.DataRow(
+            [
+                ft.DataCell(ft.Text(product, **Style.Text.value)),
+                ft.DataCell(ft.Text(price, **Style.Text.value))
+            ]
+        ) for product, price in alternatives.items()
+    ]
+
+
+def get_alternatives_as_popup(product_name: str):
+    popup = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Znaleziono alternatywy"),
+        content=ft.Container(
+            content=ft.Column(
+                controls=[
+                    alternatives_datatable := ft.DataTable(
+                        sort_ascending=True,
+                        columns=[
+                            ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(2)
+                        ],
+                        rows=[
+                            row for row in generate_alternatives_rows_from_dict(
+                                get_cheaper_alternatives(product_name, products)
+                            )
+                        ],
+                    ),
+                ],
+                expand=True,
+                scroll=ft.ScrollMode.HIDDEN,
+            ),
+            height=200,
+        ),
+        actions=[
+            ft.TextButton(
+                text="Ok!",
+                on_click=on_confirm,
+                style=ft.ButtonStyle(color=Colors.PRIMARY_DARKER),
+            ),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+    return popup
+
+
+def display_alternatives(product_name: str, e: flet_core.control_event.ControlEvent) -> None:
+    alternatives_popup = get_alternatives_as_popup(product_name)
+    try:
+        e.page.dialog = alternatives_popup
+        alternatives_popup.open = True
+        e.page.update()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def display_alternatives_wrapper(product_name: str):
+    def wrapper(e: flet_core.control_event.ControlEvent):
+        display_alternatives(product_name, e)
+
+    return wrapper
+
+
 def generate_n_receipt_rows(n: int) -> None:
     clear_receipt()
     total_price = 0.0
@@ -79,7 +148,9 @@ def generate_n_receipt_rows(n: int) -> None:
         receipt.rows.append(
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Icon(ft.icons.PRIORITY_HIGH_OUTLINED, color=Colors.ACCENT, tooltip="Możesz to kupić taniej ziomeczku.")),
+                    ft.DataCell(
+                        ft.IconButton(icon=ft.icons.PRIORITY_HIGH_OUTLINED,
+                                      on_click=display_alternatives_wrapper(product))),
                     ft.DataCell(ft.Text(product, **Style.Text.value)),
                     ft.DataCell(
                         ft.Text(
