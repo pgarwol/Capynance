@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from utils.enums import DBFields
 from pathlib import Path
 
@@ -10,7 +11,7 @@ for category, group in products.groupby('Category'):
     subgroups_dict[category] = sorted_group
 
 
-def get_cheaper_alternatives(product_name: str, dataframe: pd.DataFrame) -> dict:
+def get_cheaper_alternatives(product_name: str, dataframe: pd.DataFrame) -> tuple[pd.DataFrame, float]:
     """
     Returns all cheaper alternatives for a given row in the DataFrame.
 
@@ -23,22 +24,34 @@ def get_cheaper_alternatives(product_name: str, dataframe: pd.DataFrame) -> dict
     """
     if product_name not in dataframe['Product'].values:
         print(f'Product has not been found: {product_name}')
-        return {}
+        return pd.DataFrame.from_dict({}), 0.00
 
     row = dataframe.loc[dataframe['Product'] == product_name]
 
     category = row.iloc[0]['Category']
     price = row.iloc[0]['Price (PLN)']
 
-    cheaper_products = dataframe[
+    return dataframe[
         (dataframe['Category'] == category)
         & (dataframe['Price (PLN)'] < price)
-        ]
+        ], price
 
-    alternatives = {}
-    for i, row_alternatives in cheaper_products.iterrows():
-        alternatives[i] = {
+
+def get_cheaper_alternatives_dict(product_name: str, dataframe: pd.DataFrame) -> dict:
+    cheaper_products, price = get_cheaper_alternatives(product_name, dataframe)
+    return {
+        i: {
             'Product': row_alternatives['Product'],
-            'Price (PLN)': row_alternatives['Price (PLN)']
+            'Price (PLN)': np.round(price - row_alternatives['Price (PLN)'], 2)
         }
-    return alternatives
+        for i, row_alternatives in cheaper_products.iterrows()
+    }
+
+
+def has_cheaper_alternatives(product_name: str, dataframe: pd.DataFrame) -> bool:
+    cheaper_products, _ = get_cheaper_alternatives(product_name, dataframe)
+    return cheaper_products.size > 0
+
+
+def count_cheaper_alternatives(product_name: str, dataframe: pd.DataFrame) -> int:
+    return len(get_cheaper_alternatives(product_name, dataframe)[0])

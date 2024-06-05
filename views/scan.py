@@ -1,7 +1,7 @@
 from views.view import View, ViewsInitialStates
 import utils.services as services
 from components.component import Component, DefaultComponents
-from utils.products import get_cheaper_alternatives, products
+from utils.products import get_cheaper_alternatives_dict, products, has_cheaper_alternatives, count_cheaper_alternatives
 from pathlib import Path
 import flet_core
 from utils.enums import FletNames, String, DBFields, Colors, Currencies
@@ -74,39 +74,43 @@ def on_confirm(e: flet_core.control_event.ControlEvent) -> None:
 
 
 def generate_alternatives_rows_from_dict(alternatives: dict) -> list[ft.DataRow]:
+    print(alternatives.items())
     return [
         ft.DataRow(
             [
-                ft.DataCell(ft.Text(product, **Style.Text.value)),
-                ft.DataCell(ft.Text(price, **Style.Text.value))
+                ft.DataCell(ft.Text(alternative["Product"], **Style.Text.value)),
+                ft.DataCell(ft.Text(f'{alternative["Price (PLN)"]:.2f} ZŁ', **Style.Text.value))
             ]
-        ) for product, price in alternatives.items()
+        ) for _, alternative in alternatives.items()
     ]
 
 
 def get_alternatives_as_popup(product_name: str):
-    popup = ft.AlertDialog(
+    return ft.AlertDialog(
         modal=True,
-        title=ft.Text("Znaleziono alternatywy"),
+        title=ft.Text(f"Znaleziono {count_cheaper_alternatives(product_name, products)} tańszych alternatyw!"),
         content=ft.Container(
             content=ft.Column(
                 controls=[
                     alternatives_datatable := ft.DataTable(
                         sort_ascending=True,
                         columns=[
-                            ft.DataColumn(ft.Text(String.EMPTY)) for _ in range(2)
+                            ft.DataColumn(ft.Text("Produkt")),
+                            ft.DataColumn(ft.Text("Oszczędzisz"))
                         ],
-                        rows=[
-                            row for row in generate_alternatives_rows_from_dict(
-                                get_cheaper_alternatives(product_name, products)
+                        rows=list(
+                            generate_alternatives_rows_from_dict(
+                                get_cheaper_alternatives_dict(
+                                    product_name, products
+                                )
                             )
-                        ],
-                    ),
+                        ),
+                    )
                 ],
                 expand=True,
                 scroll=ft.ScrollMode.HIDDEN,
             ),
-            height=200,
+            height=300,
         ),
         actions=[
             ft.TextButton(
@@ -117,7 +121,6 @@ def get_alternatives_as_popup(product_name: str):
         ],
         actions_alignment=ft.MainAxisAlignment.END,
     )
-    return popup
 
 
 def display_alternatives(product_name: str, e: flet_core.control_event.ControlEvent) -> None:
@@ -145,12 +148,15 @@ def generate_n_receipt_rows(n: int) -> None:
         product, price = get_random_product(products)
         total_price += price
 
+        has_alternatives = has_cheaper_alternatives(product, products)
+
         receipt.rows.append(
             ft.DataRow(
                 cells=[
                     ft.DataCell(
                         ft.IconButton(icon=ft.icons.PRIORITY_HIGH_OUTLINED,
-                                      on_click=display_alternatives_wrapper(product))),
+                                      on_click=display_alternatives_wrapper(product),
+                                      icon_color=Colors.ACCENT) if has_alternatives else ft.Text(String.EMPTY)),
                     ft.DataCell(ft.Text(product, **Style.Text.value)),
                     ft.DataCell(
                         ft.Text(
