@@ -22,6 +22,27 @@ from views.view import View, ViewsInitialStates
 spending_dict = {}
 header_size = 26
 header_weight = ft.FontWeight.W_400
+daily_tip = None
+
+
+def refresh_labels() -> None:
+    """
+    This function changes view's texts based on the current language.
+
+    :return: None
+    """
+    daily_tip_header.value = home.lang["daily_tip_header"]
+    daily_tip_text.value = generate_daily_tip()
+    text_achievements.value = home.lang["achievements"]
+    last_speding_header.value = home.lang["last_spending"]
+    next_aim_text.value = home.lang["next_goal"]
+    btn_settings.text = home.lang["app_settings"]
+    btn_log_out.text = home.lang["log_out"]
+    txt_add_spending.value = (home.lang["add_spending"])
+    txt_spending_desc.value = home.lang["spending_desc"]
+    txt_spending_value.value = home.lang["spending_value"]
+    manual_spending_dialog.actions[0].text = home.lang["cancel"]
+    manual_spending_dialog.actions[1].text = home.lang["confirm"]
 
 
 def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
@@ -93,18 +114,46 @@ theme_dependent_elements = [
 class TipsOfTheDay(Enum):
     """Enumeration for daily tips."""
 
-    TIP_1 = "Codziennie odkładając choćby niewielką kwotę, budujesz swoją finansową przyszłość"
-    TIP_2 = "Planuj wydatki z wyprzedzeniem, aby uniknąć niepotrzebnych zakupów"
-    TIP_3 = (
-        "Korzystaj z promocji, ale tylko wtedy, gdy faktycznie potrzebujesz produktu"
-    )
-    TIP_4 = "Unikaj impulsywnych zakupów – zrób listę przed wyjściem do sklepu"
-    TIP_5 = "Ustal miesięczny budżet i trzymaj się go"
-    TIP_6 = "Przygotowuj posiłki w domu zamiast jeść na mieście"
-    TIP_7 = "Oszczędzaj energię – wyłączaj światła i urządzenia, gdy ich nie używasz"
-    TIP_8 = "Regularnie przeglądaj swoje subskrypcje i rezygnuj z nieużywanych"
-    TIP_9 = "Zainwestuj w jakość – lepsze produkty często służą dłużej"
-    TIP_10 = "Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże"
+    TIP_1 = {
+        "pl": "Codziennie odkładając choćby niewielką kwotę, budujesz swoją finansową przyszłość",
+        "en": "By saving even a small amount every day, you build your financial future"
+    }
+    TIP_2 = {
+        "pl": "Planuj wydatki z wyprzedzeniem, aby uniknąć niepotrzebnych zakupów",
+        "en": "Plan your expenses in advance to avoid unnecessary purchases"
+    }
+    TIP_3 = {
+        "pl": "Korzystaj z promocji, ale tylko wtedy, gdy faktycznie potrzebujesz produktu",
+        "en": "Take advantage of promotions, but only if you really need the product"
+    }
+    TIP_4 = {
+        "pl": "Unikaj impulsywnych zakupów – zrób listę przed wyjściem do sklepu",
+        "en": "Avoid impulsive purchases – make a list before going to the store"
+    }
+    TIP_5 = {
+        "pl": "Ustal miesięczny budżet i trzymaj się go",
+        "en": "Set a monthly budget and stick to it"
+    }
+    TIP_6 = {
+        "pl": "Przygotowuj posiłki w domu zamiast jeść na mieście",
+        "en": "Prepare meals at home instead of eating out"
+    }
+    TIP_7 = {
+        "pl": "Oszczędzaj energię – wyłączaj światła i urządzenia, gdy ich nie używasz",
+        "en": "Save energy – turn off lights and devices when not in use"
+    }
+    TIP_8 = {
+        "pl": "Regularnie przeglądaj swoje subskrypcje i rezygnuj z nieużywanych",
+        "en": "Regularly review your subscriptions and cancel unused ones"
+    }
+    TIP_9 = {
+        "pl": "Zainwestuj w jakość – lepsze produkty często służą dłużej",
+        "en": "Invest in quality – better products often last longer"
+    }
+    TIP_10 = {
+        "pl": "Oszczędzaj na dużych zakupach, polując na sezonowe wyprzedaże",
+        "en": "Save on big purchases by hunting for seasonal sales"
+    }
 
 
 class LocalThemeManager:
@@ -146,27 +195,24 @@ class LocalThemeManager:
         )
 
 
-def generate_daily_tip() -> ft.Container:
+def generate_daily_tip() -> str:
     """
     This function generates a daily tip for the user.
 
-    It randomly selects a tip from the TipsOfTheDay enumeration and creates a text container with the selected tip.
+    It randomly selects a tip from the TipsOfTheDay enumeration and creates a text with the selected tip and
+    the current language of the logged-in user.
 
     Returns:
-        ft.Container: A container with the daily tip text.
+        str: A text component with the daily tip.
     """
 
-    # Randomly select a tip from the TipsOfTheDay enumeration
-    text = random.choice(list(TipsOfTheDay)).value
+    global daily_tip
 
-    # Create a text container with the selected tip
-    return ft.Container(
-        ft.Text(
-            text, size=18, no_wrap=False, italic=True, text_align=ft.TextAlign.CENTER
-        ),
-        alignment=ft.alignment.center,
-        padding=ft.padding.all(5),
-    )
+    # Randomly select a tip from the TipsOfTheDay enumeration
+    if daily_tip is None:
+        daily_tip = random.choice(list(TipsOfTheDay)).value
+
+    return daily_tip[Session.language]
 
 
 def add_spending_manual(e: flet_core.control_event.ControlEvent) -> None:
@@ -288,14 +334,14 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
 
 
 manual_spending_dialog = ft.AlertDialog(
-    modal=True,
-    title=ft.Text("Wprowadź wydatek"),
+    True,
+    txt_add_spending := ft.Text("Wprowadź wydatek"),
     content=ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text("Opis wydatku"),
+                txt_spending_desc := ft.Text("Opis wydatku"),
                 tf_spending_desc := ft.TextField(),
-                ft.Text("Kwota"),
+                txt_spending_value := ft.Text("Kwota"),
                 tf_spending_value := ft.TextField(keyboard_type=KeyboardType.NUMBER),
             ]
         ),
@@ -332,7 +378,7 @@ def retrieve_dto_profile(dto: user.User) -> None:
         )
         return
     cont_usr_data.content.controls[0].value = (
-        view_data["first_name"] + " " + view_data["last_name"]
+            view_data["first_name"] + " " + view_data["last_name"]
     )
     cont_usr_data.content.controls[1].value = view_data["email"]
 
@@ -462,6 +508,8 @@ def init_home() -> None:
     ThemeManager.add_observer(theme_info)
     theme_info.on_change_theme(theme_info.theme_mode)
 
+    refresh_labels()
+
 
 def read_latest_spending(spending: dict[str, dict[list[str, float]]]) -> None:
     """
@@ -545,9 +593,19 @@ cont_daily_tip = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the daily tip section.
-            ft.Text("Porada dnia", size=header_size, weight=header_weight),
-            # A function call to generate_daily_tip() which returns a container with the daily tip text.
-            generate_daily_tip(),
+            daily_tip_header := ft.Text("Porada dnia", size=header_size, weight=header_weight),
+
+            ft.Container(
+                daily_tip_text := ft.Text(
+                    value='Daily tip',
+                    size=18,
+                    no_wrap=False,
+                    italic=True,
+                    text_align=ft.TextAlign.CENTER
+                ),
+                alignment=ft.alignment.center,
+                padding=ft.padding.all(5),
+            ),
             # A container for an image element.
             ft.Container(icon_savings_outlined, alignment=ft.alignment.center),
         ],
@@ -561,21 +619,23 @@ cont_achievements = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the achievements section.
-            ft.Text("Osiągnięcia", size=header_size, weight=header_weight),
+            text_achievements := ft.Text("Osiągnięcia", size=header_size, weight=header_weight),
             # A container for an image element.
             ft.Container(
                 ft.Row(
                     [
                         ft.Image(
                             src="https://lh3.googleusercontent.com/pw/AP1GczOOgFmCBvJQh"
-                            "-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I"
-                            "-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no"
-                            "?authuser=0",
+                                "-e6wNXInYOQoIuunFvNeHWNA4Jsu8mHYKuH3NRbP-ltRJVDn5SvcXdoKP6aQKv-d_zyWE7I"
+                                "-xMKqo0XXeMleaPzO_lewGRxHIYtZgk0A4dWiVW18LYF9F7xNxwXTjzR886GnI74R1E=w968-h968-s-no"
+                                "?authuser=0",
                             width=60,
                             height=60,
                         ),
                         ft.Image(
-                            src="https://lh3.googleusercontent.com/pw/AP1GczNHLgqYtKf6R6758jqUfcQh6AtfS6oqpEkXFMj2tEgzw9KssDInmp7CG_htmF3yghFzpg7yehkSpyqe2jYKc3aHPCXugJMIrGz7EzPZch_c0uIaM2-QAe3uj56A5IhC81ZaZ4N5cJJzCOsJZYsB7Wg=w894-h894-s-no-gm?authuser=0",
+                            src="https://lh3.googleusercontent.com/pw/AP1GczNHLgqYtKf6R6758jqUfcQh6AtfS6oqpEkXFMj2tEg"
+                                "zw9KssDInmp7CG_htmF3yghFzpg7yehkSpyqe2jYKc3aHPCXugJMIrGz7EzPZch_c0uIaM2-QAe3uj56A5IhC"
+                                "81ZaZ4N5cJJzCOsJZYsB7Wg=w894-h894-s-no-gm?authuser=0",
                             width=60,
                             height=60,
                         ),
@@ -599,7 +659,7 @@ cont_spending = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the spending section.
-            ft.Text("Ostatnie wydatki", size=header_size, weight=header_weight),
+            last_speding_header := ft.Text("Ostatnie wydatki", size=header_size, weight=header_weight),
             # A container for the list of spending items. Each item is represented as a row of elements: an
             # image, a text container for the item name, and a text for the item price.
             ft.Container(
@@ -616,7 +676,7 @@ cont_aim = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the upcoming goal section.
-            ft.Text("Nadchodzący cel", size=header_size, weight=header_weight),
+            next_aim_text := ft.Text("Nadchodzący cel", size=header_size, weight=header_weight),
             # A container for the goal details. It consists of a column of elements: an image, a text for the goal
             # amount, and a text for the goal description.
             ft.Container(
@@ -680,6 +740,9 @@ home.add_component(
         "Home page",
     )
 )
+
+
 home.add_component(DefaultComponents.NAVIGATION_BAR.value)
+home.refresh_language_contents = refresh_labels
 ViewsInitialStates.set_home_copy(home)
 home.log()

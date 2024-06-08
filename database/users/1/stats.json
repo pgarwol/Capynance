@@ -5,10 +5,26 @@
   "exp": "",
   "inventory": {
     "hats": [
-        {"id": 0, "isEquipped": "False"},
-        {"id": 1, "isEquipped": "False"}
+      {
+        "id": 0,
+        "isEquipped": "False"
+      },
+      {
+        "id": 1,
+        "isEquipped": "False"
+      }
     ],
-    "colors": [{"id": 0, "isEquipped": "False"}],
-    "shirts": [{"id": 0, "isEquipped": "False"}]
+    "colors": [
+      {
+        "id": 0,
+        "isEquipped": "False"
+      }
+    ],
+    "shirts": [
+      {
+        "id": 0,
+        "isEquipped": "False"
+      }
+    ]
   }
 }
