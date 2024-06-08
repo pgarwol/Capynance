@@ -16,6 +16,10 @@ from views.view import View, ViewsInitialStates
 header_size = 27
 text_size = header_size - 10
 cont_bg_color = "#122EC4B6"
+txt_snackbar_account_deleted = ft.Text("Konto zostało usunięte pomyślnie")
+txt_snackbar_password_changed = ft.Text("Hasło zostało zmienione pomyślnie")
+txt_error_incompatible_passwords = "Nowe hasła nie są takie same"
+txt_error_incorrect_password = "Niepoprawne hasło"
 
 
 class UserData:
@@ -35,6 +39,48 @@ class UserData:
             None
         """
         cls.login = login
+
+
+def refresh_labels() -> None:
+    """
+    This function changes view's texts based on the current language.
+
+    :return: None
+    """
+    txt_options.value = settings.lang['options']
+    txt_dark_mode.value = settings.lang['dark_mode']
+    txt_language.value = settings.lang['language']
+    txt_account.value = settings.lang['account']
+    btn_change_password.content.value = settings.lang['change_password']
+    btn_delete_account.content.value = settings.lang['delete_account']
+    txt_misc.value = settings.lang['misc']
+    btn_report_bug.content.value = settings.lang['report_bug']
+    txt_app_version.value = settings.lang['app_version']
+
+    txt_change_password.value = settings.lang['change_password']
+    txt_old_password.value = settings.lang['old_password']
+    txt_new_password.value = settings.lang['new_password']
+    txt_confirm_password.value = settings.lang['confirm_password']
+    change_password_dialog.actions[0].text = settings.lang['cancel']
+    change_password_dialog.actions[1].text = settings.lang['change']
+
+    txt_delete_account_title.value = settings.lang['delete_account']
+    txt_delete_account_warning.value = settings.lang['delete_account_warning']
+    txt_delete_account_password.value = settings.lang['delete_account_password']
+    delete_account_dialog.actions[0].text = settings.lang['delete_account']
+    delete_account_dialog.actions[1].text = settings.lang['cancel']
+
+    txt_report_bug_title.value = settings.lang['report_bug']
+    txt_report_bug_desc.value = settings.lang['report_bug_description']
+    report_bug_dialog.actions[0].text = settings.lang['cancel']
+    report_bug_dialog.actions[1].text = settings.lang['send']
+
+    global txt_error_incompatible_passwords, txt_error_incorrect_password
+    txt_snackbar_account_deleted.value = settings.lang['account_deleted']
+    txt_snackbar_password_changed.value = settings.lang['password_changed']
+    app_bar_settings.title.value = settings.lang['app_settings']
+    txt_error_incompatible_passwords = settings.lang['error_incompatible_passwords']
+    txt_error_incorrect_password = settings.lang['error_incorrect_password']
 
 
 def init_settings(login: str, dark_mode_on: bool) -> None:
@@ -72,6 +118,9 @@ def init_settings(login: str, dark_mode_on: bool) -> None:
     # Add the LocalThemeManager instance as an observer to the ThemeManager
     ThemeManager.remove_observer(theme_info)
     ThemeManager.add_observer(theme_info)
+
+    # Set the language for the session based on the current language setting
+    refresh_labels()
 
 
 def toggle_dark_mode(e: flet_core.control_event.Event) -> None:
@@ -293,21 +342,21 @@ def confirm_change_password_dialog(e: flet_core.control_event.ControlEvent) -> N
             )
             e.page.dialog.open = False
             Page.page.snack_bar = ft.SnackBar(
-                ft.Text("Hasło zostało zmienione pomyślnie")
+                txt_snackbar_password_changed
             )
             Page.page.snack_bar.open = True
             clear_change_password_dialog()  # Includes page update
         else:
             throw_password_error(
                 e,
-                error_message="Nowe hasła nie są takie same",
+                txt_error_incompatible_passwords,
                 content=change_password_dialog_content,
                 content_limit=6,
             )
     else:
         throw_password_error(
             e,
-            error_message="Niepoprawne hasło",
+            txt_error_incorrect_password,
             content=change_password_dialog_content,
             content_limit=6,
         )
@@ -426,7 +475,7 @@ def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
     if not services.is_login_valid(login, password)[0]:
         throw_password_error(
             e,
-            error_message="Niepoprawne hasło",
+            error_message=txt_error_incorrect_password,
             content=delete_account_dialog_content,
             content_limit=3,
         )
@@ -445,7 +494,9 @@ def confirm_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
     e.page.dialog.open = False
 
     # Show a success message
-    Page.page.snack_bar = ft.SnackBar(ft.Text("Konto zostało usunięte pomyślnie"))
+    Page.page.snack_bar = ft.SnackBar(
+        txt_snackbar_account_deleted
+    )
     Page.page.snack_bar.open = True
     Page.update()
 
@@ -471,12 +522,12 @@ def discard_delete_account_dialog(e: flet_core.control_event.ControlEvent) -> No
 
 # Bug report dialog
 report_bug_dialog = ft.AlertDialog(
-    modal=True,
-    title=ft.Text("Zgłoś błąd"),
+    True,
+    txt_report_bug_title :=ft.Text("Zgłoś błąd"),
     content=ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text("Opis błędu"),
+                txt_report_bug_desc := ft.Text("Opis błędu"),
                 bug_desc := ft.TextField(
                     value="\n\n\n\n",
                     multiline=True,
@@ -503,22 +554,22 @@ report_bug_dialog = ft.AlertDialog(
 
 # Change password dialog
 change_password_dialog = ft.AlertDialog(
-    modal=True,
-    title=ft.Text("Zmień hasło"),
+    True,
+    txt_change_password := ft.Text("Zmień hasło"),
     content=ft.Container(
         content=ft.Column(
             change_password_dialog_content := [
-                ft.Text("Stare hasło"),
+                txt_old_password := ft.Text("Stare hasło"),
                 tf_old_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
                 ),
-                ft.Text("Nowe hasło"),
+                txt_new_password := ft.Text("Nowe hasło"),
                 tf_new_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
                 ),
-                ft.Text("Potwierdź nowe hasło"),
+                txt_confirm_password := ft.Text("Potwierdź nowe hasło"),
                 tf_confirm_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
@@ -546,13 +597,16 @@ change_password_dialog = ft.AlertDialog(
 
 # Delete account dialog
 delete_account_dialog = ft.AlertDialog(
-    modal=True,
-    title=ft.Text("Usuń konto"),
+    True,
+    txt_delete_account_title := ft.Text("Usuń konto"),
     content=ft.Container(
         content=ft.Column(
             delete_account_dialog_content := [
-                ft.Text("Uwaga! Ta akcja jest nieodwracalna.", color="red"),
-                ft.Text("W celu usunięcia, podaj hasło:"),
+                txt_delete_account_warning := ft.Text(
+                    value="Uwaga! Ta akcja jest nieodwracalna.",
+                    color="red"
+                ),
+                txt_delete_account_password := ft.Text("W celu usunięcia, podaj hasło:"),
                 tf_delete_acc_password := ft.TextField(
                     password=True,
                     can_reveal_password=True,
@@ -581,13 +635,13 @@ delete_account_dialog = ft.AlertDialog(
 cont_options = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text("Opcje", size=header_size),
+            txt_options := ft.Text("Opcje", size=header_size),
             ft.Column(
                 [
                     ft.Row(
                         controls=[
                             ft.Container(
-                                ft.Text("Tryb ciemny", size=text_size),
+                                txt_dark_mode := ft.Text("Tryb ciemny", size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
                             ft.Container(theme_mode_switch),
@@ -597,7 +651,7 @@ cont_options = ft.Container(
                     ft.Row(
                         controls=[
                             ft.Container(
-                                ft.Text("Język", size=text_size),
+                                txt_language := ft.Text("Język", size=text_size),
                                 padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                             ),
                             dd_lang := ft.Dropdown(
@@ -626,10 +680,10 @@ cont_options = ft.Container(
 cont_account = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text("Konto", size=header_size),
+            txt_account := ft.Text("Konto", size=header_size),
             ft.Row(
                 [
-                    ft.TextButton(
+                    btn_change_password := ft.TextButton(
                         content=ft.Text("Zmień hasło", color="#22978C", size=text_size),
                         on_click=change_password,
                     )
@@ -637,7 +691,7 @@ cont_account = ft.Container(
             ),
             ft.Row(
                 [
-                    ft.TextButton(
+                    btn_delete_account := ft.TextButton(
                         content=ft.Text("Usuń konto", color="#22978C", size=text_size),
                         on_click=delete_account,
                     )
@@ -655,10 +709,10 @@ cont_account = ft.Container(
 cont_misc = ft.Container(
     content=ft.Column(
         controls=[
-            ft.Text(value="Inne", size=header_size),
+            txt_misc := ft.Text(value="Inne", size=header_size),
             ft.Row(
                 [
-                    ft.TextButton(
+                    btn_report_bug := ft.TextButton(
                         content=ft.Text(
                             value="Zgłoś błąd", color="#22978C", size=text_size
                         ),
@@ -669,7 +723,7 @@ cont_misc = ft.Container(
             ft.Row(
                 controls=[
                     ft.Container(
-                        ft.Text(value="Wersja aplikacji:", size=text_size),
+                        txt_app_version := ft.Text(value="Wersja aplikacji:", size=text_size),
                         padding=ft.Padding(top=0, left=10, right=0, bottom=0),
                     ),
                     ft.Container(ft.Text(value="1.0.0", size=text_size)),
@@ -689,7 +743,7 @@ settings = View(name=FletNames.SETTINGS, route=f"/{FletNames.SETTINGS}")
 settings.add_component(
     Component(
         content=[
-            ft.AppBar(
+            app_bar_settings := ft.AppBar(
                 title=ft.Text("Ustawienia aplikacji"), bgcolor=Colors.PRIMARY_DARKER
             )
         ],
@@ -712,5 +766,7 @@ settings.add_component(
         description="Settings page content.",
     )
 )
+
+settings.refresh_language_contents = refresh_labels
 ViewsInitialStates.set_settings_copy(settings)
 settings.log()

@@ -26,10 +26,23 @@ daily_tip = None
 
 
 def refresh_labels() -> None:
+    """
+    This function changes view's texts based on the current language.
+
+    :return: None
+    """
     daily_tip_header.value = home.lang["daily_tip_header"]
     daily_tip_text.value = generate_daily_tip()
     text_achievements.value = home.lang["achievements"]
     last_speding_header.value = home.lang["last_spending"]
+    next_aim_text.value = home.lang["next_goal"]
+    btn_settings.text = home.lang["app_settings"]
+    btn_log_out.text = home.lang["log_out"]
+    txt_add_spending.value = (home.lang["add_spending"])
+    txt_spending_desc.value = home.lang["spending_desc"]
+    txt_spending_value.value = home.lang["spending_value"]
+    manual_spending_dialog.actions[0].text = home.lang["cancel"]
+    manual_spending_dialog.actions[1].text = home.lang["confirm"]
 
 
 def go_to_settings(_: flet_core.control_event.ControlEvent) -> None:
@@ -321,14 +334,14 @@ def confirm_manual_spending_dialog(e: flet_core.control_event.ControlEvent) -> N
 
 
 manual_spending_dialog = ft.AlertDialog(
-    modal=True,
-    title=ft.Text("Wprowadź wydatek"),
+    True,
+    txt_add_spending := ft.Text("Wprowadź wydatek"),
     content=ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text("Opis wydatku"),
+                txt_spending_desc := ft.Text("Opis wydatku"),
                 tf_spending_desc := ft.TextField(),
-                ft.Text("Kwota"),
+                txt_spending_value := ft.Text("Kwota"),
                 tf_spending_value := ft.TextField(keyboard_type=KeyboardType.NUMBER),
             ]
         ),
@@ -620,7 +633,9 @@ cont_achievements = ft.Container(
                             height=60,
                         ),
                         ft.Image(
-                            src="https://lh3.googleusercontent.com/pw/AP1GczNHLgqYtKf6R6758jqUfcQh6AtfS6oqpEkXFMj2tEgzw9KssDInmp7CG_htmF3yghFzpg7yehkSpyqe2jYKc3aHPCXugJMIrGz7EzPZch_c0uIaM2-QAe3uj56A5IhC81ZaZ4N5cJJzCOsJZYsB7Wg=w894-h894-s-no-gm?authuser=0",
+                            src="https://lh3.googleusercontent.com/pw/AP1GczNHLgqYtKf6R6758jqUfcQh6AtfS6oqpEkXFMj2tEg"
+                                "zw9KssDInmp7CG_htmF3yghFzpg7yehkSpyqe2jYKc3aHPCXugJMIrGz7EzPZch_c0uIaM2-QAe3uj56A5IhC"
+                                "81ZaZ4N5cJJzCOsJZYsB7Wg=w894-h894-s-no-gm?authuser=0",
                             width=60,
                             height=60,
                         ),
@@ -661,7 +676,7 @@ cont_aim = ft.Container(
     ft.Column(
         [
             # A text element that serves as the title for the upcoming goal section.
-            ft.Text("Nadchodzący cel", size=header_size, weight=header_weight),
+            next_aim_text := ft.Text("Nadchodzący cel", size=header_size, weight=header_weight),
             # A container for the goal details. It consists of a column of elements: an image, a text for the goal
             # amount, and a text for the goal description.
             ft.Container(
