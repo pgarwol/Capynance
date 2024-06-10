@@ -20,6 +20,73 @@ from page import Page
 from typing import Tuple
 import flet as ft
 
+dlg_0 = ft.AlertDialog(
+    title=ft.Text("Upss!"),
+    content=ft.Text(
+        'Niestety nie udało ci się osiągnąć celu oszczędnościowego "Guma Turbo".\nTracisz serduszko!'
+    ),
+    actions=[ft.TextButton("OK", on_click=lambda e: close_dlg(e, dlg_0))],
+)
+
+dlg_1_1 = ft.AlertDialog(
+    title=ft.Text("Upss!"),
+    content=ft.Text(
+        'Niestety nie udało ci się osiągnąć celu oszczędnościowego "Guma Turbo".\nTracisz serduszko!'
+    ),
+    actions=[ft.TextButton("OK", on_click=lambda e: open_second_dlg(e))],
+)
+
+dlg_1_2 = ft.AlertDialog(
+    title=ft.Text("Upss!"),
+    content=ft.Text(
+        "O niee! Straciłeś wszystkie serduszka, twoja kapibara jest niepocieszona :(\nZa karę spadasz o jeden poziom."
+    ),
+    actions=[ft.TextButton("OK", on_click=lambda e: close_dlg(e, dlg_1_2))],
+)
+
+
+def open_second_dlg(e):
+    dlg_1_1.open = False
+    e.control.page.update()
+    e.control.page.dialog = dlg_1_2
+    dlg_1_2.open = True
+    e.control.page.update()
+
+
+def close_dlg(e, dlg):
+    dlg.open = False
+    e.control.page.update()
+
+
+def open_dlg(e, dlg):
+    e.control.page.dialog = dlg
+    dlg.open = True
+    e.control.page.update()
+
+
+def insert_dto_data_to_stats_was_punished(was_punised: bool):
+    stats_var = Session.get_logged_user().stats
+    stats_var["was_punished"] = was_punised
+
+
+async def handle_click(e):
+    log_user_in(login.var["email"].value, login.var["password"].value)
+    dto = Session.get_logged_user()
+    stats_var = dto.stats
+    was_punished = stats_var["was_punished"]
+    if not was_punished:
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        user_id = dto.id
+        print(user_id)
+        if user_id == "0":
+            open_dlg(e, dlg_0)
+            insert_dto_data_to_stats_was_punished(True)
+
+        elif user_id == "1":
+            open_dlg(e, dlg_1_1)
+            insert_dto_data_to_stats_was_punished(True)
+
+
 login = View(name=FletNames.LOGIN, route="/")
 login.add_component(
     Component(
@@ -42,9 +109,7 @@ login.add_component(
             log_in_button := ft.ElevatedButton(
                 color=Colors.BLACK.value,
                 bgcolor=Colors.ACCENT.value,
-                on_click=lambda _: log_user_in(
-                    login.var["email"].value, login.var["password"].value
-                ),
+                on_click=handle_click,
             ),
             no_account_button := ft.TextButton(
                 on_click=lambda _: Page.go(register.route),
@@ -157,6 +222,7 @@ def log_user_in(email: str | None, password: str | None):
             init_home=init_home,
         )
         Page.go(home.route)
+        # return user_id
 
 
 def refresh_labels() -> None:

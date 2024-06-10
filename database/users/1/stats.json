@@ -1,8 +1,9 @@
 {
-  "life_hearts": "1",
-  "capycoins": "20000",
-  "level": "",
-  "exp": "",
+  "was_punished": false,
+  "life_hearts": "3",
+  "capycoins": "315",
+  "level": "4",
+  "exp": "0",
   "inventory": {
     "hats": [
       {
