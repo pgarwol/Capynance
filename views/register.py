@@ -1,7 +1,7 @@
 from views.home import home
 from views.view import View
 from utils.styles import Style
-from utils.enums import FletNames
+from utils.enums import FletNames, String
 import utils.services as services
 from components.component import Component
 from page import Page
@@ -12,6 +12,7 @@ register = View(name=FletNames.REGISTER, route=f"/{FletNames.REGISTER}")
 register.add_component(
     Component(
         content=[
+            ft.SafeArea(ft.Text(String.EMPTY), height=60),
             email_textfield := ft.TextField(label=None, **Style.TextField.value),
             password_textfield := ft.TextField(
                 label=None,

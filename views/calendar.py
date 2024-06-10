@@ -2,7 +2,7 @@ import utils.services as services
 from session import Session
 from views.view import View, ViewsInitialStates
 from utils.styles import Style
-from utils.enums import Currencies, FletNames
+from utils.enums import Currencies, FletNames, String
 from components.component import Component, DefaultComponents
 import datetime
 from page import Page
@@ -36,8 +36,7 @@ calendar.add_component(
                     ),
                     currency_dropdown := ft.Dropdown(
                         options=[
-                            ft.dropdown.Option(currency)
-                            for currency in Currencies
+                            ft.dropdown.Option(currency) for currency in Currencies
                         ],
                         width=100,
                         **Style.Dropdown.value,
@@ -99,6 +98,13 @@ calendar.var = {
 }
 
 
+def clear_inputs() -> None:
+    goal_textfield.value = String.EMPTY
+    amount_textfield.value = String.EMPTY
+    date_textfield.value = String.EMPTY
+    currency_dropdown.value = String.EMPTY
+
+
 def add_savings_row(
     date: datetime.datetime, goal: str, amount: float | str, currency: str
 ) -> None:
@@ -137,6 +143,7 @@ def add_savings_row(
     if not Session.get_logged_user().does_savings_goal_exist(goal):
         services.save_all_data(Session.get_logged_user())
 
+    clear_inputs()
     Page.update()
 
 

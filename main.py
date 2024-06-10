@@ -99,7 +99,7 @@ class App:
 
         # Theming
         page.theme = theme.Theme(color_scheme_seed=Colors.PRIMARY_DARKER)
-        ThemeManager.toggle_dark_mode(toggle_on=False)
+        ThemeManager.toggle_dark_mode(toggle_on=True)
 
 
 def save_and_flush() -> None:

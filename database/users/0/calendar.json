@@ -12,23 +12,17 @@
       "savings_amount": "1.00",
       "savings_currency": "Z\u0141"
     },
-    "2": {
-      "savings_deadline": "30-05-2024",
-      "savings_goal": "jajco",
-      "savings_amount": "50.00",
-      "savings_currency": "USD"
-    },
     "3": {
       "savings_deadline": "15-07-2024",
-      "savings_goal": "Piwo po zdanej obronie",
+      "savings_goal": "Jupik",
       "savings_amount": "4.27",
       "savings_currency": "Z\u0141"
     },
-    "4": {
-      "savings_deadline": "30-08-2024",
-      "savings_goal": "ubranko dla kapibary",
-      "savings_amount": "100.00",
-      "savings_currency": "Z\u0141"
+    "4 ": {
+      "savings_deadline": "09-09-2025",
+      "savings_goal": "Kamienica Łęckich",
+      "savings_amount": "90000",
+      "savings_currency": "EUR"
     }
   }
 }

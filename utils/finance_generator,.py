@@ -42,5 +42,5 @@ def generate_income_outcome_data(year: int, months: List[int]) -> dict:
 
 
 if __name__ == "__main__":
-    in_out_data = generate_income_outcome_data(2024, [5])
+    in_out_data = generate_income_outcome_data(2024, [6])
     print(in_out_data)
