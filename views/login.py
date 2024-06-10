@@ -75,9 +75,9 @@ async def handle_click(e):
     stats_var = dto.stats
     was_punished = stats_var["was_punished"]
     if not was_punished:
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print("Pop up punish displayed")
         user_id = dto.id
-        print(user_id)
+        print(f"user_id: {user_id}")
         if user_id == "0":
             open_dlg(e, dlg_0)
             insert_dto_data_to_stats_was_punished(True)
