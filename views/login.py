@@ -45,31 +45,49 @@ dlg_1_2 = ft.AlertDialog(
 )
 
 
-def open_second_dlg(e):
-    dlg_1_1.open = False
-    e.control.page.update()
-    e.control.page.dialog = dlg_1_2
-    dlg_1_2.open = True
-    e.control.page.update()
-
-
-def close_dlg(e, dlg):
-    dlg.open = False
-    e.control.page.update()
-
-
-def open_dlg(e, dlg):
-    e.control.page.dialog = dlg
-    dlg.open = True
-    e.control.page.update()
-
-
 def insert_dto_data_to_stats_was_punished(was_punised: bool):
     stats_var = Session.get_logged_user().stats
     stats_var["was_punished"] = was_punised
 
 
-async def handle_click(e):
+def open_dlg_0(e, dlg):
+    if e.control.page:
+        e.control.page.dialog = dlg
+        dlg.open = True
+        e.control.page.update()
+    else:
+        logging.error("Failed to open dialog: e.control.page is None")
+
+
+def open_dlg_1(e, dlg):
+    if e.control.page:
+        e.control.page.dialog = dlg
+        dlg.open = True
+        e.control.page.update()
+    else:
+        logging.error("Failed to open dialog: e.control.page is None")
+
+
+def close_dlg(e, dlg):
+    if e.control.page:
+        dlg.open = False
+        e.control.page.update()
+    else:
+        logging.error("Failed to close dialog: e.control.page is None")
+
+
+def open_second_dlg(e):
+    if e.control.page:
+        dlg_1_1.open = False
+        e.control.page.update()
+        e.control.page.dialog = dlg_1_2
+        dlg_1_2.open = True
+        e.control.page.update()
+    else:
+        logging.error("Failed to open second dialog: e.control.page is None")
+
+
+def handle_click(e):
     log_user_in(login.var["email"].value, login.var["password"].value)
     dto = Session.get_logged_user()
     stats_var = dto.stats
@@ -78,12 +96,12 @@ async def handle_click(e):
         print("Pop up punish displayed")
         user_id = dto.id
         print(f"user_id: {user_id}")
-        if user_id == "0":
-            open_dlg(e, dlg_0)
-            insert_dto_data_to_stats_was_punished(True)
+        # if user_id == "0":
+        #     open_dlg_0(e, dlg_0)
+        #     insert_dto_data_to_stats_was_punished(True)
 
-        elif user_id == "1":
-            open_dlg(e, dlg_1_1)
+        if user_id == "1":
+            open_dlg_1(e, dlg_1_1)
             insert_dto_data_to_stats_was_punished(True)
 
 
